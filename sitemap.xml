@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://www.codebr.net/</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/sobre</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/contato</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/escrever-txt-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/como-somar-dias-data-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/como-converter-uma-gd-image-para-base64-em-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/erro-cannot-modify-header-information-headers-already-sent</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/como-remover-primeiro-ultimo-string-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/como-usar-match-expression-em-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/codigo-sql-com-todas-as-cidades-e-estados-do-pais</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.codebr.net/artigo/como-aplicar-mascaras-dinamicas-em-php</loc>
+  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+
+</urlset>
