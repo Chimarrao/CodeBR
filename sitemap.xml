@@ -1,67 +1,214 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
+﻿<?xml version="1.0" encoding="UTF-8"?>
+		<!--	created with www.mysitemapgenerator.com	-->
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-  <loc>https://www.codebr.net/</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>1.00</priority>
+	<loc>https://codebr.net/</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.4</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/sobre</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/sobre</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>1.0</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/contato</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/contato</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>1.0</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/escrever-txt-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/politica-de-privacidade</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>1.0</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/como-somar-dias-data-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/como-usar-dicionarios-em-python</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/como-converter-uma-gd-image-para-base64-em-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/busca-binaria-em-c</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/erro-cannot-modify-header-information-headers-already-sent</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/programacao-orientada-objetos-typescript</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/como-remover-primeiro-ultimo-string-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/complexidade-algoritmos-c-exemplos</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/como-usar-match-expression-em-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/ponteiros-em-c</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/codigo-sql-com-todas-as-cidades-e-estados-do-pais</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/algoritmos-ordenacao-c</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
 <url>
-  <loc>https://www.codebr.net/artigo/como-aplicar-mascaras-dinamicas-em-php</loc>
-  <lastmod>2022-04-21T02:05:13+00:00</lastmod>
-  <priority>0.80</priority>
+	<loc>https://codebr.net/artigo/programacao-orientada-a-objetos-em-rust</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
 </url>
-
-
+<url>
+	<loc>https://codebr.net/artigo/compiladores-o-que-sao-e-como-funcionam</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/laravel-guia-completo-desenvolvimento-web-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-funciona-qrcode</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/typescript-o-que-e-como-usar-exemplos</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/usando-fetch-api-em-js</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/bibliotecas-interface-grafica-python</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/historia-linguagem-c-desenvolvimento-evolucao-influencia</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/proteger-php-sql-injection</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/unix-timestamp-o-que-e-como-funciona</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/o-que-e-formato-avif-como-melhorar-imagens</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/porque-usar-formato-webp-para-imagens-na-web</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/o-que-e-nosql-beneficios-e-tipos</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/docblock-documentacao-codigo-eficiente</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/uso-do-jquery-em-2023</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/camelcase-vs-snakecase</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-criar-e-escrever-arquivos-de-texto-em-python</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/sortable-vanilla-js</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/formatar-data-javascript</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/javascript-foreach-em-objeto</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/o-que-e-regex-introducao</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/o-que-e-base64</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/mascara-telefone-javascript-puro</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/cronometrar-script-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/escrever-txt-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-somar-dias-data-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-converter-uma-gd-image-para-base64-em-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/erro-cannot-modify-header-information-headers-already-sent</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-remover-primeiro-ultimo-string-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-usar-match-expression-em-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/codigo-sql-com-todas-as-cidades-e-estados-do-pais</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://codebr.net/artigo/como-aplicar-mascaras-dinamicas-em-php</loc>
+	<lastmod>2023-04-22T05:31:10+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
 </urlset>
