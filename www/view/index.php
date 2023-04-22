@@ -67,7 +67,7 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <?php foreach ($artigos as $chave => $artigo) { ?>
-                    <div class="post-preview" id="artigo_<?= $chave ?>" <?= $chave > 4 ? "style= \"display:none\"" : "" ?>>
+                    <div class="post-preview" id="artigo_<?= $chave ?>" <?= $chave > 14 ? "style= \"display:none\"" : "" ?>>
                         <a href="<?= URL_BASE ?>artigo/<?= $artigo["url"] ?>">
                             <h2 class="post-title"><?= $artigo["artigo"] ?></h2>
                             <h3 class="post-subtitle"><?= $artigo["descricao"] ?></h3>
@@ -76,15 +76,15 @@
                             Publicado por
                             <a><?= $artigo["autor"] ?></a>
                             em
-                            <!-- 24 de Setembro de 2021 --> <?= date("d/m/Y", strtotime($artigo["data_publicacao"])) ?>
+                            <?= utf8_encode(strftime("%d de %B de %Y", strtotime($artigo["data_publicacao"]))); ?>
                         </p>
                     </div>
-                    <hr class="my-4" id="linha_artigo_<?= $chave ?>" <?= $chave > 3 ? "style= \"display:none\"" : "" ?> />
+                    <hr class="my-4" id="linha_artigo_<?= $chave ?>" <?= $chave > 13 ? "style= \"display:none\"" : "" ?> />
                 <?php } ?>
 
                 <nav aria-label="">
                     <ul class="pagination justify-content-end pagination-lg">
-                        <?php for ($i = 1; $i <= ceil(count((array) $artigos) / 5); $i++) { ?>
+                        <?php for ($i = 1; $i <= ceil(count((array) $artigos) / 15); $i++) { ?>
                             <li class="page-item" onclick="paginacao('<?= $i ?>')">
                                 <a class="page-link" style="cursor: pointer"><?= $i ?></a>
                             </li>
@@ -131,7 +131,6 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/site.js"></script>
     <script src="js/scripts.js"></script>
     <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
 </body>
