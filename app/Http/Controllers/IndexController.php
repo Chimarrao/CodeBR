@@ -58,7 +58,7 @@ class IndexController extends Controller
 
     private function obterPrimeiraImagemComRegex($html)
     {
-        $padrao = '/<img [^>]*src=["\'](.*?\.(jpeg|jpg|webp|png))["\'][^>]*>/i';
+        $padrao = '/<img [^>]*src=["\'](.*?\.webp)["\'][^>]*>/i';
 
         if (preg_match($padrao, $html, $matches)) {
             $imagem = $matches[1];
