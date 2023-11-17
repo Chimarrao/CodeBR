@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        var containerElement = document.querySelector('.section.artigo');
+
+        if (containerElement) {
+            var paragraphsAndSpans = containerElement.querySelectorAll('p, span');
+
+            paragraphsAndSpans.forEach(function (element) {
+                element.style.color = 'white';
+            });
+        }
+    }
+
     if (document.getElementById('subtitulo')) {
         const texto = 'Um blog sobre programação';
         const local = document.getElementById('subtitulo');
