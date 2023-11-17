@@ -7,7 +7,7 @@
     <meta name="description" content="Um blog sobre programação" />
     <meta name="author" content="Lucas Reolon" />
     <title>Code BR - Um blog sobre programação</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
 
     <link href="{{ asset('images/favicon.png') }}" rel="icon">
     <link href="{{ asset('images/favicon.png') }}" rel="apple-touch-icon">
@@ -43,25 +43,22 @@
     </script>
     <!-- Google analytics -->
 
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
-        rel="stylesheet" type="text/css">
+    <link type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
 
 <body>
     @include('components.menu')
 
-    <section class="hero is-medium is-dark is-bold"
-        style="background-image: url('https://codebr.net/public/assets/img/home-bg.webp');">
+    <section class="hero is-medium is-dark is-bold" style="background-image: url('https://codebr.net/public/assets/img/home-bg.webp');">
         <div class="hero-body">
             <div class="container text-center">
                 <h1 class="title">
                     Code BR
                 </h1>
-                <h2 id="subtitulo" class="subtitle">
+                <h2 class="subtitle" id="subtitulo">
                 </h2>
             </div>
         </div>
@@ -72,9 +69,9 @@
             <div class="section">
                 <h2 class="title is-3">Artigos em Destaque</h2>
                 <div class="columns is-multiline">
-                    <?php foreach ($artigosDestaque as $artigo) { ?>
-                    @include('components.bloco-pequeno-artigo')
-                    <?php } ?>
+                    @foreach ($artigosDestaque as $artigo)
+                        @include('components.bloco-pequeno-artigo')
+                    @endforeach
                 </div>
             </div>
         @endif
@@ -86,11 +83,12 @@
                 <h2 class="title is-3">Artigos Recentes</h2>
             @endif
             <div class="columns is-multiline">
-                <?php foreach ($artigos as $artigo) { ?>
-                @include('components.bloco-pequeno-artigo')
-                <?php } ?>
+                @foreach ($artigos as $artigo)
+                    @include('components.bloco-pequeno-artigo')
+                @endforeach
             </div>
         </div>
+
 
         <section class="section">
             <div class="container">
@@ -100,14 +98,13 @@
                 ?>
                 <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                     @if ($numeroPagina > 1)
-                        <a href="{{ url('/page/' . ($numeroPagina - 1)) }}" class="pagination-previous">Anterior</a>
+                        <a class="pagination-previous" href="{{ url('/page/' . ($numeroPagina - 1)) }}">Anterior</a>
                     @endif
 
                     <ul class="pagination-list">
                         @for ($i = max(1, $numeroPagina - $pagesToShow); $i <= min($totalPages, $numeroPagina + $pagesToShow); $i++)
                             <li>
-                                <a class="pagination-link {{ $i == $numeroPagina ? 'is-current' : '' }}"
-                                    href="{{ url('/page/' . $i) }}">
+                                <a class="pagination-link {{ $i == $numeroPagina ? 'is-current' : '' }}" href="{{ url('/page/' . $i) }}">
                                     {{ $i }}
                                 </a>
                             </li>
@@ -115,7 +112,7 @@
                     </ul>
 
                     @if ($numeroPagina < $totalPages)
-                        <a href="{{ url('/page/' . ($numeroPagina + 1)) }}" class="pagination-next">Próxima</a>
+                        <a class="pagination-next" href="{{ url('/page/' . ($numeroPagina + 1)) }}">Próxima</a>
                     @endif
                 </nav>
             </div>
