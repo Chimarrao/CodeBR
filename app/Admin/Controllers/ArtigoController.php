@@ -52,15 +52,18 @@ class ArtigoController extends AdminController
         $form = new Form(new Artigo());
 
         $form->display('id_artigo', 'ID');
+
         $form->text('artigo', 'Título');
+
         $form->switch('liberado', 'Liberado')->default(1);
         $form->switch('destaque', 'Destaque')->default(0);
-        $form->text('descricao', 'Descrição');
-        $form->textarea('texto', 'Texto');
 
-        $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
-            $tituloArtigo = $form->input('artigo');
-            $nomeImagem = Str::slug($tituloArtigo) . '-' . uniqid() . '.webp';
+        $form->text('descricao', 'Descrição');
+
+        $form->tmeditor('texto', 'Texto');
+
+        $form->image('imagem_aux', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
+            $nomeImagem = Str::slug($form->input('artigo')) . '.webp';
 
             $caminhoOriginal = $file->getPath() . '/' . $file->getFilename();
 
@@ -72,22 +75,31 @@ class ArtigoController extends AdminController
 
             $imagem->save(public_path('images/' . $nomeImagem), 80, 'webp');
 
+            $form->input('imagem', $nomeImagem);
             return $nomeImagem;
+        });
+
+        $form->saving(function (Form $form) {
+            $form->model()->imagem = 'images/' . Str::slug($form->input('artigo')) . '.webp';
+            $form->model()->html_title = $form->input('artigo');
+            $form->model()->html_meta = $form->input('descricao');
         });
 
         $form->text('url', 'URL');
         $form->text('autor', 'Autor')->default(auth()->user()->name);
+
         $form->date('data_criacao', 'Data de Criação')->default(now());
         $form->date('data_publicacao', 'Data de Publicação')->default(now());
+        $form->date('data_modificacao', 'Data de Publicação')->default(now());
+
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
         $form->switch('excluido', 'Excluído')->default(0);
 
-        $form->ignore(['html_title', 'html_meta', 'data_modificacao']);
+        $form->ignore(['imagem_aux']);
 
         return $form;
     }
-
 
     protected function detail($id)
     {
@@ -104,7 +116,8 @@ class ArtigoController extends AdminController
         $show->field('descricao', 'Descrição');
         $show->field('html_title', 'HTML Title');
         $show->field('html_meta', 'HTML Meta');
-        $show->field('texto', 'Texto')->as(function ($texto) {
+
+        $show->field('texto', 'Texto (<pre><code class="language-xxx">)')->as(function ($texto) {
             return strip_tags(nl2br($texto));
         });
         $show->field('imagem', 'Imagem')->image(asset(''), 300, 300);

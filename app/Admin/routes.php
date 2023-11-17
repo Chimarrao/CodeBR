@@ -13,6 +13,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
+    $router->post('/file_oupload', 'FileUploadController@upload');
     $router->resource('artigos', ArtigoController::class);
 
 });
