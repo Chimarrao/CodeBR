@@ -19,13 +19,16 @@ class IndexController extends Controller
             ->orderByDesc('id_artigo')
             ->offset($offset);
 
+        $count = DB::table('artigos')->select('*')->where('liberado', 1)->where('excluido', 0);
+
         if (request()->has('q') && !empty(request('q'))) {
             $searchTerm = '%' . request('q') . '%';
             $query->where('artigo', 'like', $searchTerm);
+            $count->where('artigo', 'like', $searchTerm);
         }
-
+        
         $artigos = $query->limit($artigosPorPagina)->get()->toArray();
-        $count = DB::table('artigos')->select('*')->where('liberado', 1)->where('excluido', 0)->count();
+        $count = $count->count();
 
         $artigosDestaque = DB::table('artigos')->select('*')->where('liberado', 1)->where('excluido', 0)->where('destaque', 1)->get();
 

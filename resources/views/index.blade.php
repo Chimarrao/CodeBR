@@ -89,22 +89,22 @@
             </div>
         </div>
 
-
         <section class="section">
             <div class="container">
                 <?php
                 $totalPages = ceil($count / $artigosPorPagina);
                 $pagesToShow = 2;
+                $searchQuery = request('q') ? '&q=' . urlencode(request('q')) : '';
                 ?>
                 <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                     @if ($numeroPagina > 1)
-                        <a class="pagination-previous" href="{{ url('/page/' . ($numeroPagina - 1)) }}">Anterior</a>
+                        <a class="pagination-previous" href="{{ url('/page/' . ($numeroPagina - 1) . '?q=' . urlencode(request('q'))) }}">Anterior</a>
                     @endif
 
                     <ul class="pagination-list">
                         @for ($i = max(1, $numeroPagina - $pagesToShow); $i <= min($totalPages, $numeroPagina + $pagesToShow); $i++)
                             <li>
-                                <a class="pagination-link {{ $i == $numeroPagina ? 'is-current' : '' }}" href="{{ url('/page/' . $i) }}">
+                                <a class="pagination-link {{ $i == $numeroPagina ? 'is-current' : '' }}" href="{{ url('/page/' . $i . '?q=' . urlencode(request('q'))) }}">
                                     {{ $i }}
                                 </a>
                             </li>
@@ -112,11 +112,12 @@
                     </ul>
 
                     @if ($numeroPagina < $totalPages)
-                        <a class="pagination-next" href="{{ url('/page/' . ($numeroPagina + 1)) }}">Próxima</a>
+                        <a class="pagination-next" href="{{ url('/page/' . ($numeroPagina + 1) . '?q=' . urlencode(request('q'))) }}">Próxima</a>
                     @endif
                 </nav>
             </div>
         </section>
+
     </div>
 
     @include('components.rodape')
