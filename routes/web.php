@@ -18,6 +18,14 @@ Route::get('/page/{numeroPagina}', 'App\Http\Controllers\IndexController@index')
 
 Route::get('/artigo/{slug}', 'App\Http\Controllers\ArtigoController@artigo');
 
-Route::get('/sobre', 'App\Http\Controllers\SobreController@sobre');
-Route::get('/contato', 'App\Http\Controllers\ContatoController@contato');
-Route::get('/politica-de-privacidade', 'App\Http\Controllers\PoliticaPrivacidadeController@politica');
+Route::get('/sobre', function() {
+    return view('sobre');
+});
+
+Route::get('/contato', function() {
+    return view('contato');
+});
+
+Route::get('/politica-de-privacidade', function() {
+    return view('politica-de-privacidade');
+});
