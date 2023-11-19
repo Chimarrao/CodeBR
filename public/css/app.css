@@ -597,4 +597,24 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
         color: #0d6efd;
         box-shadow: 0 8px 16px hsl(0, 0%, 0%);
     }
+
+    .pagination-link {
+        color: white;
+    }
+
+    .pagination-link:hover {
+        background-color: white;
+    }
+
+    .pagination-link.is-current {
+        color: black;
+    }
+
+    .pagination-next {
+        color: white;
+    }
+
+    .pagination-next:hover {
+        background-color: white;
+    }
 }
