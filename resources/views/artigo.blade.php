@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <div class="section">
+        {{-- <div class="section">
             <div class="columns">
                 <div class="column">
                     <h2 class="title is-3">Artigos em Destaque</h2>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     @include('components.rodape')
