@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^codebr.net$ [NC,OR] 
+RewriteCond %{HTTP_HOST} ^www.codebr.net$
+RewriteCond %{REQUEST_URI} !public/
+RewriteRule (.*) /public/$1 [L]
