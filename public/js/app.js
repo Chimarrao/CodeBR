@@ -3,12 +3,21 @@ document.addEventListener('DOMContentLoaded', function () {
         var containerElement = document.querySelector('.section.artigo');
 
         if (containerElement) {
-            var paragraphsAndSpans = containerElement.querySelectorAll('p, span');
+            var paragraphsAndSpans = containerElement.querySelectorAll('p, span, strong');
 
             paragraphsAndSpans.forEach(function (element) {
-                element.style.color = 'white';
+                // Verificar se o elemento ou algum de seus ancestrais tem a classe 'gist'
+                if (!element.closest('.gist')) {
+                    element.style.color = 'white';
+                }
             });
         }
+
+        var elementsBlack = document.querySelectorAll('[style="color: black;"]');
+
+        elementsBlack.forEach(function (element) {
+            element.style.color = 'white';
+        });
     }
 
     if (document.getElementById('subtitulo')) {
