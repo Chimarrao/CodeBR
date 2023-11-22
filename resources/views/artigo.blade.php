@@ -20,7 +20,7 @@
     <meta property="og:title" content="{{ $artigo->html_title ? $artigo->html_title : 'Code BR - Um blog sobre programação' }}" />
     <meta property="og:description" content="{{ $artigo->html_meta ? $artigo->html_meta : 'Um blog sobre programação' }}" />
     <meta property="og:url" content="{{ 'http://codebr.net/artigo/' . $artigo->url }}" />
-    <meta property="og:image" content="{{ asset('icons/favicon.png') }}" />
+    <meta property="og:image" content="{{ isset($artigo->{"imagem"}) ? asset($artigo->imagem) : asset('images/favicon.png') }}" />
     <meta property="og:site_name" content="Code BR - Um blog sobre programação" />
     <!-- Tags OG -->
 
@@ -28,7 +28,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $artigo->html_title }}">
     <meta name="twitter:description" content="{{ $artigo->html_meta ? $artigo->html_meta : 'Um blog sobre programação' }}">
-    <meta name="twitter:image" content="{{ asset('icons/favicon') }}">
+    <meta name="twitter:image" content="{{ isset($artigo->{"imagem"}) ? asset($artigo->imagem) : asset('images/favicon.png') }}">
     <!-- Tags Twitter Card para redes sociais -->
 
     <!-- Google analytics -->
