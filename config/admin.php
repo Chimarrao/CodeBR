@@ -95,7 +95,7 @@ return [
     | If your page is going to be accessed via https, set it to `true`.
     |
     */
-    'https' => env('ADMIN_HTTPS', false),
+    'https' => env('ADMIN_HTTPS', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -411,6 +411,9 @@ return [
 
             // Editor configuration
             'config' => [
+                'force_br_newlines' => true,
+                'force_p_newlines' => true,
+                'forced_root_block' => '',
                 'height' => 500,
                 'language' => 'en',
                 'plugins' => 'emoticons print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template code table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help ',
