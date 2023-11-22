@@ -28,4 +28,16 @@ class Artigo extends Model
         'tags',
         'excluido',
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($table) {
+            $nomeArtigo = $table->artigo;
+            $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
+            $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
+            $nomeImagem = $nomeArtigo . '.webp';
+
+            $table->imagem = 'images/' . $nomeImagem;
+        });
+    }
 }

@@ -8,7 +8,6 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use App\Models\Artigo;
-use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class ArtigoController extends AdminController
@@ -49,6 +48,7 @@ class ArtigoController extends AdminController
 
     protected function form()
     {
+
         $form = new Form(new Artigo());
 
         $form->display('id_artigo', 'ID');
@@ -62,8 +62,12 @@ class ArtigoController extends AdminController
 
         $form->tmeditor('texto', 'Texto');
 
-        $form->image('imagem_aux', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
-            $nomeImagem = Str::slug($form->input('artigo')) . '.webp';
+        $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
+            $nomeArtigo = $form->input('artigo');
+
+            $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
+            $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
+            $nomeImagem = $nomeArtigo . '.webp';
 
             $caminhoOriginal = $file->getPath() . '/' . $file->getFilename();
 
@@ -73,14 +77,12 @@ class ArtigoController extends AdminController
                 $constraint->aspectRatio();
             });
 
-            $imagem->save(public_path('images/' . $nomeImagem), 80, 'webp');
+            $imagem->encode('webp', 80)->save(public_path('images/' . $nomeImagem));
 
-            $form->input('imagem', $nomeImagem);
             return $nomeImagem;
         });
 
         $form->saving(function (Form $form) {
-            $form->model()->imagem = 'images/' . Str::slug($form->input('artigo')) . '.webp';
             $form->model()->html_title = $form->input('artigo');
             $form->model()->html_meta = $form->input('descricao');
         });
@@ -95,8 +97,6 @@ class ArtigoController extends AdminController
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
         $form->switch('excluido', 'Excluído')->default(0);
-
-        $form->ignore(['imagem_aux']);
 
         return $form;
     }
