@@ -3,13 +3,13 @@
         <div class="box article">
             <article>
                 <figure class="image is-3by2">
-                    <img src="{{ asset($artigo->imagem) }}" alt="Imagem de Exemplo">
+                    <img src="{{ asset($artigo->imagem) }}" alt="Imagem de {{ $artigo->artigo }}">
                 </figure>
                 <div class="content">
-                    <h3 class="title is-4"><?= $artigo->artigo ?></h3>
-                    <p><?= $artigo->descricao ?></p>
-                    <p>Por: <?= $artigo->autor ?></p>
-                    <p>📅 <?= (new IntlDateFormatter('pt_BR', IntlDateFormatter::LONG, IntlDateFormatter::NONE))->format((new DateTime($artigo->data_publicacao))->getTimestamp()) ?></p>
+                    <h3 class="title is-4">{{ $artigo->artigo }}</h3>
+                    <p>{{ $artigo->descricao }}</p>
+                    <p>Por: {{ $artigo->autor }}</p>
+                    <p>📅 {{ (new IntlDateFormatter('pt_BR', IntlDateFormatter::LONG, IntlDateFormatter::NONE))->format((new DateTime($artigo->data_publicacao))->getTimestamp()) }}</p>
                 </div>
             </article>
         </div>
