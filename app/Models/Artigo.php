@@ -35,7 +35,7 @@ class Artigo extends Model
             $nomeArtigo = $table->artigo;
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
-            $nomeImagem = $nomeArtigo . '.webp';
+            $nomeImagem = 'imagem-' . $nomeArtigo . '.webp';
 
             $table->imagem = 'images/' . $nomeImagem;
         });

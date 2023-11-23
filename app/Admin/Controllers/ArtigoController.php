@@ -64,7 +64,7 @@ class ArtigoController extends AdminController
 
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
             $nomeArtigo = $form->input('artigo');
-
+            $nomeArtigo = 'imagem-' . strval($nomeArtigo);
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
             $nomeImagem = $nomeArtigo . '.webp';
