@@ -72,8 +72,32 @@
     <div class="container">
         <div class="section artigo">
             <div class="columns is-centered">
+                <div class="column is-one">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '19b4f71efec5db23c79bcb62b7c1c696',
+                            'format': 'iframe',
+                            'height': 600,
+                            'width': 160,
+                            'params': {}
+                        };
+                        document.write('<scr' + 'ipt type="text/javascript" src="//tubfurryhen.com/19b4f71efec5db23c79bcb62b7c1c696/invoke.js"></scr' + 'ipt>');
+                    </script>
+                </div>
                 <div class="column is-two-thirds">
                     {!! $artigo->texto !!}
+                </div>
+                <div class="column is-one">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key': '19b4f71efec5db23c79bcb62b7c1c696',
+                            'format': 'iframe',
+                            'height': 600,
+                            'width': 160,
+                            'params': {}
+                        };
+                        document.write('<scr' + 'ipt type="text/javascript" src="//tubfurryhen.com/19b4f71efec5db23c79bcb62b7c1c696/invoke.js"></scr' + 'ipt>');
+                    </script>
                 </div>
             </div>
         </div>
@@ -91,6 +115,8 @@
             </div>
         </div> --}}
     </div>
+
+    <script type='text/javascript' src='//tubfurryhen.com/b9/15/02/b915027095387ef94f23fad1d39276c3.js'></script>
 
     @include('components.rodape')
 </body>
