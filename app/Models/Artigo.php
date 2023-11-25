@@ -33,9 +33,15 @@ class Artigo extends Model
     {
         static::saving(function ($table) {
             $nomeArtigo = $table->artigo;
+            $nomeArtigo = 'imagem-' . $nomeArtigo;
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
-            $nomeImagem = 'imagem-' . $nomeArtigo . '.webp';
+
+            if (strlen($nomeArtigo) > 55) {
+                $nomeArtigo = substr($nomeArtigo, 0, 55);
+            }
+
+            $nomeImagem = $nomeArtigo . '.webp';
 
             $table->imagem = 'images/' . $nomeImagem;
         });
