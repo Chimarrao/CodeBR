@@ -20,7 +20,7 @@ class RedirecionarNonWww
         if (strpos($host, 'www.') === 0) {
             $novoHost = substr($host, 4);
 
-            return redirect()->to($request->scheme() . '://' . $novoHost . $request->getRequestUri(), 301);
+            return redirect()->to($request->getScheme() . '://' . $novoHost . $request->getRequestUri(), 301);
         }
 
         return $next($request);
