@@ -60,6 +60,7 @@ class ArtigoController extends AdminController
 
         $form->text('descricao', 'Descrição');
 
+        $form->html('<button type="button" class="btn btn-primary" onclick="padronizarTextoTMEditor()">Padronizar</button> ' . $this->getScriptPadronizacao());
         $form->tmeditor('texto', 'Texto');
 
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
@@ -67,10 +68,13 @@ class ArtigoController extends AdminController
             $nomeArtigo = 'imagem-' . strval($nomeArtigo);
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
+
+            if (strlen($nomeArtigo) > 55) {
+                $nomeArtigo = substr($nomeArtigo, 0, 55);
+            }
+
             $nomeImagem = $nomeArtigo . '.webp';
-
             $caminhoOriginal = $file->getPath() . '/' . $file->getFilename();
-
             $imagem = Image::make($caminhoOriginal);
 
             $imagem->resize(700, null, function ($constraint) {
@@ -78,7 +82,6 @@ class ArtigoController extends AdminController
             });
 
             $imagem->encode('webp', 80)->save(public_path('images/' . $nomeImagem));
-
             return $nomeImagem;
         });
 
@@ -97,7 +100,7 @@ class ArtigoController extends AdminController
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
         $form->switch('excluido', 'Excluído')->default(0);
-
+        
         return $form;
     }
 
@@ -147,5 +150,9 @@ class ArtigoController extends AdminController
         return $content
             ->header('Criar Artigo')
             ->body($this->form());
+    }
+
+    private function getScriptPadronizacao() {
+        return file_get_contents(__DIR__ . '/../includes/script-padronizacao.blade.php');
     }
 }
