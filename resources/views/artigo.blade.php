@@ -46,7 +46,7 @@
     <!-- Google analytics -->
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
 </head>
 
 <body>
@@ -146,7 +146,7 @@
                                     <div class="g-recaptcha" data-sitekey="6LeJkxwpAAAAAG3I6h3cfBxaVFqMC4NHpCVc0sw8"></div>
                                 </div>
                                 <div class="control">
-                                    <button type="submit" class="button is-primary">Enviar Comentário</button>
+                                    <button class="button is-primary" type="submit">Enviar Comentário</button>
                                 </div>
                             </form>
                         </div>
@@ -178,8 +178,8 @@
 </body>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<script type="module" src="{{ asset('js/style.js') }}"></script>
-<script src="{{ asset('js/prism.js') }}"></script>
-<script type="module" src="{{ asset('js/comentarios.js') }}"></script>
+<script src="{{ asset('js/script.js') }}"></script>
+<script src="{{ asset('js/comentarios.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 
 </html>
