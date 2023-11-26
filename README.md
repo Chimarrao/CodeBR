@@ -1,6 +1,6 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.3-blue)](https://www.php.net) [![Laravel Version](https://img.shields.io/badge/Laravel-v10-red)](https://laravel.com) [![BulmaCSS Version](https://img.shields.io/badge/BulmaCSS-v0.93-00d1b2)](https://bulma.io) ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![PHP](https://img.shields.io/badge/-PHP-777BB4?style=flat-square&logo=php&logoColor=white) ![Laravel](https://img.shields.io/badge/-Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![Bulma CSS](https://img.shields.io/badge/-Bulma-00D1B2?style=flat-square&logo=bulma&logoColor=white) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) ![Licença](https://img.shields.io/badge/Licença-MIT-green?style=flat-square)
 
 # CodeBR Website
 
@@ -11,8 +11,32 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 - Laravel
 - BulmaCSS
 - PHP
+- Typescript
 - Bootstrap (removida)
 - CleanBlog Template (removida)
+
+## Como executar o Projeto
+
+Instale as dependências do front e compile os códigos em typescript:
+
+```bash
+npm install
+tsc
+```
+
+Atualização do Arquivo .env:
+
+Copie o arquivo .env.example e renomeie para .env.
+Abra o arquivo .env e ajuste as configurações conforme necessário, como conexão com o banco de dados.
+
+No backend, instale as dependências via composer, gere a chave do app, realize as migrations e coloque o servidor para executar:
+
+```bash
+composer install
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
 
 ## Histórico de Versões
 
