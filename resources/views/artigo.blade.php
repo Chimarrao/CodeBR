@@ -46,7 +46,7 @@
     <!-- Google analytics -->
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/bundle.js') }}"></script>
 </head>
 
 <body>
@@ -178,10 +178,7 @@
 
     @include('components.rodape')
 </body>
-<script>var exports = {};</script>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<script src="{{ asset('js/comentarios.js') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
 
 </html>

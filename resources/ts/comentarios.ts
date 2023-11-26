@@ -1,3 +1,6 @@
+/**
+ * Estrutura de um comentário retornado
+ */
 interface ComentarioRetornado {
     erro: string | boolean;
     nome: string;
@@ -5,7 +8,7 @@ interface ComentarioRetornado {
 }
 
 /**
- * Representa a estrutura de um comentário.
+ * Estrutura de um comentário enviado
  */
 interface Comentario {
     nome: string;

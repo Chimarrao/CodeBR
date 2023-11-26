@@ -1,9 +1,7 @@
 /.phpunit.cache
 /node_modules
 /public/build
-/public/js/comentarios.js
-/public/js/script.js
-/public/js/types.js
+/public/js/*bundle*
 /public/hot
 /public/storage
 /public/images/novas

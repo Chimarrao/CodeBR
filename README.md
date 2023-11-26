@@ -21,7 +21,7 @@ Instale as dependências do front e compile os códigos em typescript:
 
 ```bash
 npm install
-tsc
+npm run build
 ```
 
 Atualização do Arquivo .env:

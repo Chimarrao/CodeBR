@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-        "outDir": "./public/js",
-        "target": "es6",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
-        "removeComments": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "skipLibCheck": true
-    }
-}
+      "target": "es5",
+      "module": "commonjs",
+      "strict": true
+    },
+    "include": [
+      "resources/ts/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }
+  
