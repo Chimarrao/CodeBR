@@ -20,6 +20,7 @@ class CreateComentariosTable extends Migration
             $table->string('email');
             $table->text('comentario');
             $table->dateTime('data');
+            $table->integer('id_comentario_resposta');
             $table->boolean('excluido')->default(false);
 
             $table->timestamps();

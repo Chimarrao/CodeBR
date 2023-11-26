@@ -18,6 +18,7 @@ interface Comentario {
     email: string;
     comentario: string;
     url: string;
+    id_comentario_resposta: number;
 }
 
 /**
@@ -51,15 +52,15 @@ class ComentarioHandler {
         this.inputNome = document.querySelector<HTMLInputElement>('input[name="nome"]');
         this.inputEmail = document.querySelector<HTMLInputElement>('input[name="email"]');
         this.inputComentario = document.querySelector<HTMLTextAreaElement>('textarea[name="comentario"]');
-        this.inicializarEventos();
+        this.iniciaForm();
     }
 
     /**
-     * Inicializa os eventos, vinculando o envio do formulário ao método enviarFormulario.
+     * Vincula o envio do formulário ao método enviarFormulario.
      * 
      * @return {void}
      */
-    private inicializarEventos() {
+    private iniciaForm() {
         const formulario = document.getElementById('comentarioForm') as HTMLFormElement | null;
 
         if (formulario) {
@@ -88,6 +89,7 @@ class ComentarioHandler {
                 email: this.inputEmail.value,
                 comentario: this.inputComentario.value,
                 url: url ? url : '',
+                id_comentario_resposta: 0
             };
 
             try {

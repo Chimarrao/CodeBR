@@ -3,12 +3,9 @@
         <div class="media-content">
             <div class="content">
                 <strong>
-                    <p>Nome do Autor Resposta 1</p>
+                    <p>{{ $resposta->nome }}</p>
                 </strong>
-                <p>
-                    Resposta 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                    posuere erat a ante.
-                </p>
+                <p>{{ $resposta->comentario }}</p>
             </div>
         </div>
     </article>

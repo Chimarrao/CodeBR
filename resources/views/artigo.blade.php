@@ -96,9 +96,9 @@
                     </div>
 
                     <div class="bloco-comentarios">
-                        @include('components.comments.comentario')
-                        @include('components.comments.comentario')
-                        @include('components.comments.comentario')
+                        @foreach ($comentarios as $comentario)
+                            @include('components.comments.comentario')
+                        @endforeach
                     </div>
                 </div>
             </div>

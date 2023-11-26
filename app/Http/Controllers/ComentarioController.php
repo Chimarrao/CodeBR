@@ -26,6 +26,7 @@ class ComentarioController extends Controller
             'email' => 'sometimes',
             'comentario' => 'required|string',
             'url' => 'required|string',
+            'id_comentario_resposta' => 'required|integer',
         ]);
 
         $artigo = Artigo::where('url', $request->input('url'))->first();
@@ -43,6 +44,7 @@ class ComentarioController extends Controller
         $comentario->nome = (string) $request->input('nome');
         $comentario->email = (string) $request->input('email');
         $comentario->comentario = (string) $request->input('comentario');
+        $comentario->id_comentario_resposta = (string) $request->input('id_comentario_resposta');
         $comentario->data = now();
         $comentario->save();
 
