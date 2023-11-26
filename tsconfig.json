@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outDir": "./public/js",
         "target": "es6",
-        "module": "ES2015",
+        "module": "CommonJS",
         "moduleResolution": "Node",
         "removeComments": true,
         "allowSyntheticDefaultImports": true,

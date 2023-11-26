@@ -1,3 +1,9 @@
+interface ComentarioRetornado {
+    erro: string | boolean;
+    nome: string;
+    comentario: string;
+}
+
 /**
  * Representa a estrutura de um comentário.
  */
@@ -5,6 +11,7 @@ interface Comentario {
     nome: string;
     email: string;
     comentario: string;
+    url: string;
 }
 
 /**
@@ -53,6 +60,7 @@ class ComentarioHandler {
             formulario.addEventListener('submit', (event) => {
                 event.preventDefault();
                 this.enviarFormulario();
+                formulario.reset();
 
                 return false;
             });
@@ -66,10 +74,13 @@ class ComentarioHandler {
      */
     private async enviarFormulario() {
         if (this.inputNome && this.inputEmail && this.inputComentario) {
+            const url = this.obterSlugDoArtigo();
+
             const comentario: Comentario = {
                 nome: this.inputNome.value,
                 email: this.inputEmail.value,
                 comentario: this.inputComentario.value,
+                url: url ? url : '',
             };
 
             try {
@@ -95,23 +106,47 @@ class ComentarioHandler {
      * @param {Comentario} novoComentario - O novo comentário a ser adicionado à interface.
      * @return {void}
      */
-    private atualizarInterface(novoComentario: Comentario) {
-        const caixaComentarios = document.querySelector('.box');
+    private atualizarInterface(novoComentario: ComentarioRetornado) {
+        if (novoComentario.erro) {
+            return;
+        }
+
+        const caixaComentarios = document.querySelector('.bloco-comentarios');
 
         if (caixaComentarios) {
             const templateComentario = `
-                <article class="media">
-                    <div class="media-content">
-                        <div class="content">
-                            <strong>
-                                <p>${novoComentario.nome}</p>
-                            </strong>
-                            <p>${novoComentario.comentario}</p>
+                <div class="box">
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="content">
+                                <strong>
+                                    <p>${novoComentario.nome}</p>
+                                </strong>
+                                <p>${novoComentario.comentario}</p>
+                            </div>
                         </div>
-                    </div>
-                </article>`;
+                    </article>
+                </div>`;
 
             caixaComentarios.insertAdjacentHTML('afterbegin', templateComentario);
+        }
+    }
+
+    /**
+     * Obtém o slug do artigo a partir da URL.
+     * 
+     * @returns {string | null} O slug do artigo ou null se não encontrado.
+     */
+    private obterSlugDoArtigo(): string | null {
+        const url = window.location.href;
+
+        const regex = /\/artigo\/([a-zA-Z0-9-]+)/;
+        const correspondencia = url.match(regex);
+
+        if (correspondencia && correspondencia.length > 1) {
+            return correspondencia[1];
+        } else {
+            return null;
         }
     }
 }

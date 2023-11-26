@@ -152,20 +152,22 @@
                         </div>
                     </div>
 
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-content">
-                                <div class="content">
-                                    <strong>
-                                        <p>Nome do Autor 1</p>
-                                    </strong>
-                                    <p>
-                                        Comentário 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                                        posuere erat a ante.
-                                    </p>
+                    <div class="bloco-comentarios">
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <strong>
+                                            <p>Nome do Autor 1</p>
+                                        </strong>
+                                        <p>
+                                            Comentário 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                                            posuere erat a ante.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,9 +178,9 @@
 
     @include('components.rodape')
 </body>
+<script>var exports = {};</script>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<script src="{{ asset('js/script.js') }}"></script>
 <script src="{{ asset('js/comentarios.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 
