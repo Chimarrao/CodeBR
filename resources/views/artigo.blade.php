@@ -73,101 +73,32 @@
         <div class="section artigo">
             <div class="columns is-centered">
                 <div class="column is-one">
-                    <script type="text/javascript">
-                        atOptions = {
-                            'key': '19b4f71efec5db23c79bcb62b7c1c696',
-                            'format': 'iframe',
-                            'height': 600,
-                            'width': 160,
-                            'params': {}
-                        };
-                        document.write('<scr' + 'ipt type="text/javascript" src="//tubfurryhen.com/19b4f71efec5db23c79bcb62b7c1c696/invoke.js"></scr' + 'ipt>');
-                    </script>
+                    @include('components.adverts.lateral')
                 </div>
                 <div class="column is-two-thirds">
                     {!! $artigo->texto !!}
                 </div>
                 <div class="column is-one">
-                    <script type="text/javascript">
-                        atOptions = {
-                            'key': '19b4f71efec5db23c79bcb62b7c1c696',
-                            'format': 'iframe',
-                            'height': 600,
-                            'width': 160,
-                            'params': {}
-                        };
-                        document.write('<scr' + 'ipt type="text/javascript" src="//tubfurryhen.com/19b4f71efec5db23c79bcb62b7c1c696/invoke.js"></scr' + 'ipt>');
-                    </script>
+                    @include('components.adverts.lateral')
                 </div>
             </div>
         </div>
-
-        {{-- <div class="section">
-            <div class="columns">
-                <div class="column">
-                    <h2 class="title is-3">Artigos em Destaque</h2>
-                    <div class="columns is-multiline">
-                        @foreach ($artigosSugeridos as $artigo)
-                            @include('components.bloco-pequeno-artigo')
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </div>
 
-    <div class="section comentarios">
+    <div class="section comentarios pt-0">
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-two-thirds">
                     <h2 class="title is-3">Comentários</h2>
+
                     <div class="message">
-                        <div class="message-body">
-                            <form id="comentarioForm" method="POST">
-                                <div class="field">
-                                    <p class="label">Nome:</p>
-                                    <div class="control">
-                                        <input class="input" name="nome" type="text" required>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <p class="label">Email (não será publicado):</p>
-                                    <div class="control">
-                                        <input class="input" name="email" type="email">
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <p class="label">Comentário:</p>
-                                    <div class="control">
-                                        <textarea class="textarea" name="comentario" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <div class="g-recaptcha" data-sitekey="6LeJkxwpAAAAAG3I6h3cfBxaVFqMC4NHpCVc0sw8"></div>
-                                </div>
-                                <div class="control">
-                                    <button class="button is-primary" type="submit">Enviar Comentário</button>
-                                </div>
-                            </form>
-                        </div>
+                        @include('components.comments.form-comentario')
                     </div>
 
                     <div class="bloco-comentarios">
-                        <div class="box">
-                            <article class="media">
-                                <div class="media-content">
-                                    <div class="content">
-                                        <strong>
-                                            <p>Nome do Autor 1</p>
-                                        </strong>
-                                        <p>
-                                            Comentário 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-                                            posuere erat a ante.
-                                        </p>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
+                        @include('components.comments.comentario')
+                        @include('components.comments.comentario')
+                        @include('components.comments.comentario')
                     </div>
                 </div>
             </div>
@@ -175,10 +106,10 @@
     </div>
 
     <script type='text/javascript' src='//tubfurryhen.com/b9/15/02/b915027095387ef94f23fad1d39276c3.js'></script>
-
     @include('components.rodape')
 </body>
 
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="https://www.google.com/recaptcha/api.js"></script>
 
 </html>

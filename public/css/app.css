@@ -567,6 +567,15 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
     background-color: #f5f5f500
 }
 
+.message-body {
+    border: none;
+    padding: 0%;
+}
+
+.resposta-container {
+    margin-left: 2em;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #212529;
@@ -624,9 +633,5 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
 
     .message, .message-body, .section.comentarios {
         background-color: #212529;
-    }
-
-    .message-body {
-        border-color: #212529;
     }
 }
