@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 /**
  * Estrutura de um comentário retornado
@@ -90,17 +91,10 @@ class ComentarioHandler {
             };
 
             try {
-                const response = await fetch('/api/comentarios', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(comentario),
-                });
-
+                this.mostrarSweetAlertComAnimacao(this.isDark());
+                const response = await axios.post('/api/comentarios', comentario);
                 this.fecharSweetAlert();
-
-                const novoComentario = await response.json();
+                const novoComentario = response.data;
 
                 if (novoComentario.erro) {
                     this.mostrarSweetAlert('Erro ao enviar comentário!', false, this.isDark());
