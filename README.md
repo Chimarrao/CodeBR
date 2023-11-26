@@ -8,10 +8,10 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 
 ## Tecnologias Utilizadas
 
-- Laravel
-- BulmaCSS
-- PHP
-- Typescript
+- Laravel 10
+- BulmaCSS 0.9
+- PHP 8.3
+- Typescript 5.3
 - Bootstrap (removida)
 - CleanBlog Template (removida)
 
