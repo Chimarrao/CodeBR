@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 /**
  * Estrutura de um comentário retornado
  */
@@ -77,6 +79,7 @@ class ComentarioHandler {
      */
     private async enviarFormulario() {
         if (this.inputNome && this.inputEmail && this.inputComentario) {
+            this.mostrarSweetAlertComAnimacao(this.isDark());
             const url = this.obterSlugDoArtigo();
 
             const comentario: Comentario = {
@@ -95,7 +98,16 @@ class ComentarioHandler {
                     body: JSON.stringify(comentario),
                 });
 
+                this.fecharSweetAlert();
+
                 const novoComentario = await response.json();
+
+                if (novoComentario.erro) {
+                    this.mostrarSweetAlert('Erro ao enviar comentário!', false, this.isDark());
+                    return;
+                }
+
+                this.mostrarSweetAlert('Comentário enviado com sucesso!', true, this.isDark());
                 this.atualizarInterface(novoComentario);
             } catch (erro) {
                 console.error('Erro ao enviar comentário:', erro);
@@ -110,10 +122,6 @@ class ComentarioHandler {
      * @return {void}
      */
     private atualizarInterface(novoComentario: ComentarioRetornado) {
-        if (novoComentario.erro) {
-            return;
-        }
-
         const caixaComentarios = document.querySelector('.bloco-comentarios');
 
         if (caixaComentarios) {
@@ -152,6 +160,67 @@ class ComentarioHandler {
             return null;
         }
     }
+
+    /**
+     * Exibe um SweetAlert com ícone sinalizando aguardo
+     *
+     * @param {boolean} temaDark - Indica se o tema deve ser escuro (dark).
+     * @return {void}
+     */
+    private mostrarSweetAlertComAnimacao(temaDark: boolean): void {
+        Swal.fire({
+            title: "Aguarde...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            ...(temaDark && { backdrop: '#212529', customClass: { container: 'dark-mode' } }),
+        });
+    };
+
+    /**
+     * Remove o SweetAlert da tela
+     *
+     * @return {void}
+     */
+    private fecharSweetAlert(): void {
+        Swal.close();
+    };
+
+    /**
+     * Exibe um SweetAlert com um ícone indicando sucesso ou erro, com base nos parâmetros fornecidos.
+     *
+     * @param {string} mensagem - A mensagem a ser exibida no SweetAlert.
+     * @param {boolean} sucesso - Indica se o SweetAlert deve exibir um ícone de sucesso ou erro.
+     * @param {boolean} temaDark - Indica se o tema deve ser escuro (dark).
+     * @return {void}
+     */
+    private mostrarSweetAlert(mensagem: string, sucesso: boolean, temaDark: boolean): void {
+        Swal.fire({
+            icon: sucesso ? 'success' : 'error',
+            title: sucesso ? 'Sucesso' : 'Erro',
+            text: mensagem,
+            backdrop: temaDark ? '#212529' : '#fff',
+            customClass: {
+                container: temaDark ? 'dark-mode' : '',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+        });
+    };
+
+    /**
+     * Verifica se o tema atual é escuro (dark).
+     *
+     * @returns {boolean} Retorna true se o tema for escuro; false, caso contrário.
+     */
+    private isDark(): boolean {
+        return Boolean(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
 }
 
-new ComentarioHandler();
+document.addEventListener('DOMContentLoaded', () => {
+    new ComentarioHandler();
+});
