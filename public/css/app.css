@@ -617,4 +617,16 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
     .pagination-next:hover {
         background-color: white;
     }
+
+    .box {
+        background-color: #212529;
+    }
+
+    .message, .message-body, .section.comentarios {
+        background-color: hsl(0, 0%, 21%);
+    }
+
+    .message-body {
+        border-color: hsl(0, 0%, 21%);
+    }
 }
