@@ -123,7 +123,7 @@
                     <h2 class="title is-3">Comentários</h2>
                     <div class="message">
                         <div class="message-body">
-                            <form id="commentForm" method="POST">
+                            <form id="comentarioForm" method="POST">
                                 <div class="field">
                                     <p class="label">Nome:</p>
                                     <div class="control">
@@ -146,7 +146,7 @@
                                     <div class="g-recaptcha" data-sitekey="6LeJkxwpAAAAAG3I6h3cfBxaVFqMC4NHpCVc0sw8"></div>
                                 </div>
                                 <div class="control">
-                                    <button class="button is-primary" type="button" @click="submitForm">Enviar Comentário</button>
+                                    <button type="submit" class="button is-primary">Enviar Comentário</button>
                                 </div>
                             </form>
                         </div>
@@ -178,6 +178,8 @@
 </body>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<script type="module" src="{{ asset('js/style.js') }}"></script>
 <script src="{{ asset('js/prism.js') }}"></script>
+<script type="module" src="{{ asset('js/comentarios.js') }}"></script>
 
 </html>
