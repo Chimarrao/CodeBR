@@ -103,7 +103,6 @@ class ComentarioHandler {
                     return;
                 }
 
-                this.mostrarSweetAlert('Comentário enviado com sucesso!', true, this.isDark());
                 this.atualizarInterface(novoComentario);
             } catch (erro) {
                 console.error('Erro ao enviar comentário:', erro);
