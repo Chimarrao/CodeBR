@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="field">
-            <div class="g-recaptcha" data-sitekey="6LeJkxwpAAAAAG3I6h3cfBxaVFqMC4NHpCVc0sw8"></div>
+            <div class="g-recaptcha" data-sitekey="6LdlmB4pAAAAAF8uCw8BeWogDClVSiCRx5eNx-7e"></div>
         </div>
         <div class="control">
             <button class="button is-primary" type="submit">Enviar Comentário</button>
