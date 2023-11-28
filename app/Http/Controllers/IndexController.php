@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
+    /**
+     * Exibe a página inicial com uma lista de artigos.
+     *
+     * @param  int  $numeroPagina  O número da página a ser exibida.
+     * @return \Illuminate\View\View
+     */
     public function index(int $numeroPagina = 1)
     {
         $artigosPorPagina = 9;
@@ -26,7 +32,7 @@ class IndexController extends Controller
             $query->where('artigo', 'like', $searchTerm);
             $count->where('artigo', 'like', $searchTerm);
         }
-        
+
         $artigos = $query->limit($artigosPorPagina)->get()->toArray();
         $count = $count->count();
 
@@ -59,6 +65,12 @@ class IndexController extends Controller
         ]);
     }
 
+    /**
+     * Obtém a primeira imagem de um bloco de texto usando expressões regulares.
+     *
+     * @param  string  $html  O bloco de texto HTML.
+     * @return string|null  O caminho da imagem ou null se não for encontrado.
+     */
     private function obterPrimeiraImagemComRegex($html)
     {
         $padrao = '/<img [^>]*src=["\'](.*?\.webp)["\'][^>]*>/i';

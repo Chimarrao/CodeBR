@@ -9,6 +9,12 @@ use App\Models\Comentario;
 
 class ComentarioController extends Controller
 {
+    /**
+     * Processa a submissão de um comentário.
+     *
+     * @param  Request  $request  A instância da requisição.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function post(Request $request)
     {
         if (!app()->environment('local')) {

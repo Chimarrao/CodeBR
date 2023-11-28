@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class ArtigoController extends Controller
 {
+    /**
+     * Exibe um artigo com base no slug.
+     *
+     * @param  string  $slug  O slug do artigo.
+     * @return \Illuminate\View\View
+     */
     public function artigo(string $slug)
     {
         $artigo = Artigo::where('url', $slug)->first();
@@ -30,6 +36,12 @@ class ArtigoController extends Controller
         );
     }
 
+    /**
+     * Obtém os comentários para um artigo.
+     *
+     * @param  int  $id_artigo  O ID do artigo.
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     private function getComentarios(int $id_artigo)
     {
         $comentarios = Comentario::where('id_artigo', $id_artigo)
@@ -54,6 +66,12 @@ class ArtigoController extends Controller
         return $comentarios;
     }
 
+    /**
+     * Atualiza o caminho das imagens no texto para usar a função 'asset'.
+     *
+     * @param  string  $texto  O texto contendo imagens.
+     * @return string
+     */
     private function attCaminhoImagem($texto)
     {
         $padrao = '/<img\s+[^>]*src=["\'](https:\/\/codebr\.net\/images\/[^"\']+)["\'][^>]*>/i';
@@ -68,6 +86,12 @@ class ArtigoController extends Controller
         return $novoTexto;
     }
 
+    /**
+     * Atualiza o caminho das imagens no texto para usar a função 'asset' - Versão 2.
+     *
+     * @param  string  $texto  O texto contendo imagens.
+     * @return string
+     */
     private function attCaminhoImagem2($texto)
     {
         $caminhoLaravel = asset('/');
