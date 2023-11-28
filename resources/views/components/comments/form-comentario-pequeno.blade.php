@@ -1,4 +1,4 @@
-<form id="comentarioForm" method="POST" style="display: none">
+<form id="resposta_form_{{ $comentario->id }}" method="POST" style="display: none">
     <div class="field is-horizontal">
         <div class="field-body">
             <div class="field">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="field">
-        <div class="g-recaptcha" data-sitekey="6LeJkxwpAAAAAG3I6h3cfBxaVFqMC4NHpCVc0sw8"></div>
+        <div class="g-recaptcha" data-sitekey="6LdlmB4pAAAAAF8uCw8BeWogDClVSiCRx5eNx-7e"></div>
     </div>
 
     <div class="control">

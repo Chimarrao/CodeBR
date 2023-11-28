@@ -13,7 +13,7 @@ class ComentarioController extends Controller
     {
         if (!app()->environment('local')) {
             $validator = Validator::make($request->all(), [
-                'g-recaptcha-response' => 'required|recaptcha',
+                'g_recaptcha_response' => 'required|string',
             ]);
 
             if ($validator->fails()) {
@@ -26,7 +26,7 @@ class ComentarioController extends Controller
             'email' => 'sometimes',
             'comentario' => 'required|string',
             'url' => 'required|string',
-            'id_comentario_resposta' => 'required|integer',
+            'id_comentario_resposta' => 'sometimes',
         ]);
 
         $artigo = Artigo::where('url', $request->input('url'))->first();
@@ -44,15 +44,17 @@ class ComentarioController extends Controller
         $comentario->nome = (string) $request->input('nome');
         $comentario->email = (string) $request->input('email');
         $comentario->comentario = (string) $request->input('comentario');
-        $comentario->id_comentario_resposta = (string) $request->input('id_comentario_resposta');
+        $comentario->id_comentario_resposta = (int) $request->input('id_comentario_resposta');
         $comentario->data = now();
         $comentario->save();
 
         return response()->json(
             [
                 'erro' => false,
+                'id' => $comentario->id,
                 'nome' => $request->input('nome'),
-                'comentario' => $request->input('comentario')
+                'comentario' => $request->input('comentario'),
+                'id_comentario_resposta' => $request->input('id_comentario_resposta')
             ],
             200
         );

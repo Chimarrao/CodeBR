@@ -5,9 +5,11 @@ import axios from 'axios';
  * Estrutura de um comentário retornado
  */
 interface ComentarioRetornado {
+    id: number;
     erro: string | boolean;
     nome: string;
     comentario: string;
+    id_comentario_resposta: number;
 }
 
 /**
@@ -19,6 +21,7 @@ interface Comentario {
     comentario: string;
     url: string;
     id_comentario_resposta: number;
+    g_recaptcha_response: string;
 }
 
 /**
@@ -53,6 +56,7 @@ class ComentarioHandler {
         this.inputEmail = document.querySelector<HTMLInputElement>('input[name="email"]');
         this.inputComentario = document.querySelector<HTMLTextAreaElement>('textarea[name="comentario"]');
         this.iniciaForm();
+        this.inciarFormsResposta();
     }
 
     /**
@@ -66,8 +70,13 @@ class ComentarioHandler {
         if (formulario) {
             formulario.addEventListener('submit', (event) => {
                 event.preventDefault();
-                this.enviarFormulario();
-                formulario.reset();
+                const nome = this.inputNome?.value as string;
+                const email = this.inputEmail?.value as string;
+                const comentario = this.inputComentario?.value as string;
+                const recaptchaElement = document.querySelector('textarea[name="g-recaptcha-response"]');
+                const recaptcha = recaptchaElement instanceof HTMLTextAreaElement ? recaptchaElement.value : '';
+
+                this.enviarFormulario(formulario, nome, email, comentario, recaptcha);
 
                 return false;
             });
@@ -75,38 +84,82 @@ class ComentarioHandler {
     }
 
     /**
-     * Envia o formulário para o backend e atualiza a interface com o novo comentário.
+     * Inicia os formulários de resposta para os comentários.
+     * Adiciona listeners de eventos aos botões de resposta e formulários correspondentes.
      * 
      * @return {void}
      */
-    private async enviarFormulario() {
-        if (this.inputNome && this.inputEmail && this.inputComentario) {
-            this.mostrarSweetAlertComAnimacao(this.isDark());
-            const url = this.obterSlugDoArtigo();
+    private inciarFormsResposta() {
+        const botoesResposta: NodeListOf<HTMLElement> = document.querySelectorAll('.button.is-link.is-small.responder');
 
-            const comentario: Comentario = {
-                nome: this.inputNome.value,
-                email: this.inputEmail.value,
-                comentario: this.inputComentario.value,
-                url: url ? url : '',
-                id_comentario_resposta: 0
-            };
+        botoesResposta.forEach((botao: HTMLElement) => {
+            botao.addEventListener('click', (event) => {
+                this.toggleForm(`resposta_form_${id_comentario}`);
+            });
 
-            try {
-                this.mostrarSweetAlertComAnimacao(this.isDark());
-                const response = await axios.post('/api/comentarios', comentario);
-                this.fecharSweetAlert();
-                const novoComentario = response.data;
+            const id_comentario = botao.getAttribute('id_comentario') as number | null;
+            const formulario = document.getElementById(`resposta_form_${id_comentario}`) as HTMLFormElement | null;
 
-                if (novoComentario.erro) {
-                    this.mostrarSweetAlert('Erro ao enviar comentário!', false, this.isDark());
-                    return;
-                }
+            if (formulario) {
+                const nome = formulario.querySelector('input[name="nome"]') as HTMLFormElement | null;
+                const email = formulario.querySelector('input[name="email"]') as HTMLFormElement | null;
+                const comentario = formulario.querySelector('textarea[name="comentario"]') as HTMLFormElement | null;
 
-                this.atualizarInterface(novoComentario);
-            } catch (erro) {
-                console.error('Erro ao enviar comentário:', erro);
+                formulario.addEventListener('submit', (event) => {
+                    const recaptchaElement = formulario.querySelector('textarea[name="g-recaptcha-response"]');
+                    const recaptcha = recaptchaElement instanceof HTMLTextAreaElement ? recaptchaElement.value : '';
+
+                    event.preventDefault();
+                    this.enviarFormulario(formulario, nome?.value, email?.value, comentario?.value, recaptcha as string, id_comentario as number);
+
+                    return false;
+                });
             }
+        });
+    }
+
+    /**
+     * Envia o formulário para o backend e atualiza a interface com o novo comentário.
+     * 
+     * @param {HTMLFormElement} formulario Formulário
+     * @param {string} nome Nome de quem está enviando
+     * @param {string} email E-mail
+     * @param {string} comentario Comentário
+     * @param {string} g_recaptcha_response Valor do recaptcha
+     * @param {number} id_comentario_resposta Id do comentário respondido (0 para novo comentário)
+     * @return {void}
+     */
+    private async enviarFormulario(formulario: HTMLFormElement, nome: string, email: string, comentario: string, g_recaptcha_response: string, id_comentario_resposta: number = 0) {
+        this.mostrarSweetAlertComAnimacao(this.isDark());
+        const url = this.obterSlugDoArtigo();
+
+        const comentarioEnviar: Comentario = {
+            nome: nome,
+            email: email,
+            comentario: comentario,
+            url: url ? url : '',
+            id_comentario_resposta: id_comentario_resposta,
+            g_recaptcha_response: g_recaptcha_response
+        };
+
+        try {
+            this.mostrarSweetAlertComAnimacao(this.isDark());
+            const response = await axios.post('/api/comentarios', comentarioEnviar);
+            this.fecharSweetAlert();
+            const novoComentario = response.data;
+
+            if (novoComentario.erro) {
+                this.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, this.isDark());
+                this.fecharSweetAlert();
+                return;
+            }
+
+            this.atualizarInterface(novoComentario);
+            formulario.reset();
+            formulario.style.display = 'none';
+        } catch (erro) {
+            console.error('Erro :', erro);
+            this.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, this.isDark());
         }
     }
 
@@ -117,24 +170,83 @@ class ComentarioHandler {
      * @return {void}
      */
     private atualizarInterface(novoComentario: ComentarioRetornado) {
-        const caixaComentarios = document.querySelector('.bloco-comentarios');
+        if (!novoComentario.id_comentario_resposta) {
+            const caixaComentarios = document.querySelector('.bloco-comentarios');
 
-        if (caixaComentarios) {
-            const templateComentario = `
-                <div class="box">
-                    <article class="media">
-                        <div class="media-content">
-                            <div class="content">
-                                <strong>
-                                    <p>${novoComentario.nome}</p>
-                                </strong>
-                                <p>${novoComentario.comentario}</p>
+            if (caixaComentarios) {
+                caixaComentarios.insertAdjacentHTML('afterbegin',
+                    `<div class="box">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <strong>
+                                        <p>${novoComentario.nome}</p>
+                                    </strong>
+                                    <p>${novoComentario.comentario}</p>
+                                </div>
+                                <button class="button is-link is-small responder" id_comentario="${novoComentario.id}">Responder</button>
+                                <form id="resposta_form_${novoComentario.id}" method="POST" style="display: none">
+                                    <div class="field is-horizontal">
+                                        <div class="field-body">
+                                            <div class="field">
+                                                <p class="label">Nome:</p>
+                                                <div class="control">
+                                                    <input class="input" name="nome" type="text" required>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <p class="label">Email (não será publicado):</p>
+                                                <div class="control">
+                                                    <input class="input" name="email" type="email">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <p class="label">Comentário:</p>
+                                        <div class="control">
+                                            <textarea class="textarea" name="comentario" required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="g-recaptcha" data-sitekey="6LdlmB4pAAAAAF8uCw8BeWogDClVSiCRx5eNx-7e"></div>
+                                    </div>
+
+                                    <div class="control">
+                                        <button class="button is-primary" type="submit">Enviar Comentário</button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                    </article>
-                </div>`;
+                        </article>
 
-            caixaComentarios.insertAdjacentHTML('afterbegin', templateComentario);
+                        <div id="respostas_${novoComentario.id}">
+                        </div>
+                    </div>`
+                );
+
+                this.inciarFormsResposta();
+            }
+        } else {
+            const caixaResposatas = document.getElementById(`respostas_${novoComentario.id_comentario_resposta}`);
+
+            if (caixaResposatas) {
+                caixaResposatas.insertAdjacentHTML('beforeend',
+                    `<div class="resposta-container mt-3">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <strong>
+                                        <p>${novoComentario.nome}</p>
+                                    </strong>
+                                    <p>${novoComentario.comentario}</p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>`
+                );
+            }
         }
     }
 
@@ -213,6 +325,20 @@ class ComentarioHandler {
      */
     private isDark(): boolean {
         return Boolean(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+
+    /**
+     * Alternar a visibilidade de um formulário entre display: none e display: block.
+     * 
+     * @param {string} formId - O ID do elemento do formulário.
+     * @returns {void}
+     */
+    private toggleForm(formId: string): void {
+        const form = document.getElementById(formId);
+
+        if (form) {
+            form.style.display = form.style.display === 'none' ? '' : 'none';
+        }
     }
 }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "458f392beab1c9289b303d56359a9c05",
+    "content-hash": "a72ef210eff710324927c74dedfc04d3",
     "packages": [
         {
             "name": "asm-laravel-admin-ext/tmeditor",
@@ -8749,7 +8749,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.3"
+        "php": "^8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

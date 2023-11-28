@@ -30,25 +30,25 @@ class ArtigoController extends Controller
         );
     }
 
-    private function getComentarios(int $id_artigo) {
+    private function getComentarios(int $id_artigo)
+    {
         $comentarios = Comentario::where('id_artigo', $id_artigo)
             ->where('id_comentario_resposta', 0)
+            ->orderBy('id', 'desc')
             ->get();
-            
+
         $respostas = Comentario::where('id_artigo', $id_artigo)
             ->where('id_comentario_resposta', '>', 0)
             ->get();
 
-        foreach ($comentarios as $chave => $comentario) {
-            $comentario->{"respostas"} = array();
+        $colecaoRespostas = collect($respostas)->groupBy('id_comentario_resposta');
 
-            foreach ($respostas as $resposta) {
-                if ($comentario->id_comentario == $resposta->id_comentario_resposta) {
-                    $comentario->respostas[] = $resposta;
-                }
+        foreach ($comentarios as $comentario) {
+            if ($colecaoRespostas->has($comentario->id)) {
+                $comentario->respostas = $colecaoRespostas->get($comentario->id)->all();
+            } else {
+                $comentario->respostas = [];
             }
-
-            $comentarios[$chave] = $comentario;
         }
 
         return $comentarios;
