@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/contato', 'App\Http\Controllers\ContatoController@post');
 Route::post('/comentarios', 'App\Http\Controllers\ComentarioController@post');

@@ -64,6 +64,48 @@
         </div>
     </section>
 
+    <section>
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-two-thirds">
+                    <div class="message-body mt-6">
+                        <form id="contatoForm" method="POST">
+                            <div class="field">
+                                <p class="label">Nome:</p>
+                                <div class="control">
+                                    <input class="input" name="nome" type="text" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="label">Email:</p>
+                                <div class="control">
+                                    <input class="input" name="email" type="email">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="label">Telefone:</p>
+                                <div class="control">
+                                    <input class="input" name="telefone" type="phone">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <p class="label">Mensagem:</p>
+                                <div class="control">
+                                    <textarea class="textarea" name="mensagem" required></textarea>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="g-recaptcha" data-sitekey="6LdlmB4pAAAAAF8uCw8BeWogDClVSiCRx5eNx-7e"></div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-primary" type="submit">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     @include('components.rodape')
 </body>

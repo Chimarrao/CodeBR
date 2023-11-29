@@ -1,5 +1,5 @@
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import * as util from './util/util';
 
 /**
  * Estrutura de um comentário retornado
@@ -130,7 +130,7 @@ class ComentarioHandler {
      * @return {void}
      */
     private async enviarFormulario(formulario: HTMLFormElement, nome: string, email: string, comentario: string, g_recaptcha_response: string, id_comentario_resposta: number = 0) {
-        this.mostrarSweetAlertComAnimacao(this.isDark());
+        util.mostrarSweetAlertComAnimacao(util.isDark());
         const url = this.obterSlugDoArtigo();
 
         const comentarioEnviar: Comentario = {
@@ -143,14 +143,14 @@ class ComentarioHandler {
         };
 
         try {
-            this.mostrarSweetAlertComAnimacao(this.isDark());
+            util.mostrarSweetAlertComAnimacao(util.isDark());
             const response = await axios.post('/api/comentarios', comentarioEnviar);
-            this.fecharSweetAlert();
+            util.fecharSweetAlert();
             const novoComentario = response.data;
 
             if (novoComentario.erro) {
-                this.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, this.isDark());
-                this.fecharSweetAlert();
+                util.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, util.isDark());
+                util.fecharSweetAlert();
                 return;
             }
 
@@ -159,7 +159,7 @@ class ComentarioHandler {
             formulario.style.display = 'none';
         } catch (erro) {
             console.error('Erro :', erro);
-            this.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, this.isDark());
+            util.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, util.isDark());
         }
     }
 
@@ -266,65 +266,6 @@ class ComentarioHandler {
         } else {
             return null;
         }
-    }
-
-    /**
-     * Exibe um SweetAlert com ícone sinalizando aguardo
-     *
-     * @param {boolean} temaDark - Indica se o tema deve ser escuro (dark).
-     * @return {void}
-     */
-    private mostrarSweetAlertComAnimacao(temaDark: boolean): void {
-        Swal.fire({
-            title: "Aguarde...",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            ...(temaDark && { backdrop: '#212529', customClass: { container: 'dark-mode' } }),
-        });
-    };
-
-    /**
-     * Remove o SweetAlert da tela
-     *
-     * @return {void}
-     */
-    private fecharSweetAlert(): void {
-        Swal.close();
-    };
-
-    /**
-     * Exibe um SweetAlert com um ícone indicando sucesso ou erro, com base nos parâmetros fornecidos.
-     *
-     * @param {string} mensagem - A mensagem a ser exibida no SweetAlert.
-     * @param {boolean} sucesso - Indica se o SweetAlert deve exibir um ícone de sucesso ou erro.
-     * @param {boolean} temaDark - Indica se o tema deve ser escuro (dark).
-     * @return {void}
-     */
-    private mostrarSweetAlert(mensagem: string, sucesso: boolean, temaDark: boolean): void {
-        Swal.fire({
-            icon: sucesso ? 'success' : 'error',
-            title: sucesso ? 'Sucesso' : 'Erro',
-            text: mensagem,
-            backdrop: temaDark ? '#212529' : '#fff',
-            customClass: {
-                container: temaDark ? 'dark-mode' : '',
-            },
-            showConfirmButton: false,
-            timer: 3000,
-        });
-    };
-
-    /**
-     * Verifica se o tema atual é escuro (dark).
-     *
-     * @returns {boolean} Retorna true se o tema for escuro; false, caso contrário.
-     */
-    private isDark(): boolean {
-        return Boolean(window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
 
     /**
