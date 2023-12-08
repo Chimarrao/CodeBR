@@ -1,6 +1,6 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-![PHP](https://img.shields.io/badge/-PHP-777BB4?style=flat-square&logo=php&logoColor=white) ![Laravel](https://img.shields.io/badge/-Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![Bulma CSS](https://img.shields.io/badge/-Bulma-00D1B2?style=flat-square&logo=bulma&logoColor=white) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) ![Licença](https://img.shields.io/badge/Licença-MIT-green?style=flat-square)
+![PHP](https://img.shields.io/badge/-PHP-777BB4?style=flat-square&logo=php&logoColor=white) ![PHPUnit](https://img.shields.io/badge/PHPUnit-1F425F.svg?style=flat-square&logo=php&logoColor=white&color=777BB4) ![Laravel](https://img.shields.io/badge/-Laravel-FF2D20?style=flat-square&logo=laravel&logoColor=white) ![Bulma CSS](https://img.shields.io/badge/-Bulma-00D1B2?style=flat-square&logo=bulma&logoColor=white) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) ![Licença](https://img.shields.io/badge/Licença-MIT-green?style=flat-square)
 
 # CodeBR Website
 
@@ -11,6 +11,7 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 - Laravel 10
 - BulmaCSS 0.9
 - PHP 8.3
+- PHPUnit 10.5
 - Typescript 5.3
 - Bootstrap (removida)
 - CleanBlog Template (removida)

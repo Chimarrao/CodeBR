@@ -1,13 +1,13 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <a class="navbar-burger" data-target="navbarBasicExample" role="button" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
         </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-menu" id="navbarBasicExample">
         <div class="navbar-start">
             <a class="navbar-item has-text-white" href="{{ url('/') }}">Início</a>
             <a class="navbar-item has-text-white" href="{{ url('/sobre') }}">Sobre</a>
@@ -19,7 +19,7 @@
             <form action="/" method="GET">
                 <div class="field is-grouped">
                     <p class="control">
-                        <input name="q" class="input" type="text" placeholder="Pesquisar...">
+                        <input class="input" name="q" type="text" placeholder="Pesquisar...">
                     </p>
                     <p class="control">
                         <button class="button is-dark">Pesquisar</button>

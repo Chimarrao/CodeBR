@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "strict": true
+        "target": "es5",
+        "module": "node16",
+        "strict": true,
+        "strictNullChecks": true,
     },
     "include": [
-      "resources/ts/**/*.ts"
+        "resources/ts/**/*.ts"
     ],
     "exclude": [
-      "node_modules"
+        "node_modules"
     ]
-  }
-  
+}

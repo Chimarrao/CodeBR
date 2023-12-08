@@ -1,8 +1,11 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const WebpackBar = require('webpackbar');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './resources/ts/main.ts',
     output: {
         filename: 'bundle.js',
@@ -16,9 +19,13 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
-            }
-        ]
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+        ],
     },
     optimization: {
         minimize: true,
@@ -28,9 +35,18 @@ module.exports = {
                     format: {
                         comments: false,
                     },
-                },
+                    compress: {
+                        drop_console: true,
+                    },
+                }
             }),
+            new CssMinimizerPlugin(),
         ],
     },
-    // devtool: 'source-map',
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: './../css/app.css',
+        }),
+        new WebpackBar()
+    ],
 };

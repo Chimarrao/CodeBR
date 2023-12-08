@@ -46,14 +46,14 @@
     <!-- Google analytics -->
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/bundle.js') }}"></script>
 </head>
 
 <body>
     @include('components.menu')
 
-    <section class="hero is-medium is-dark is-bold" style="background-image: url('{{ asset('images/background.webp') }}');">
+    <section class="hero is-medium is-dark is-bold">
         <div class="hero-body">
             <div class="container text-center">
                 <div class="columns is-centered">
@@ -70,8 +70,8 @@
         </div>
     </section>
 
-    <div class="container">
-        <div class="section artigo">
+    <section class="section artigo">
+        <div class="container">
             <div class="columns is-centered">
                 <div class="column is-one">
                     @include('components.adverts.lateral')
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <div class="section comentarios pt-0">
         <div class="container">

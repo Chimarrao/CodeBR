@@ -64,19 +64,17 @@
         </div>
     </section>
 
-    <div class="container">
-        @if (!request()->has('q'))
-            <div class="section">
+    <section class="section index">
+        <div class="container">
+            @if (!request()->has('q'))
                 <h2 class="title is-3">Artigos em Destaque</h2>
                 <div class="columns is-multiline">
                     @foreach ($artigosDestaque as $artigo)
                         @include('components.bloco-pequeno-artigo')
                     @endforeach
                 </div>
-            </div>
-        @endif
+            @endif
 
-        <div class="section">
             @if (request()->has('q'))
                 <h2 class="title is-3">Resultados da busca</h2>
             @else
@@ -87,9 +85,7 @@
                     @include('components.bloco-pequeno-artigo')
                 @endforeach
             </div>
-        </div>
 
-        <section class="section">
             <div class="container">
                 <?php
                 $totalPages = ceil($count / $artigosPorPagina);
@@ -116,9 +112,8 @@
                     @endif
                 </nav>
             </div>
-        </section>
-
-    </div>
+        </div>
+    </section>
 
     @include('components.rodape')
 </body>
