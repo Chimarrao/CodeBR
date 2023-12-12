@@ -1,4 +1,20 @@
-import Swal from 'sweetalert2';
+let Swal: typeof import('sweetalert2').default;
+
+/**
+ * Carrega o SweetAlert2
+ * 
+ * @return {void}
+ */
+async function carregarSweetAlert2() {
+    try {
+        const module = await import(/* webpackChunkName: "sweetalert2" */'sweetalert2');
+        Swal = module.default;
+    } catch (error) {
+        console.error('Erro ao carregar SweetAlert2:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarSweetAlert2);
 
 /**
  * Exibe um SweetAlert com ícone sinalizando aguardo

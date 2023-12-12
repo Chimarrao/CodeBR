@@ -19,11 +19,8 @@ import 'prismjs/components/prism-http';
 import 'prismjs/components/prism-hpkp';
 import 'prismjs/components/prism-hsts';
 import 'prismjs/components/prism-java';
-// import 'prismjs/components/prism-javadoc';
 import 'prismjs/components/prism-javadoclike';
 import 'prismjs/components/prism-javastacktrace';
-// import 'prismjs/components/prism-jsdoc';
-// import 'prismjs/components/prism-js-extras';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-json5';
 import 'prismjs/components/prism-jsonp';
@@ -33,9 +30,7 @@ import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-markup-templating';
 import 'prismjs/components/prism-nginx';
 import 'prismjs/components/prism-php';
-// import 'prismjs/components/prism-phpdoc';
 import 'prismjs/components/prism-php-extras';
-// import 'prismjs/components/prism-plsql';
 import 'prismjs/components/prism-powershell';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-r';
@@ -46,6 +41,13 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-rust';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-typescript';
+
+// Desativadas por bug
+// import 'prismjs/components/prism-phpdoc';
+// import 'prismjs/components/prism-plsql';
+// import 'prismjs/components/prism-jsdoc';
+// import 'prismjs/components/prism-js-extras';
+// import 'prismjs/components/prism-javadoc';
 
 import 'prismjs/plugins/autolinker/prism-autolinker';
 import 'prismjs/plugins/inline-color/prism-inline-color';

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as util from './util/util';
 
 /**
@@ -63,6 +62,9 @@ class FormularioContato {
      */
     private async enviarFormulario(formulario: HTMLFormElement, mensagem: MensagemContato): Promise<void> {
         try {
+            const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
+            const axios = axiosModule.default;
+
             util.mostrarSweetAlertComAnimacao(util.isDark());
             const response = await axios.post('/api/contato', mensagem);
             util.fecharSweetAlert();
@@ -79,6 +81,19 @@ class FormularioContato {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     new FormularioContato();
+
+    const inputmaskModule = await import(/* webpackChunkName: "inputmask" */"inputmask");
+    const Inputmask = inputmaskModule.default;
+
+    if (window.location.pathname === '/contato') {
+        const telefoneInput = document.querySelector('input[name="telefone"]') as HTMLInputElement;
+        const telefoneMask = new Inputmask({
+            mask: '(99) 9999-9999',
+            placeholder: '_',
+        });
+
+        telefoneMask.mask(telefoneInput);
+    }
 });

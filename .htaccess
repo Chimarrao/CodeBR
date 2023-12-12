@@ -3,3 +3,8 @@ RewriteCond %{HTTP_HOST} ^codebr.net$ [NC,OR]
 RewriteCond %{HTTP_HOST} ^www.codebr.net$
 RewriteCond %{REQUEST_URI} !public/
 RewriteRule (.*) /public/$1 [L]
+
+<IfModule mod_deflate.c>
+    SetOutputFilter DEFLATE
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript
+</IfModule>

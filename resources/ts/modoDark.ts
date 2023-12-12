@@ -1,4 +1,3 @@
-
 /**
  * Classe responsável por aplicar estilos relacionados ao modo escuro.
  */

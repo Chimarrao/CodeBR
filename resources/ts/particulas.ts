@@ -1,14 +1,14 @@
-import { tsParticles } from "@tsparticles/engine";
-import { loadFull } from "tsparticles";
-
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     const hero = document.querySelector('.hero');
 
     if (hero instanceof HTMLElement) {
         hero.setAttribute('id', 'section_particulas')
     }
 
-    (async () => {
+    try {
+        const { tsParticles } = await import(/* webpackChunkName: "tsParticles-engine" */ "@tsparticles/engine");
+        const { loadFull } = await import(/* webpackChunkName: "tsparticles" */ "tsparticles");
+
         await loadFull(tsParticles);
 
         await tsParticles.load({
@@ -513,7 +513,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         "value": true
                     }
                 }
-            }
+            },
         });
-    })();
+    } catch (error) {
+        console.error('Erro ao carregar os módulos:', error);
+    }
 });

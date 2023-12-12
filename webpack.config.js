@@ -3,13 +3,17 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const WebpackBar = require('webpackbar');
+const CompressionPlugin = require('compression-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     mode: 'production',
     entry: './resources/ts/main.ts',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'public/js')
+        path: path.resolve(__dirname, 'public/js'),
+        chunkFilename: '[name].chunk.js',
+        // clean: true
     },
     resolve: {
         extensions: ['.ts', '.js']
@@ -37,6 +41,19 @@ module.exports = {
                     },
                     compress: {
                         drop_console: true,
+                        keep_fargs: false,
+                        reduce_vars: true,
+                        drop_debugger: true,
+                        passes: 10,
+                    },
+                    mangle: {
+                        properties: {
+                            regex: /^_/,
+                        },
+                        keep_fnames: false,
+                        keep_classnames: false,
+                        toplevel: false,
+                        module: true
                     },
                 }
             }),
@@ -47,6 +64,8 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: './../css/app.css',
         }),
-        new WebpackBar()
+        new WebpackBar(),
+        new CompressionPlugin(),
+        // new BundleAnalyzerPlugin()
     ],
 };

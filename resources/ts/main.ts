@@ -6,4 +6,6 @@ import './comentarios';
 import './menuHamburguer';
 import './animacaoTextoBlog';
 
+import 'bulma/css/bulma.min.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import './../css/styles.css';

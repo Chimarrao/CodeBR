@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as util from './util/util';
 
 /**
@@ -143,6 +142,9 @@ class ComentarioHandler {
         };
 
         try {
+            const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
+            const axios = axiosModule.default;
+
             util.mostrarSweetAlertComAnimacao(util.isDark());
             const response = await axios.post('/api/comentarios', comentarioEnviar);
             util.fecharSweetAlert();
