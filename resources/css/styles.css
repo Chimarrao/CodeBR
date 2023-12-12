@@ -113,10 +113,6 @@ h6 {
     position: relative;
 }
 
-.footer {
-    position: relative;
-}
-
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #212529;
@@ -199,6 +195,14 @@ h6 {
     .content.has-text-centered p {
         color: white;
         position: relative;
+    }
+
+    .redesocial {
+        color: white;
+    }
+
+    .redesocial:hover {
+        /* color: #363636; */
     }
 }
 
