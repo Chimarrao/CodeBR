@@ -202,7 +202,7 @@ h6 {
     }
 
     .redesocial:hover {
-        /* color: #363636; */
+        color: hsl(0, 0%, 10%);
     }
 }
 
