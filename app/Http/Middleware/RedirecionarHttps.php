@@ -15,7 +15,7 @@ class RedirecionarHttps
      */
     public function handle($request, Closure $next)
     {
-        if (app()->environment('local')) {
+        if (app()->environment('local') || app()->environment('testing')) {
             return $next($request);
         }
 
