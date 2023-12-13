@@ -7,7 +7,6 @@
     <meta name="description" content="Política de privacidade" />
     <meta name="author" content="Lucas Reolon" />
     <title>Code BR - Política de privacidade</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
 
     <link href="{{ asset('images/favicon.png') }}" rel="icon">
     <link href="{{ asset('images/favicon.png') }}" rel="apple-touch-icon">

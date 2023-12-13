@@ -10,7 +10,6 @@
     <meta name="author" content="Lucas Reolon" />
     <link href="{{ asset('images/favicon.png') }}" rel="icon">
     <link href="{{ asset('images/favicon.png') }}" rel="apple-touch-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
     <link type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
 

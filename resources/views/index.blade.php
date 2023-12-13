@@ -7,7 +7,6 @@
     <meta name="description" content="Um blog sobre programação" />
     <meta name="author" content="Lucas Reolon" />
     <title>Code BR - Um blog sobre programação</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
 
     <link href="{{ asset('images/favicon.png') }}" rel="icon">
     <link href="{{ asset('images/favicon.png') }}" rel="apple-touch-icon">
