@@ -42,6 +42,6 @@ class ContatoController extends Controller
             $request->input('mensagem')
         ));
 
-        return response()->json(['message' => 'Mensagem enviada com sucesso']);
+        return response()->json(['message' => 'Mensagem enviada com sucesso', 'erro' => False]);
     }
 }
