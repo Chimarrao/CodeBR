@@ -1,0 +1,75 @@
+<!-- Exemplo de index (para webpack) -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Code BR - Um blog sobre programação</title>
+</head>
+
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-burger" data-target="navbarBasicExample" role="button" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+    
+        <div class="navbar-menu" id="navbarBasicExample">
+            <div class="navbar-start">
+                <a class="navbar-item has-text-white" href="/">Início</a>
+                <a class="navbar-item has-text-white" href="/sobre">Sobre</a>
+                <a class="navbar-item has-text-white" href="/contato">Contato</a>
+                <a class="navbar-item has-text-white" href="/politica-de-privacidade">Política de Privacidade</a>
+            </div>
+    
+            <div class="navbar-item">
+                <form action="/" method="GET">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <input class="input" name="q" type="text" placeholder="Pesquisar...">
+                        </p>
+                        <p class="control">
+                            <button class="button is-dark">Pesquisar</button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero is-medium is-dark is-bold">
+        <div class="hero-body">
+            <div class="container text-center">
+                <h1 class="title">
+                    Code BR
+                </h1>
+                <h2 class="subtitle" id="subtitulo">
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section index">
+        <div class="container">
+            <div class="column is-4">
+                <a href="#">
+                    <div class="box article">
+                        <article>
+                            <figure class="image is-3by2">
+                                <img src="#" alt="Imagem de" loading="lazy">
+                            </figure>
+                            <div class="content">
+                                <h3 class="title is-4">Teste</h3>
+                            </div>
+                        </article>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
