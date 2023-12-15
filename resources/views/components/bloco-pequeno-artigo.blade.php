@@ -3,7 +3,7 @@
         <div class="box article">
             <article>
                 <figure class="image is-3by2">
-                    <img src="{{ asset($artigo->imagem) }}" alt="Imagem de {{ $artigo->artigo }}">
+                    <img src="{{ asset($artigo->imagem) }}" alt="Imagem de {{ $artigo->artigo }}" {!! !$artigo->destaque ? 'loading="lazy"' : '' !!}>
                 </figure>
                 <div class="content">
                     <h3 class="title is-4">{{ $artigo->artigo }}</h3>
