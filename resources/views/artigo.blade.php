@@ -44,7 +44,7 @@
     </script>
     <!-- Google analytics -->
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app-critical.css') }}" rel="stylesheet">
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/bundle.js') }}"></script>
 </head>
@@ -110,5 +110,6 @@
 </body>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </html>
