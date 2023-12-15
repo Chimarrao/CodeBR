@@ -13,6 +13,7 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 - PHP 8.3
 - PHPUnit 10.5
 - Typescript 5.3
+- Node 20.9.0 LTS
 - Bootstrap (removida)
 - CleanBlog Template (removida)
 

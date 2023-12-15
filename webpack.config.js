@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const WebpackBar = require('webpackbar');
 const CompressionPlugin = require('compression-webpack-plugin');
+const CriticalCssPlugin = require('critical-css-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
@@ -13,7 +14,6 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'public/js'),
         chunkFilename: '[name].chunk.js',
-        // clean: true
     },
     resolve: {
         extensions: ['.ts', '.js']
@@ -66,6 +66,12 @@ module.exports = {
         }),
         new WebpackBar(),
         new CompressionPlugin(),
+        new CriticalCssPlugin({
+            base: path.resolve(__dirname, 'public'),
+            src: 'html/index.html',
+            target: 'css/app-critical.css',
+            inline: true,
+        }),
         // new BundleAnalyzerPlugin()
     ],
 };
