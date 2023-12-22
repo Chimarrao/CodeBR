@@ -1,8 +1,5 @@
-// import './prismJs';
-import './contato';
 import './modoDark';
 import './particulas';
-import './comentarios';
 import './menuHamburguer';
 import './animacaoTextoBlog';
 
@@ -12,6 +9,10 @@ import './../css/styles.css';
 
 const loadModules = async () => {
     const prismJsModule = await import(/* webpackChunkName: "prismJs" */ './prismJs');
+    const contatoModule = await import(/* webpackChunkName: "contato" */ './contato');
+    const comentariosModule = await import(/* webpackChunkName: "comentarios" */ './comentarios');
 };
 
-loadModules();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadModules();
+});

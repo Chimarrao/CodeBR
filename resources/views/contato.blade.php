@@ -45,7 +45,6 @@
     <link type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
 
     <link href="{{ asset('css/app-critical.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/bundle.js') }}"></script>
 </head>
 
 <body>
@@ -110,5 +109,8 @@
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<script src="{{ asset('js/bundle.js') }}"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3072419723964148" crossorigin="anonymous"></script>
 
 </html>

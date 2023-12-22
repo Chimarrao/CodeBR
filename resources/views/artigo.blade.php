@@ -45,8 +45,6 @@
     <!-- Google analytics -->
 
     <link href="{{ asset('css/app-critical.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script src="{{ asset('js/bundle.js') }}"></script>
 </head>
 
 <body>
@@ -73,13 +71,13 @@
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-one">
-                    @include('components.adverts.lateral')
+                    {{--  --}}
                 </div>
                 <div class="column is-two-thirds">
                     {!! $artigo->texto !!}
                 </div>
                 <div class="column is-one">
-                    @include('components.adverts.lateral')
+                    {{--  --}}
                 </div>
             </div>
         </div>
@@ -105,11 +103,13 @@
         </div>
     </div>
 
-    <script type='text/javascript' src='//tubfurryhen.com/b9/15/02/b915027095387ef94f23fad1d39276c3.js'></script>
     @include('components.rodape')
 </body>
 
-<script src="https://www.google.com/recaptcha/api.js"></script>
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<script src="{{ asset('js/bundle.js') }}"></script>
+<script src="{{ asset('js/script.js') }}"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3072419723964148" crossorigin="anonymous"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
 
 </html>
