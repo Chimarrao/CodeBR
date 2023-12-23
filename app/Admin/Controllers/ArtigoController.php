@@ -9,6 +9,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use App\Models\Artigo;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Request;
 
 class ArtigoController extends AdminController
 {
@@ -64,7 +65,17 @@ class ArtigoController extends AdminController
         $form->tmeditor('texto', 'Texto');
 
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
-            $nomeArtigo = $form->input('artigo');
+            $url = Request::url();
+            $isEditing = strpos($url, '/edit') !== false;
+
+            if (!$isEditing) {
+                $id = Request::segment(3);
+                $artigo = Artigo::findOrFail($id);
+                $nomeArtigo = $artigo->artigo;
+            } else {
+                $nomeArtigo = $form->input('artigo');
+            }
+
             $nomeArtigo = 'imagem-' . strval($nomeArtigo);
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
