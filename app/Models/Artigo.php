@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Model;
 
 class Artigo extends Model
@@ -31,8 +33,8 @@ class Artigo extends Model
 
     protected static function booted()
     {
-        static::saving(function ($table) {
-            $nomeArtigo = $table->artigo;
+        static::saving(function ($artigo) {
+            $nomeArtigo = $artigo->artigo;
             $nomeArtigo = 'imagem-' . $nomeArtigo;
             $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
             $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
@@ -42,8 +44,27 @@ class Artigo extends Model
             }
 
             $nomeImagem = $nomeArtigo . '.webp';
+            $caminhoImagem = public_path('images/' . $nomeImagem);
 
-            $table->imagem = 'images/' . $nomeImagem;
+            if (!File::exists($caminhoImagem)) {
+                $files = File::files(public_path('images'));
+
+                usort($files, function ($a, $b) {
+                    return filemtime($b) - filemtime($a);
+                });
+
+                $ultimaImagem = reset($files);
+
+                if ($ultimaImagem) {
+                    $imagem = Image::make($ultimaImagem);
+                    $imagem->encode('webp', 80)->save($caminhoImagem);
+                } else {
+                    $artigo->imagem = null;
+                    return;
+                }
+            }
+
+            $artigo->imagem = 'images/' . $nomeImagem;
         });
     }
 }

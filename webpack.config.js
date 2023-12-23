@@ -8,7 +8,8 @@ const CriticalCssPlugin = require('critical-css-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-    mode: 'production',
+    // mode: 'production',
+    mode: 'development',
     entry: './resources/ts/main.ts',
     output: {
         filename: 'bundle.js',
