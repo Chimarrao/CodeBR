@@ -169,17 +169,17 @@ class erro extends checkOk {
 export class alerts extends erro {
     static _(config: any) {
         const obj = new alerts();
-        const mensagemPadrao = config.mensagem ?? '';
+        const mensagem = config.mensagem ?? '';
 
         switch (config.tipo) {
             case 'spinner':
-                obj.exibirSpinner(mensagemPadrao || 'Aguarde');
+                obj.exibirSpinner(mensagem || 'Aguarde');
                 break;
             case 'check':
-                obj.exibirCheck(mensagemPadrao || 'Ok');
+                obj.exibirCheck(mensagem || 'Ok');
                 break;
             case 'erro':
-                obj.exibirErro(mensagemPadrao || 'Erro');
+                obj.exibirErro(mensagem || 'Erro');
                 break;
             default:
                 break;
