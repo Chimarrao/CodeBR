@@ -1,4 +1,4 @@
-import * as util from './util/util';
+import { alerts } from './alerts/alerts';
 
 /**
  * Estrutura de um comentário retornado
@@ -129,7 +129,8 @@ class ComentarioHandler {
      * @return {void}
      */
     private async enviarFormulario(formulario: HTMLFormElement, nome: string, email: string, comentario: string, g_recaptcha_response: string, id_comentario_resposta: number = 0) {
-        util.mostrarSweetAlertComAnimacao(util.isDark());
+        alerts._({ tipo: 'spinner' });
+
         const url = this.obterSlugDoArtigo();
 
         const comentarioEnviar: Comentario = {
@@ -145,14 +146,13 @@ class ComentarioHandler {
             const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
             const axios = axiosModule.default;
 
-            util.mostrarSweetAlertComAnimacao(util.isDark());
+            alerts._({ tipo: 'spinner' });
             const response = await axios.post('/api/comentarios', comentarioEnviar);
-            util.fecharSweetAlert();
+            alerts.off();
             const novoComentario = response.data;
 
             if (novoComentario.erro) {
-                util.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, util.isDark());
-                util.fecharSweetAlert();
+                alerts._({ tipo: 'erro', mensagem: 'Erro! Marque a caixa "Não sou um robô"' });
                 return;
             }
 
@@ -161,7 +161,7 @@ class ComentarioHandler {
             formulario.style.display = 'none';
         } catch (erro) {
             console.error('Erro :', erro);
-            util.mostrarSweetAlert('Erro ! Marque a caixa "Não sou um robô"', false, util.isDark());
+            alerts._({ tipo: 'erro', mensagem: 'Erro! Marque a caixa "Não sou um robô"' });
         }
     }
 
