@@ -1,4 +1,4 @@
-import * as util from './util/util';
+import { alerts } from './alerts/alerts';
 
 /**
  * Interface representando a estrutura de uma mensagem de contato.
@@ -65,15 +65,14 @@ class FormularioContato {
             const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
             const axios = axiosModule.default;
 
-            util.mostrarSweetAlertComAnimacao(util.isDark());
             const response = await axios.post('/api/contato', mensagem);
-            util.fecharSweetAlert();
+            alerts.off();
 
             if (response.status === 200) {
                 formulario.reset();
-                util.mostrarSweetAlert('Mensagem foi enviada com sucesso', true, util.isDark());
+                alerts._({ tipo: 'check', mensagem: 'Mensagem foi enviada com sucesso' });
             } else {
-                util.mostrarSweetAlert('Erro! Marque a caixa "Não sou um robô"', false, util.isDark());
+                alerts._({ tipo: 'erro', mensagem: 'Erro! Marque a caixa "Não sou um robô"' });
             }
         } catch (error) {
             console.error('Erro na requisição:', error);

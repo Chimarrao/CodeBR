@@ -17,6 +17,17 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 - Bootstrap (removida)
 - CleanBlog Template (removida)
 
+## Bibliotecas relevantes JS/TS utilizadas
+
+- Axios
+- Inputmask
+- PrismJS
+- Webpack (+ plugins)
+
+## Bibliotecas removidas
+
+- Sweetalert2
+
 ## Como executar o Projeto
 
 Instale as dependências do front e compile os códigos em typescript:

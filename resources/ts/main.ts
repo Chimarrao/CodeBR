@@ -1,3 +1,6 @@
+import { alerts } from './alerts/alerts';
+
+import './contato';
 import './modoDark';
 import './particulas';
 import './comentarios';
@@ -10,9 +13,13 @@ import './../css/styles.css';
 
 const loadModules = async () => {
     const prismJsModule = await import(/* webpackChunkName: "prismJs" */ './prismJs');
-    const contatoModule = await import(/* webpackChunkName: "contato" */ './contato');
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadModules();
 });
+
+/**
+ * Classes disponíveis na window
+ */
+(window as any).alerts = alerts;

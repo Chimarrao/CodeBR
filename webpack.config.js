@@ -8,8 +8,8 @@ const CriticalCssPlugin = require('critical-css-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-    // mode: 'production',
-    mode: 'development',
+    mode: 'production',
+    // mode: 'development',
     entry: './resources/ts/main.ts',
     output: {
         filename: 'bundle.js',
@@ -46,16 +46,7 @@ module.exports = {
                         reduce_vars: true,
                         drop_debugger: true,
                         passes: 10,
-                    },
-                    mangle: {
-                        properties: {
-                            regex: /^_/,
-                        },
-                        keep_fnames: false,
-                        keep_classnames: false,
-                        toplevel: false,
-                        module: true
-                    },
+                    }
                 }
             }),
             new CssMinimizerPlugin(),

@@ -709,3 +709,377 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
     font-size: 15pt;
     background-color: #f5f5f500
 }
+
+/* ! ||--------------------------------------------------------------------------------|| */
+/* ! ||                                     Alertas                                    || */
+/* ! ||--------------------------------------------------------------------------------|| */
+
+/* Spinner */
+.container-carregamento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 16rem;
+    min-height: 7rem;
+    z-index: 99999;
+    position: fixed;
+    transform: translate(-50%, -50%);
+}
+
+.carregamento-spinner {
+    border: 8px solid transparent;
+    border-top: 8px solid #3498db;
+    border-bottom: 8px solid #3498db;
+    border-radius: 50%;
+    animation: girar 1s linear infinite;
+    margin-bottom: 10px;
+    border-width: 4px;
+    width: 4rem;
+    height: 4rem;
+}
+
+.carregamento-msg {
+    font-size: 1.4rem;
+    font-family: 'Open Sans';
+    color: black !important;
+    padding-top: 1rem;
+    z-index: 99999;
+}
+
+@keyframes girar {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Check */
+.container-check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 16rem;
+    min-height: 7rem;
+}
+
+.check {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.linha-check {
+    width: 100%;
+    height: 8px;
+    background-color: #3498db;
+    position: absolute;
+    top: 50%;
+    transform-origin: 0 50%;
+    animation: desenharCheck 1s forwards;
+}
+
+.linha-check:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.linha-check:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.linha-check:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.linha-check:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+.msg-check {
+    font-size: 1.5rem;
+    font-family: 'Open Sans';
+    color: black !important;
+    margin-top: 10px;
+}
+
+@keyframes desenharCheck {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.sucesso-check {
+    width: 80px;
+    height: 5.3rem;
+    margin: 0 auto;
+}
+
+.sucesso-check .icone-check {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    border-radius: 50%;
+    box-sizing: content-box;
+    border: 4px solid #4CAF50;
+}
+
+.sucesso-check .icone-check::before {
+    top: 3px;
+    left: -2px;
+    width: 30px;
+    transform-origin: 100% 50%;
+    border-radius: 100px 0 0 100px;
+}
+
+.sucesso-check .icone-check::after {
+    top: 0;
+    left: 30px;
+    width: 60px;
+    transform-origin: 0 50%;
+    border-radius: 0 100px 100px 0;
+    animation: rotacionar-circulo 4.25s ease-in;
+}
+
+.sucesso-check .icone-check::before,
+.sucesso-check .icone-check::after {
+    content: "";
+    height: 100px;
+    position: absolute;
+    background: #FFFFFF;
+    transform: rotate(-45deg);
+}
+
+.sucesso-check .icone-check .linha-icon {
+    height: 5px;
+    background-color: #4CAF50;
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+}
+
+.sucesso-check .icone-check .linha-icon.line-tip {
+    top: 46px;
+    left: 14px;
+    width: 25px;
+    transform: rotate(45deg);
+    animation: linha-icon-tip 0.75s;
+}
+
+.sucesso-check .icone-check .linha-icon.line-long {
+    top: 38px;
+    right: 8px;
+    width: 47px;
+    transform: rotate(-45deg);
+    animation: linha-icon-long 0.75s;
+}
+
+.sucesso-check .icone-check .circulo-icon {
+    top: -4px;
+    left: -4px;
+    z-index: 10;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    box-sizing: content-box;
+    border: 4px solid rgba(76, 175, 80, 0.5);
+}
+
+.sucesso-check .icone-check .correcao-icon {
+    top: 8px;
+    width: 5px;
+    left: 26px;
+    z-index: 1;
+    height: 85px;
+    position: absolute;
+    transform: rotate(-45deg);
+    background-color: #FFFFFF;
+}
+
+@keyframes rotacionar-circulo {
+    0% {
+        transform: rotate(-45deg);
+    }
+
+    5% {
+        transform: rotate(-45deg);
+    }
+
+    12% {
+        transform: rotate(-405deg);
+    }
+
+    100% {
+        transform: rotate(-405deg);
+    }
+}
+
+@keyframes linha-icon-tip {
+    0% {
+        width: 0;
+        left: 1px;
+        top: 19px;
+    }
+
+    54% {
+        width: 0;
+        left: 1px;
+        top: 19px;
+    }
+
+    70% {
+        width: 50px;
+        left: -8px;
+        top: 37px;
+    }
+
+    84% {
+        width: 17px;
+        left: 21px;
+        top: 48px;
+    }
+
+    100% {
+        width: 25px;
+        left: 14px;
+        top: 45px;
+    }
+}
+
+@keyframes linha-icon-long {
+    0% {
+        width: 0;
+        right: 46px;
+        top: 54px;
+    }
+
+    65% {
+        width: 0;
+        right: 46px;
+        top: 54px;
+    }
+
+    84% {
+        width: 55px;
+        right: 0px;
+        top: 35px;
+    }
+
+    100% {
+        width: 47px;
+        right: 8px;
+        top: 38px;
+    }
+}
+
+.botao-ok {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: medium;
+    min-width: 4.5rem;
+    min-height: 2.5rem;
+}
+
+.botao-ok:hover {
+    background-color: #2980b9;
+}
+
+/* Erro */
+.circulo,
+.borda-circulo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.circulo {
+    z-index: 1;
+    position: relative;
+    background: white;
+    transform: scale(1);
+    animation: animacao-sucesso 700ms ease;
+}
+
+.borda-circulo {
+    z-index: 0;
+    position: absolute;
+    transform: scale(1.1);
+    animation: animacao-circulo 400ms ease;
+    background: #f86;
+}
+
+@keyframes animacao-sucesso {
+    0% {
+        transform: scale(0);
+    }
+
+    30% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes animacao-circulo {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
+}
+
+.erro::before,
+.erro::after {
+    content: "";
+    display: block;
+    height: 4px;
+    background: #f86;
+    position: absolute;
+}
+
+.erro::before {
+    width: 40px;
+    top: 48%;
+    left: 16%;
+    transform: rotateZ(50deg);
+}
+
+.erro::after {
+    width: 40px;
+    top: 48%;
+    left: 16%;
+    transform: rotateZ(-50deg);
+}
