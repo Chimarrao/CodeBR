@@ -146,10 +146,10 @@ class ComentarioHandler {
             const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
             const axios = axiosModule.default;
 
-            alerts._({ tipo: 'spinner' });
             const response = await axios.post('/api/comentarios', comentarioEnviar);
-            alerts.off();
             const novoComentario = response.data;
+
+            alerts.off();
 
             if (novoComentario.erro) {
                 alerts._({ tipo: 'erro', mensagem: 'Erro! Marque a caixa "Não sou um robô"' });
