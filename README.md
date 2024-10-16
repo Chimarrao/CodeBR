@@ -8,8 +8,8 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 
 ## Tecnologias Utilizadas
 
-- Laravel 10
-- BulmaCSS 0.9
+- Laravel 11
+- BulmaCSS 1.0.2
 - PHP 8.3
 - PHPUnit 10.5
 - Typescript 5.3
@@ -34,7 +34,7 @@ Instale as dependências do front e compile os códigos em typescript:
 
 ```bash
 npm install
-npm run build
+npm run watch
 ```
 
 Atualização do Arquivo .env:
@@ -67,6 +67,11 @@ php artisan serve
 - Recriado com Laravel + BulmaCSS
 - Aprimorado visualmente com base no template original
 - Adição de funcionalidades como paginação e busca
+
+-**Versão 3.0 (2024):**
+
+- Adicionado framework Vue no frontend
+- Atualizado Laravel 10 para 11
 
 ## Como Contribuir
 
