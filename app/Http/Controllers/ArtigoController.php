@@ -22,21 +22,35 @@ class ArtigoController extends Controller
             abort(404);
         }
 
+        return view('artigo', [
+            'artigo' => $artigo
+        ]);
+    }
+
+    public function get(Request $request) {
+        $slug = $request->input('slug', 1);
+        $artigo = Artigo::where('url', $slug)->first();
+
+        if (!$artigo) {
+            return response()->json([
+                'success' => false,
+            ]);
+        }
+
         $comentarios = $this->getComentarios($artigo->id_artigo);
         $artigo->texto = $this->attCaminhoImagem($artigo->texto);
         $artigo->texto = $this->attCaminhoImagem2($artigo->texto);
 
-        return view(
-            'artigo',
-            [
+        return response()->json([
+            'success' => true,
+            'data' => [
                 'artigo' => $artigo,
-                'comentarios' => $comentarios,
-                'artigosSugeridos' => []
-            ]
-        );
+                'comentarios' => $comentarios
+            ],
+        ]);
     }
 
-    public function get(Request $request)
+    public function getAll(Request $request)
     {
         $artigosPorPagina = 9;
 
@@ -74,7 +88,7 @@ class ArtigoController extends Controller
         ]);
     }
 
-    public function destaque()
+    public function getAllDestaque()
     {
         $artigos = Artigo::where('destaque', 1)->get();
 
@@ -94,7 +108,6 @@ class ArtigoController extends Controller
             'data' => $artigos
         ]);
     }
-
 
     /**
      * Obtém os comentários para um artigo.

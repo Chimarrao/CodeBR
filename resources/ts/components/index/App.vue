@@ -69,9 +69,13 @@ export default {
             artigosPorPagina: 9,
             searchQuery: '',
             loading: true,
+            texto: 'Um blog sobre programação',
+            index: 0
         };
     },
     mounted() {
+        this.iniciarDigitacao();
+
         window.addEventListener('popstate', this.handlePopState);
 
         const q = new URLSearchParams(window.location.search).get('q');
@@ -103,6 +107,17 @@ export default {
         },
     },
     methods: {
+        iniciarDigitacao() {
+            if (this.index < this.texto.length) {
+                const subtitulo = document.getElementById('subtitulo');
+                if (subtitulo) {
+                    subtitulo.textContent += this.texto[this.index];
+                    this.index++;
+                    setTimeout(this.iniciarDigitacao, 50);
+                }
+            }
+        },
+
         /**
          * Retorna a URL da paginação
          * 

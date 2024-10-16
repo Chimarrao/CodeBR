@@ -43,6 +43,7 @@
         "inputmask": "^5.0.8",
         "prismjs": "^1.29.0",
         "tsparticles": "^3.0.2",
-        "vue": "^3.5.12"
+        "vue": "^3.5.12",
+        "vue-router": "^4.0.13"
     }
 }

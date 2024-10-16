@@ -95,5 +95,7 @@ class EstilizadorModoEscuro {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new EstilizadorModoEscuro();
+    setInterval(() => {
+        new EstilizadorModoEscuro();
+    }, 200);
 });

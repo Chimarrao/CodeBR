@@ -54,57 +54,7 @@
 <body>
     @include('components.menu')
 
-    <section class="hero is-medium is-dark is-bold">
-        <div class="hero-body">
-            <div class="container text-center">
-                <div class="columns is-centered">
-                    <div class="column is-two-thirds">
-                        <h1 class="title artigo">
-                            {!! $artigo->artigo !!}
-                        </h1>
-                        <h2 class="subtitle">
-                            {!! $artigo->descricao !!}
-                        </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section artigo">
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-one">
-                    {{--  --}}
-                </div>
-                <div class="column is-two-thirds">
-                    {!! $artigo->texto !!}
-                </div>
-                <div class="column is-one">
-                    {{--  --}}
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="section comentarios pt-0">
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-two-thirds">
-                    <h2 class="title is-3">Comentários</h2>
-
-                    <div class="message">
-                        @include('components.comments.form-comentario')
-                    </div>
-
-                    <div class="bloco-comentarios">
-                        @foreach ($comentarios as $comentario)
-                            @include('components.comments.comentario')
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="app">
     </div>
 
     @include('components.rodape')

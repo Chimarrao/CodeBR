@@ -1,11 +1,14 @@
-//@ts-ignore
-import { createApp } from 'vue'
-//@ts-ignore
-import MainComponent from './components/MainComponent.vue';
+// @ts-ignore
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
 
+const app = createApp(App); 
 
-const app = createApp(MainComponent);
+app.use(router);
 app.mount('#app');
+
+
 
 
 import { alerts } from './alerts/alerts';
@@ -13,9 +16,7 @@ import { alerts } from './alerts/alerts';
 import './contato';
 import './modoDark';
 import './particulas';
-import './comentarios';
 import './menuHamburguer';
-import './animacaoTextoBlog';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import './../css/styles.css';

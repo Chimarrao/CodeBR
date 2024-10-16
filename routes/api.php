@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\ArtigoController;
+use App\Http\Controllers\ContatoController;
+use App\Http\Controllers\ComentarioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/artigos', 'App\Http\Controllers\ArtigoController@get');
-Route::get('/artigos-destaque', 'App\Http\Controllers\ArtigoController@destaque');
+Route::get('/artigo', [ArtigoController::class, 'get']);
+Route::get('/artigos', [ArtigoController::class, 'getAll']);
+Route::get('/artigos-destaque', [ArtigoController::class, 'getAllDestaque']);
 
-Route::post('/contato', 'App\Http\Controllers\ContatoController@post');
-Route::post('/comentarios', 'App\Http\Controllers\ComentarioController@post');
+Route::post('/contato', [ContatoController::class, 'post']);
+Route::post('/comentarios', [ComentarioController::class, 'post']);
