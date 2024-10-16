@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "esnext",
         "strict": true,
-        "strictNullChecks": true,
         "baseUrl": "./resources/ts",
-        "moduleResolution": "bundler"
+        "moduleResolution": "node",
+        "types": [
+            "vue"
+        ],
+        "preserveSymlinks": false,
+        "skipLibCheck": true
     },
     "include": [
-        "resources/ts/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules"
+        "resources/ts/**/*.ts",
+        "resources/ts/*.vue",
+        "resources/ts/**/*.vue"
     ]
 }

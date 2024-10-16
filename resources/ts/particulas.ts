@@ -1,3 +1,6 @@
+import { tsParticles } from "@tsparticles/engine";
+import { loadFull } from "tsparticles";
+
 document.addEventListener('DOMContentLoaded', async function () {
     const hero = document.querySelector('.hero');
 
@@ -6,9 +9,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     try {
-        const { tsParticles } = await import(/* webpackChunkName: "tsParticles-engine" */ "@tsparticles/engine");
-        const { loadFull } = await import(/* webpackChunkName: "tsparticles" */ "tsparticles");
-
         await loadFull(tsParticles);
 
         await tsParticles.load({

@@ -5,26 +5,41 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const WebpackBar = require('webpackbar');
 const CompressionPlugin = require('compression-webpack-plugin');
 const CriticalCssPlugin = require('critical-css-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
     mode: 'production',
-    // mode: 'development',
     entry: './resources/ts/main.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'public/js'),
-        chunkFilename: '[name].chunk.js',
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.vue'],
+        alias: {
+            vue$: 'vue/dist/vue.runtime.esm-bundler.js',
+        }
     },
     module: {
         rules: [
             {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+            },
+            {
                 test: /\.ts$/,
-                use: 'ts-loader',
-                exclude: /node_modules/,
+                use: {
+                    loader: 'ts-loader',
+                    options: {
+                        appendTsSuffixTo: [/\.vue$/],
+                    }
+                },
+                exclude: /node_modules/
+            },
+            {
+                test: /\.js$/,
+                use: 'babel-loader',
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
@@ -53,6 +68,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
             filename: './../css/app.css',
         }),
@@ -64,6 +80,5 @@ module.exports = {
             target: 'css/app-critical.css',
             inline: true,
         }),
-        // new BundleAnalyzerPlugin()
     ],
 };

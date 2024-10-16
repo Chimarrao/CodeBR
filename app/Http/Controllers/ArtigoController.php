@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artigo;
 use App\Models\Comentario;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ArtigoController extends Controller
 {
@@ -35,6 +35,66 @@ class ArtigoController extends Controller
             ]
         );
     }
+
+    public function get(Request $request)
+    {
+        $artigosPorPagina = 9;
+
+        $pagina = $request->input('page', 1);
+        $query = $request->input('q', '');
+
+        $artigosQuery = Artigo::where('artigo', 'like', "%{$query}%")
+            ->where('liberado', 1)
+            ->where('excluido', 0)
+            ->orderByDesc('id_artigo');
+
+        $totalArtigos = $artigosQuery->count();
+
+        $artigos = $artigosQuery->skip(($pagina - 1) * $artigosPorPagina)
+            ->take($artigosPorPagina)
+            ->get();
+
+        foreach ($artigos as $chave => $artigo) {
+            if (isset($artigo->{"imagem"})) {
+                $artigo->{"imagem"} = '/' . $artigo->{"imagem"};
+                $artigos[$chave] = $artigo;
+                continue;
+            }
+
+            $artigo->{"imagem"} = '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
+            $artigos[$chave] = $artigo;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $artigos,
+            'total' => $totalArtigos,
+            'pagina_atual' => $pagina,
+            'total_paginas' => ceil($totalArtigos / $artigosPorPagina),
+        ]);
+    }
+
+    public function destaque()
+    {
+        $artigos = Artigo::where('destaque', 1)->get();
+
+        foreach ($artigos as $chave => $artigo) {
+            if (isset($artigo->{"imagem"})) {
+                $artigo->{"imagem"} = '/' . $artigo->{"imagem"};
+                $artigos[$chave] = $artigo;
+                continue;
+            }
+
+            $artigo->{"imagem"} = '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
+            $artigos[$chave] = $artigo;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $artigos
+        ]);
+    }
+
 
     /**
      * Obtém os comentários para um artigo.
@@ -99,5 +159,25 @@ class ArtigoController extends Controller
         $substituicao = '<img src="' . $caminhoLaravel . 'images/$1"$2>';
         $novoTexto = preg_replace($padrao, $substituicao, $texto);
         return $novoTexto;
+    }
+
+    /**
+     * Obtém a primeira imagem de um bloco de texto usando expressões regulares.
+     *
+     * @param  string  $html  O bloco de texto HTML.
+     * @return string|null  O caminho da imagem ou null se não for encontrado.
+     */
+    private function obterPrimeiraImagemComRegex($html)
+    {
+        $padrao = '/<img [^>]*src=["\'](.*?\.webp)["\'][^>]*>/i';
+
+        if (preg_match($padrao, $html, $matches)) {
+            $imagem = $matches[1];
+            $imagem = 'images/' . array_reverse(explode('/', $imagem))[0];
+
+            return $imagem;
+        }
+
+        return null;
     }
 }

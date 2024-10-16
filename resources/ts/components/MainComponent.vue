@@ -1,0 +1,200 @@
+<template>
+    <section class="hero is-medium is-dark is-bold">
+        <div class="hero-body">
+            <div class="container text-center">
+                <h1 class="title">Code BR</h1>
+                <h2 class="subtitle" id="subtitulo"></h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section index">
+        <div class="container">
+            <div v-if="!hasSearchQuery">
+                <h2 class="title is-3">Artigos em Destaque</h2>
+                <div class="columns is-multiline">
+                    <BlocoPequenoArtigo v-for="artigo in artigosDestaque" :key="index" :artigo="artigo" />
+                </div>
+            </div>
+
+            <h2 class="title is-3">
+                {{ hasSearchQuery ? 'Resultados da busca' : 'Artigos Recentes' }}
+            </h2>
+            <div class="columns is-multiline">
+                <SkeletonLoader v-if="loading" v-for="i in 9" :key="i" />
+                <BlocoPequenoArtigo v-else v-for="artigo in artigos" :key="index" :artigo="artigo" />
+            </div>
+
+            <div class="container">
+                <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <a v-if="numeroPagina > 1" class="pagination-previous"
+                        @click.prevent="navigateToPage(numeroPagina - 1)">
+                        Anterior
+                    </a>
+
+                    <ul class="pagination-list">
+                        <li v-for="i in paginationRange" :key="i">
+                            <a :class="['pagination-link', { 'is-current': i === numeroPagina }]"
+                                @click.prevent="navigateToPage(i)">
+                                {{ i }}
+                            </a>
+                        </li>
+                    </ul>
+
+                    <a v-if="numeroPagina < totalPaginas" class="pagination-next"
+                        @click.prevent="navigateToPage(numeroPagina + 1)">
+                        Próxima
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+import BlocoPequenoArtigo from './BlocoPequenoArtigo.vue';
+import SkeletonLoader from './SkeletonLoader.vue'; 
+
+export default {
+    components: {
+        BlocoPequenoArtigo,
+        SkeletonLoader
+    },
+    data() {
+        return {
+            artigosDestaque: [],
+            artigos: [],
+            numeroPagina: 1,
+            totalPaginas: 0,
+            artigosPorPagina: 9,
+            searchQuery: '',
+            loading: true,
+        };
+    },
+    mounted() {
+        window.addEventListener('popstate', this.handlePopState);
+
+        const q = new URLSearchParams(window.location.search).get('q');
+        const page = window.location.pathname.split('/').pop();
+
+        if (q) {
+            this.searchQuery = q;
+        }
+
+        if (page) {
+            this.numeroPagina = parseInt(page);
+        }
+
+        this.fetchArtigosDestaque();
+        this.fetchArtigos();
+    },
+    beforeDestroy() {
+        window.removeEventListener('popstate', this.handlePopState);
+    },
+    computed: {
+        hasSearchQuery() {
+            return this.searchQuery !== '';
+        },
+        paginationRange() {
+            return Array.from({ length: 5 }, (_, i) => {
+                const start = Math.max(1, this.numeroPagina - 2);
+                return start + i;
+            }).filter(pagina => pagina <= this.totalPaginas);
+        },
+    },
+    methods: {
+        /**
+         * Retorna a URL da paginação
+         * 
+         * @return {string}
+         */
+        getPaginationUrl(page) {
+            const query = this.searchQuery ? `&q=${encodeURIComponent(this.searchQuery)}` : '';
+            return `/page/${page}?q=${query}`;
+        },
+
+        /**
+         * Navega para uma nova página sem recarregar a página inteira
+         * Atualiza a URL e os artigos dinamicamente
+         *
+         * @param {number} page - Número da página
+         */
+        navigateToPage(page) {
+            const url = this.getPaginationUrl(page);
+            window.history.pushState({}, '', url);
+            this.numeroPagina = page;
+            this.fetchArtigos();
+        },
+
+        /**
+         * Manipula a navegação via botão "voltar" ou "avançar" do navegador
+         */
+        handlePopState() {
+            const q = new URLSearchParams(window.location.search).get('q');
+            const page = window.location.pathname.split('/').pop();
+
+            if (q) {
+                this.searchQuery = q;
+            }
+
+            if (page) {
+                this.numeroPagina = parseInt(page);
+            }
+
+            this.fetchArtigos();
+        },
+
+        /**
+         * Busca os artigos em destaque da página
+         * 
+         * @return {void}
+         */
+        async fetchArtigosDestaque() {
+            try {
+                const resposta = await fetch(`/api/artigos-destaque`);
+                const resultado = await resposta.json();
+
+                if (resultado.success) {
+                    this.artigosDestaque = resultado.data;
+                } else {
+                    console.error('Erro ao carregar os artigos:', resultado.message);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar os artigos:', error);
+            }
+        },
+
+        /**
+         * Busca os artigos da página
+         * 
+         * @return {void}
+         */
+        async fetchArtigos() {
+            this.loading = true;
+
+            try {
+                const resposta = await fetch(`/api/artigos?page=${this.numeroPagina}&q=${encodeURIComponent(this.searchQuery)}`);
+                const resultado = await resposta.json();
+
+                if (resultado.success) {
+                    this.totalPaginas = resultado.total_paginas;
+                    this.artigos = resultado.data;
+                } else {
+                    console.error('Erro ao carregar os artigos:', resultado.message);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar os artigos:', error);
+            }
+
+            this.loading = false;
+        },
+    }
+};
+</script>
+
+<style scoped>
+.hero {
+    background-size: cover;
+    background-position: center;
+}
+</style>

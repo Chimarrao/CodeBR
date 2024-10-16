@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { alerts } from './alerts/alerts';
 
 /**
@@ -62,9 +63,6 @@ class FormularioContato {
      */
     private async enviarFormulario(formulario: HTMLFormElement, mensagem: MensagemContato): Promise<void> {
         try {
-            const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
-            const axios = axiosModule.default;
-
             const response = await axios.post('/api/contato', mensagem);
             alerts.off();
 
@@ -83,7 +81,7 @@ class FormularioContato {
 document.addEventListener('DOMContentLoaded', async () => {
     new FormularioContato();
 
-    const inputmaskModule = await import(/* webpackChunkName: "inputmask" */"inputmask");
+    const inputmaskModule = await import("inputmask");
     const Inputmask = inputmaskModule.default;
 
     if (window.location.pathname === '/contato') {

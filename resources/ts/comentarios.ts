@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { alerts } from './alerts/alerts';
 
 /**
@@ -143,9 +144,6 @@ class ComentarioHandler {
         };
 
         try {
-            const axiosModule = await import(/* webpackChunkName: "axios" */'axios');
-            const axios = axiosModule.default;
-
             const response = await axios.post('/api/comentarios', comentarioEnviar);
             const novoComentario = response.data;
 

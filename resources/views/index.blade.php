@@ -45,73 +45,17 @@
     <link type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet">
 
     <link href="{{ asset('css/app-critical.css') }}" rel="stylesheet">
+
+    <!-- Importações -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css" rel="stylesheet" integrity="sha512-RpeJZX3aH5oZN3U3JhE7Sd+HG8XQsqmP3clIbu4G28p668yNsRNj3zMASKe1ATjl/W80wuEtCx2dFA8xaebG5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     @include('components.menu')
 
-    <section class="hero is-medium is-dark is-bold" style="background-image: url('{{ asset('images/background.webp') }}');">
-        <div class="hero-body">
-            <div class="container text-center">
-                <h1 class="title">
-                    Code BR
-                </h1>
-                <h2 class="subtitle" id="subtitulo">
-                </h2>
-            </div>
-        </div>
-    </section>
-
-    <section class="section index">
-        <div class="container">
-            @if (!request()->has('q'))
-                <h2 class="title is-3">Artigos em Destaque</h2>
-                <div class="columns is-multiline">
-                    @foreach ($artigosDestaque as $artigo)
-                        @include('components.bloco-pequeno-artigo')
-                    @endforeach
-                </div>
-            @endif
-
-            @if (request()->has('q'))
-                <h2 class="title is-3">Resultados da busca</h2>
-            @else
-                <h2 class="title is-3">Artigos Recentes</h2>
-            @endif
-            <div class="columns is-multiline">
-                @foreach ($artigos as $artigo)
-                    @include('components.bloco-pequeno-artigo')
-                @endforeach
-            </div>
-
-            <div class="container">
-                <?php
-                $totalPages = ceil($count / $artigosPorPagina);
-                $pagesToShow = 2;
-                $searchQuery = request('q') ? '&q=' . urlencode(request('q')) : '';
-                ?>
-                <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                    @if ($numeroPagina > 1)
-                        <a class="pagination-previous" href="{{ url('/page/' . ($numeroPagina - 1) . '?q=' . urlencode(request('q'))) }}">Anterior</a>
-                    @endif
-
-                    <ul class="pagination-list">
-                        @for ($i = max(1, $numeroPagina - $pagesToShow); $i <= min($totalPages, $numeroPagina + $pagesToShow); $i++)
-                            <li>
-                                <a class="pagination-link {{ $i == $numeroPagina ? 'is-current' : '' }}" href="{{ url('/page/' . $i . '?q=' . urlencode(request('q'))) }}">
-                                    {{ $i }}
-                                </a>
-                            </li>
-                        @endfor
-                    </ul>
-
-                    @if ($numeroPagina < $totalPages)
-                        <a class="pagination-next" href="{{ url('/page/' . ($numeroPagina + 1) . '?q=' . urlencode(request('q'))) }}">Próxima</a>
-                    @endif
-                </nav>
-            </div>
-        </div>
-    </section>
+    <div id="app">
+    </div>
 
     @include('components.rodape')
 </body>
