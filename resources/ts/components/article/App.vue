@@ -1,4 +1,5 @@
 <template>
+    <Menu />
     <SkeletonLoader v-if="loading" />
 
     <section class="hero is-medium is-dark is-bold">
@@ -54,14 +55,13 @@
 </template>
 
 <script>
+import Menu from './../Menu.vue';
 import FormComentario from "./FormComentario.vue";
 import Comentario from "./Comentario.vue";
 import SkeletonLoader from "./SkeletonLoader.vue";
-import { ref, onMounted } from "vue";
-import axios from "axios";
 
 export default {
-    components: { FormComentario, Comentario, SkeletonLoader },
+    components: { Menu, FormComentario, Comentario, SkeletonLoader },
     data() {
         return {
             artigo: [],

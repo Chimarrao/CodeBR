@@ -1,4 +1,5 @@
 <template>
+    <Menu />
     <section class="hero is-medium is-dark is-bold">
         <div class="hero-body">
             <div class="container text-center">
@@ -52,11 +53,13 @@
 </template>
 
 <script>
+import Menu from './../Menu.vue';
 import BlocoPequenoArtigo from './BlocoPequenoArtigo.vue';
 import SkeletonLoader from './SkeletonLoader.vue'; 
 
 export default {
     components: {
+        Menu,
         BlocoPequenoArtigo,
         SkeletonLoader
     },

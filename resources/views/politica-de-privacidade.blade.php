@@ -52,8 +52,6 @@
 </head>
 
 <body>
-    @include('components.menu')
-
     <section class="hero is-medium is-dark is-bold" style="background-image: url('{{ asset('images/background.webp') }}');">
         <div class="hero-body">
             <div class="container text-center">

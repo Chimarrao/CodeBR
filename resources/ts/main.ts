@@ -1,12 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9fc2c2e (Separação de apps Vue por tela e tela base de artigo)
 // @ts-ignore
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-<<<<<<< HEAD
 
 const app = createApp(App); 
 
@@ -14,28 +9,6 @@ app.use(router);
 app.mount('#app');
 
 
-
-
-=======
-//@ts-ignore
-import { createApp } from 'vue'
-//@ts-ignore
-import MainComponent from './components/MainComponent.vue';
-=======
->>>>>>> 9fc2c2e (Separação de apps Vue por tela e tela base de artigo)
-
-const app = createApp(App); 
-
-app.use(router);
-app.mount('#app');
-
-
-<<<<<<< HEAD
->>>>>>> 3e6576c (Base de códigos para front para Vue.js)
-=======
-
-
->>>>>>> 9fc2c2e (Separação de apps Vue por tela e tela base de artigo)
 import { alerts } from './alerts/alerts';
 
 import './contato';

@@ -52,8 +52,6 @@
 </head>
 
 <body>
-    @include('components.menu')
-
     <div id="app">
     </div>
 
