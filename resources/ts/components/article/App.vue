@@ -42,26 +42,31 @@
                     <FormComentario @comentarioEnviado="adicionarComentario" />
 
                     <div class="bloco-comentarios mt-2">
-                        <Comentario
-                            v-for="comentario in comentarios"
-                            :key="comentario.id"
-                            :comentario="comentario"
-                        />
+                        <Comentario v-for="comentario in comentarios" :key="comentario.id" :comentario="comentario" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <Rodape />
 </template>
 
 <script>
 import Menu from './../Menu.vue';
+import Rodape from './../Rodape.vue';
 import FormComentario from "./FormComentario.vue";
 import Comentario from "./Comentario.vue";
 import SkeletonLoader from "./SkeletonLoader.vue";
 
 export default {
-    components: { Menu, FormComentario, Comentario, SkeletonLoader },
+    components: {
+        Menu,
+        Rodape,
+        FormComentario, 
+        Comentario, 
+        SkeletonLoader
+    },
     data() {
         return {
             artigo: [],

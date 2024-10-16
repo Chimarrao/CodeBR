@@ -18,7 +18,7 @@
             </div>
 
             <div class="navbar-item">
-                <form @submit.prevent="search">
+                <form @submit.prevent="pesquisar">
                     <div class="field is-grouped">
                         <p class="control">
                             <input class="input" v-model="searchQuery" type="text" placeholder="Pesquisar...">
@@ -46,17 +46,15 @@ export default {
         toggleMenu() {
             this.isActive = !this.isActive;
         },
-        search() {
-            let currentUrl = window.location.href;
+        pesquisar() {
             let queryParams = new URLSearchParams(window.location.search);
 
             if (this.searchQuery) {
                 queryParams.set('q', this.searchQuery);
             }
 
-            const newUrl = `${currentUrl}?${queryParams.toString()}`;
-
-            this.$router.push({ path: `/external-redirect`, query: { url: newUrl } });
+            this.$router.push({ path: `/`, query: { q: this.searchQuery } });
+            this.$emit('pesquisar', this.searchQuery);
         },
     },
 };

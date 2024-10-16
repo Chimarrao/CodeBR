@@ -8,9 +8,13 @@ const routes = [
         component: Home,
     },
     {
+        path: '/page/:pageNumber',
+        component: Home,
+    },
+    {
         path: '/artigo/:slug',
         component: Artigo,
-        props: true 
+        props: true
     }
 ];
 

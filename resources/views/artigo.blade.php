@@ -54,8 +54,6 @@
 <body>
     <div id="app">
     </div>
-
-    @include('components.rodape')
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">

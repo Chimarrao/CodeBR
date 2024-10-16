@@ -106,8 +106,6 @@
             </div>
         </div>
     </section>
-
-    @include('components.rodape')
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">

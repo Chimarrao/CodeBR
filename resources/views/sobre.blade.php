@@ -79,8 +79,6 @@
 
         <p class="is-size-5 mt-5">Obrigado por visitar o meu blog e espero vê-lo novamente em breve! 👍💻</p>
     </div>
-
-    @include('components.rodape')
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">

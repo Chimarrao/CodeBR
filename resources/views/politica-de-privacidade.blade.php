@@ -124,8 +124,6 @@
                 deixar os cookies ativados, caso interaja com um dos recursos que você usa em nosso site.</span></p>
         <p class="is-size-5 mt-5"><span style="color: black;">Esta política é efetiva a partir de&nbsp;15 April 2023 00:52</span></p>
     </div>
-
-    @include('components.rodape')
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">

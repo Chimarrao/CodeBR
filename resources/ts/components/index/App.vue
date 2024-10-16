@@ -1,5 +1,5 @@
 <template>
-    <Menu />
+    <Menu @pesquisar="pesquisar" />
     <section class="hero is-medium is-dark is-bold">
         <div class="hero-body">
             <div class="container text-center">
@@ -11,7 +11,7 @@
 
     <section class="section index">
         <div class="container">
-            <div v-if="!hasSearchQuery">
+            <div v-if="!searchQuery">
                 <h2 class="title is-3">Artigos em Destaque</h2>
                 <div class="columns is-multiline">
                     <BlocoPequenoArtigo v-for="artigo in artigosDestaque" :key="index" :artigo="artigo" />
@@ -19,7 +19,7 @@
             </div>
 
             <h2 class="title is-3">
-                {{ hasSearchQuery ? 'Resultados da busca' : 'Artigos Recentes' }}
+                {{ searchQuery ? 'Resultados da busca' : 'Artigos Recentes' }}
             </h2>
             <div class="columns is-multiline">
                 <SkeletonLoader v-if="loading" v-for="i in 9" :key="i" />
@@ -50,16 +50,20 @@
             </div>
         </div>
     </section>
+
+    <Rodape />
 </template>
 
 <script>
 import Menu from './../Menu.vue';
+import Rodape from './../Rodape.vue';
 import BlocoPequenoArtigo from './BlocoPequenoArtigo.vue';
-import SkeletonLoader from './SkeletonLoader.vue'; 
+import SkeletonLoader from './SkeletonLoader.vue';
 
 export default {
     components: {
         Menu,
+        Rodape,
         BlocoPequenoArtigo,
         SkeletonLoader
     },
@@ -75,6 +79,15 @@ export default {
             texto: 'Um blog sobre programação',
             index: 0
         };
+    },
+    beforeRouteUpdate(to, from, next) {
+        if (to.query.q !== from.query.q || to.params.page !== from.params.page) {
+            this.numeroPagina = parseInt(to.params.page) || 1;
+            this.searchQuery = to.query.q || '';
+
+            this.fetchArtigos();
+        }
+        next();
     },
     mounted() {
         this.iniciarDigitacao();
@@ -99,9 +112,6 @@ export default {
         window.removeEventListener('popstate', this.handlePopState);
     },
     computed: {
-        hasSearchQuery() {
-            return this.searchQuery !== '';
-        },
         paginationRange() {
             return Array.from({ length: 5 }, (_, i) => {
                 const start = Math.max(1, this.numeroPagina - 2);
@@ -206,6 +216,16 @@ export default {
 
             this.loading = false;
         },
+
+        /**
+         * Pesquisa os artigos
+         * 
+         * @param {string} termo Termo da pesquisa
+         */
+        pesquisar(termo) {
+            this.searchQuery = termo;
+            this.fetchArtigos();
+        }
     }
 };
 </script>
