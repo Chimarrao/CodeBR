@@ -6,7 +6,10 @@ const WebpackBar = require('webpackbar');
 const CompressionPlugin = require('compression-webpack-plugin');
 const CriticalCssPlugin = require('critical-css-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+<<<<<<< HEAD
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+=======
+>>>>>>> 3e6576c (Base de códigos para front para Vue.js)
 
 module.exports = {
     mode: 'production',
@@ -81,6 +84,5 @@ module.exports = {
             target: 'css/app-critical.css',
             inline: true,
         }),
-        // new BundleAnalyzerPlugin()
     ],
 };

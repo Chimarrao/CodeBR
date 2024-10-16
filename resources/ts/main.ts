@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // @ts-ignore
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -11,6 +12,18 @@ app.mount('#app');
 
 
 
+=======
+//@ts-ignore
+import { createApp } from 'vue'
+//@ts-ignore
+import MainComponent from './components/MainComponent.vue';
+
+
+const app = createApp(MainComponent);
+app.mount('#app');
+
+
+>>>>>>> 3e6576c (Base de códigos para front para Vue.js)
 import { alerts } from './alerts/alerts';
 
 import './contato';
