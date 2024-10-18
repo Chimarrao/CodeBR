@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Index from './components/index/App.vue';
 import Artigo from './components/article/App.vue';
 import Sobre from './components/about/App.vue';
+import Contato from './components/contact/App.vue';
 
 const routes = [
     {
@@ -23,7 +24,7 @@ const routes = [
     },
     {
         path: '/contato',
-        component: Index,
+        component: Contato,
     },
     {
         path: '/politica-de-privacidade',

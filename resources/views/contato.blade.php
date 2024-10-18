@@ -47,65 +47,12 @@
     <link href="{{ asset('css/app-critical.css') }}" rel="stylesheet">
 
     <!-- Importações -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css" integrity="sha512-RpeJZX3aH5oZN3U3JhE7Sd+HG8XQsqmP3clIbu4G28p668yNsRNj3zMASKe1ATjl/W80wuEtCx2dFA8xaebG5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css" rel="stylesheet" integrity="sha512-RpeJZX3aH5oZN3U3JhE7Sd+HG8XQsqmP3clIbu4G28p668yNsRNj3zMASKe1ATjl/W80wuEtCx2dFA8xaebG5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
-    <section class="hero is-medium is-dark is-bold" style="background-image: url('{{ asset('images/background.webp') }}');">
-        <div class="hero-body">
-            <div class="container text-center">
-                <h1 class="title">
-                    Code BR
-                </h1>
-                <h2 class="subtitle" id="subtitulo">
-                </h2>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-two-thirds">
-                    <div class="message-body mt-6">
-                        <form id="contatoForm" method="POST">
-                            <div class="field">
-                                <p class="label">Nome:</p>
-                                <div class="control">
-                                    <input class="input" name="nome" type="text" required>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <p class="label">Email:</p>
-                                <div class="control">
-                                    <input class="input" name="email" type="email">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <p class="label">Telefone:</p>
-                                <div class="control">
-                                    <input class="input" name="telefone" type="phone">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <p class="label">Mensagem:</p>
-                                <div class="control">
-                                    <textarea class="textarea" name="mensagem" required></textarea>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="g-recaptcha" data-sitekey="6LdlmB4pAAAAAF8uCw8BeWogDClVSiCRx5eNx-7e"></div>
-                            </div>
-                            <div class="control">
-                                <button class="button is-primary" type="submit">Enviar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div id="app"></div>
 </body>
 
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
