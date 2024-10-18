@@ -118,7 +118,7 @@ h6 {
     position: relative;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) { */
     body {
         background-color: #212529;
     }
@@ -209,7 +209,7 @@ h6 {
     .redesocial:hover {
         color: hsl(0, 0%, 10%);
     }
-}
+/* } */
 
 /* Estilo da barra de rolagem */
 ::-webkit-scrollbar {
@@ -1087,4 +1087,9 @@ pre>code.diff-highlight .token.inserted:not(.prefix) {
     top: 48%;
     left: 16%;
     transform: rotateZ(-50deg);
+}
+
+.hero {
+    background-size: cover;
+    background-position: center;
 }

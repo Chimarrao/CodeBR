@@ -83,7 +83,8 @@ class EstilizadorModoEscuro {
      * @return {void}
      */
     public aplicarEstilosModoEscuro(): void {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches && this.elementoConteiner) {
+        //window.matchMedia('(prefers-color-scheme: dark)').matches && 
+        if (this.elementoConteiner) {
             const paragrafosESpans = this.elementoConteiner.querySelectorAll('p, span, strong');
 
             this.aplicarEstilosAElementos(paragrafosESpans);
