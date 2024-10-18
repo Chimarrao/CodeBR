@@ -2,15 +2,6 @@
     <Menu />
     <Cabecalho />
 
-    <section class="hero is-medium is-dark is-bold">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <h1 class="title">Code BR</h1>
-                <h2 class="subtitle" id="subtitulo">Bem-vindo ao meu blog de programação!</h2>
-            </div>
-        </div>
-    </section>
-
     <div class="container">
         <h2 class="is-size-2 mt-6"><span style="color: black;">Política Privacidade</span></h2>
         <p class="is-size-5 mt-5"><span style="color: black;">A sua privacidade é importante para nós. É política do

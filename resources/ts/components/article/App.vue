@@ -1,6 +1,5 @@
 <template>
     <Menu />
-    <Cabecalho />
     <SkeletonLoader v-if="loading" />
 
     <section class="hero is-medium is-dark is-bold">

@@ -2,15 +2,6 @@
     <Menu />
     <Cabecalho />
 
-    <section class="hero is-medium is-dark is-bold">
-        <div class="hero-body">
-            <div class="container text-center">
-                <h1 class="title">Code BR</h1>
-                <h2 class="subtitle" id="subtitulo">Um blog sobre programação</h2>
-            </div>
-        </div>
-    </section>
-
     <section>
         <div class="container">
             <div class="columns is-centered">

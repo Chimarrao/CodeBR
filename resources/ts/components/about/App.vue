@@ -2,15 +2,6 @@
     <Menu />
     <Cabecalho />
 
-    <section class="hero is-medium is-dark is-bold">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <h1 class="title">Code BR</h1>
-                <h2 class="subtitle" id="subtitulo">Bem-vindo ao meu blog de programação!</h2>
-            </div>
-        </div>
-    </section>
-
     <div class="container">
         <p class="is-size-5 mt-6">
             Olá! Meu nome é Lucas Reolon e sou um entusiasta de programação de {{ idade }} anos. Estou animado em compartilhar
