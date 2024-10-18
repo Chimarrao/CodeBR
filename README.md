@@ -14,8 +14,7 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 - PHPUnit 10.5
 - Typescript 5.3
 - Node 20.9.0 LTS
-- Bootstrap (removida)
-- CleanBlog Template (removida)
+- Vue.js 3
 
 ## Bibliotecas relevantes JS/TS utilizadas
 
@@ -27,6 +26,8 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 ## Bibliotecas removidas
 
 - Sweetalert2
+- Bootstrap (removida)
+- CleanBlog Template (removida)
 
 ## Como executar o Projeto
 
