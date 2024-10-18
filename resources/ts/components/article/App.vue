@@ -1,5 +1,6 @@
 <template>
     <Menu />
+    <Cabecalho />
     <SkeletonLoader v-if="loading" />
 
     <section class="hero is-medium is-dark is-bold">
@@ -55,6 +56,7 @@
 <script>
 import Menu from './../Menu.vue';
 import Rodape from './../Rodape.vue';
+import Cabecalho from './../Cabecalho.vue';
 import FormComentario from "./FormComentario.vue";
 import Comentario from "./Comentario.vue";
 import SkeletonLoader from "./SkeletonLoader.vue";
@@ -63,6 +65,7 @@ export default {
     components: {
         Menu,
         Rodape,
+        Cabecalho,
         FormComentario, 
         Comentario, 
         SkeletonLoader

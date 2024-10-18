@@ -1,5 +1,6 @@
 <template>
     <Menu />
+    <Cabecalho />
 
     <section class="hero is-medium is-dark is-bold">
         <div class="hero-body">
@@ -65,11 +66,13 @@
 <script>
 import Menu from './../Menu.vue';
 import Rodape from './../Rodape.vue';
+import Cabecalho from './../Cabecalho.vue';
 
 export default {
     components: {
         Menu,
         Rodape,
+        Cabecalho
     },
     data() {
         return {
