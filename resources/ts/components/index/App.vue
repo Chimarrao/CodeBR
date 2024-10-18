@@ -1,13 +1,6 @@
 <template>
     <Menu @pesquisar="pesquisar" />
-    <section class="hero is-medium is-dark is-bold">
-        <div class="hero-body">
-            <div class="container text-center">
-                <h1 class="title">Code BR</h1>
-                <h2 class="subtitle" id="subtitulo"></h2>
-            </div>
-        </div>
-    </section>
+    <Cabecalho />
 
     <section class="section index">
         <div class="container">
@@ -57,6 +50,7 @@
 <script>
 import Menu from './../Menu.vue';
 import Rodape from './../Rodape.vue';
+import Cabecalho from './../Cabecalho.vue';
 import BlocoPequenoArtigo from './BlocoPequenoArtigo.vue';
 import SkeletonLoader from './SkeletonLoader.vue';
 
@@ -64,6 +58,7 @@ export default {
     components: {
         Menu,
         Rodape,
+        Cabecalho,
         BlocoPequenoArtigo,
         SkeletonLoader
     },
@@ -229,10 +224,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.hero {
-    background-size: cover;
-    background-position: center;
-}
-</style>
