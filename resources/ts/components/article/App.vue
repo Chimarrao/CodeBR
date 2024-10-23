@@ -23,16 +23,23 @@
     <section class="section artigo">
         <div class="container">
             <div class="columns is-centered">
-                <div class="column is-one">
-                    <!--  -->
+                <div class="column is-one"></div>
+                <div class="column is-two-thirds">
+                    <!-- Aqui percorremos o conteúdo do artigo para detectar blocos de código -->
+                    <template v-for="(item, index) in processarTexto(artigo.texto)" :key="index">
+                        <!-- <CodeHighlight  :language="item.language" :code="item.content" /> -->
+
+                        <code-highlight v-if="item.isCode" language="javascript">
+                            {{ item.content }}
+                        </code-highlight>
+                        <div v-else v-html="item.content"></div>
+                    </template>
                 </div>
-                <div class="column is-two-thirds" v-html="artigo.texto"></div>
-                <div class="column is-one">
-                    <!--  -->
-                </div>
+                <div class="column is-one"></div>
             </div>
         </div>
     </section>
+
 
     <div class="section comentarios pt-0">
         <div class="container">
@@ -61,14 +68,19 @@ import FormComentario from "./FormComentario.vue";
 import Comentario from "./Comentario.vue";
 import SkeletonLoader from "./SkeletonLoader.vue";
 
+import CodeHighlight from "vue-code-highlight/src/CodeHighlight.vue";
+import "vue-code-highlight/themes/duotone-sea.css";
+import "vue-code-highlight/themes/window.css";
+
 export default {
     components: {
         Menu,
         Rodape,
         Cabecalho,
-        FormComentario, 
-        Comentario, 
-        SkeletonLoader
+        FormComentario,
+        Comentario,
+        SkeletonLoader,
+        CodeHighlight
     },
     data() {
         return {
@@ -77,15 +89,7 @@ export default {
             loading: false,
         };
     },
-    mounted() {
-        this.fetchArtigo();
-    },
     methods: {
-        /**
-         * Busca o artigo da página
-         *
-         * @return {void}
-         */
         async fetchArtigo() {
             this.loading = true;
             const slug = window.location.pathname.split("/artigo/")[1].split("/")[0];
@@ -108,9 +112,49 @@ export default {
         },
 
         adicionarComentario(novoComentario) {
-            console.log("Comentário adicionado", novoComentario);
             this.fetchArtigo();
+        },
+
+        processarTexto(texto) {
+            const resultado = [];
+            const regex = /<pre.*?><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g;
+            let match, lastIndex = 0;
+
+            while ((match = regex.exec(texto)) !== null) {
+                if (match.index > lastIndex) {
+                    resultado.push({
+                        isCode: false,
+                        content: texto.slice(lastIndex, match.index),
+                    });
+                }
+
+                resultado.push({
+                    isCode: true,
+                    language: match[1],
+                    content: this.decodeHTMLEntities(match[2]),
+                });
+
+                lastIndex = regex.lastIndex;
+            }
+
+            if (texto && lastIndex < parseInt(texto.length)) {
+                resultado.push({
+                    isCode: false,
+                    content: texto.slice(lastIndex),
+                });
+            }
+
+            return resultado;
+        },
+
+        decodeHTMLEntities(texto) {
+            const textarea = document.createElement("textarea");
+            textarea.innerHTML = texto;
+            return textarea.value;
         }
     },
+    mounted() {
+        this.fetchArtigo();
+    }
 };
 </script>

@@ -56,8 +56,8 @@
     </div>
 </body>
 
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-<script src="{{ asset('js/bundle.js') }}"></script>
+<link href="{{ asset('css/app.css') }}?v=1.0.1" rel="stylesheet">
+<script src="{{ asset('js/bundle.js') }}?v=1.0.1"></script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3072419723964148" crossorigin="anonymous"></script>
 

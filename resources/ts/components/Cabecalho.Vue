@@ -16,11 +16,11 @@ import { loadFull } from 'tsparticles';
 
 export default {
     setup() {
-        const particlesSection = ref(null); // Referência para a seção onde as partículas serão aplicadas
+        const particlesSection = ref(null);
 
         const initParticles = async () => {
             if (particlesSection.value) {
-                particlesSection.value.setAttribute('id', 'section_particulas'); // Definir o id
+                particlesSection.value.setAttribute('id', 'section_particulas');
             }
 
             try {
@@ -69,12 +69,12 @@ export default {
         };
 
         onMounted(() => {
-            initParticles(); // Inicializar partículas ao montar o componente
+            initParticles();
         });
 
         onBeforeUnmount(() => {
             tsParticles.dom().forEach((container) => {
-                container.stop(); // Parar as partículas ao desmontar o componente
+                container.stop();
             });
         });
 
