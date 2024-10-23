@@ -27,7 +27,8 @@ class ArtigoController extends Controller
         ]);
     }
 
-    public function get(Request $request) {
+    public function get(Request $request)
+    {
         $slug = $request->input('slug', 1);
         $artigo = Artigo::where('url', $slug)->first();
 
@@ -38,8 +39,11 @@ class ArtigoController extends Controller
         }
 
         $comentarios = $this->getComentarios($artigo->id_artigo);
+
         $artigo->texto = $this->attCaminhoImagem($artigo->texto);
         $artigo->texto = $this->attCaminhoImagem2($artigo->texto);
+
+        $artigo->texto = $this->processarGistsNoArtigo($artigo->texto);
 
         return response()->json([
             'success' => true,
@@ -48,6 +52,35 @@ class ArtigoController extends Controller
                 'comentarios' => $comentarios
             ],
         ]);
+    }
+
+    private function processarGistsNoArtigo(string $html)
+    {
+        $pattern = '/<script\s+src="https:\/\/gist\.github\.com\/.*?\.js"><\/script>/i';
+
+        preg_match_all($pattern, $html, $matches);
+
+        foreach ($matches[0] as $scriptTag) {
+            preg_match('/src="(.*?)"/', $scriptTag, $urlMatch);
+            if (isset($urlMatch[1])) {
+                $gistUrl = $urlMatch[1];
+                $gistUrl = str_replace('.js', '', $gistUrl);
+
+                $gistContent = file_get_contents($gistUrl . '.json');
+
+                if ($gistContent !== false) {
+                    $gistContent = json_decode($gistContent, true);
+                    $css = $gistContent['stylesheet'];
+                    $novoItem = $gistContent['div'];
+
+                    $novoItem .= "<link href='$css' rel='stylesheet'>";
+
+                    $html = str_replace($scriptTag, $novoItem, $html);
+                }
+            }
+        }
+
+        return $html;
     }
 
     public function getAll(Request $request)
