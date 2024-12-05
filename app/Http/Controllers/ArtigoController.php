@@ -27,6 +27,12 @@ class ArtigoController extends Controller
         ]);
     }
 
+    /**
+     * Obtém um artigo baseado no slug e retorna seus dados e comentários.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function get(Request $request)
     {
         $slug = $request->input('slug', 1);
@@ -54,6 +60,12 @@ class ArtigoController extends Controller
         ]);
     }
 
+    /**
+     * Processa e substitui gists no conteúdo do artigo.
+     *
+     * @param  string  $html  O conteúdo HTML do artigo.
+     * @return string  O HTML processado com os gists substituídos.
+     */
     private function processarGistsNoArtigo(string $html)
     {
         $pattern = '/<script\s+src="https:\/\/gist\.github\.com\/.*?\.js"><\/script>/i';
@@ -83,6 +95,12 @@ class ArtigoController extends Controller
         return $html;
     }
 
+    /**
+     * Obtém todos os artigos com paginação e busca.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAll(Request $request)
     {
         $artigosPorPagina = 9;
@@ -121,6 +139,11 @@ class ArtigoController extends Controller
         ]);
     }
 
+    /**
+     * Obtém todos os artigos em destaque.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllDestaque()
     {
         $artigos = Artigo::where('destaque', 1)->get();
@@ -176,7 +199,7 @@ class ArtigoController extends Controller
      * Atualiza o caminho das imagens no texto para usar a função 'asset'.
      *
      * @param  string  $texto  O texto contendo imagens.
-     * @return string
+     * @return string  O texto atualizado com os caminhos corretos.
      */
     private function attCaminhoImagem($texto)
     {
@@ -196,7 +219,7 @@ class ArtigoController extends Controller
      * Atualiza o caminho das imagens no texto para usar a função 'asset' - Versão 2.
      *
      * @param  string  $texto  O texto contendo imagens.
-     * @return string
+     * @return string  O texto atualizado com os caminhos corretos.
      */
     private function attCaminhoImagem2($texto)
     {
