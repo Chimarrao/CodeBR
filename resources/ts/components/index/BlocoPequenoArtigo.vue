@@ -30,8 +30,9 @@ export default {
         },
         formatDate(date) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(date).toLocaleDateString('pt-BR', options);
-        },
+            const localDate = new Date(date + 'T00:00:00');
+            return localDate.toLocaleDateString('pt-BR', options);
+        }
     },
 };
 </script>
