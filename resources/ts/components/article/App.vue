@@ -101,6 +101,10 @@ export default {
                 if (resultado.success) {
                     this.artigo = resultado.data.artigo;
                     this.comentarios = resultado.data.comentarios;
+
+                    this.$nextTick(() => {
+                        this.executarScripts();
+                    });
                 } else {
                     console.error("Erro ao carregar os artigos:", resultado.message);
                 }
@@ -151,10 +155,28 @@ export default {
             const textarea = document.createElement("textarea");
             textarea.innerHTML = texto;
             return textarea.value;
+        },
+
+        executarScripts() {
+            const scripts = document.querySelectorAll(".container script");
+            scripts.forEach((script) => {
+                const novoScript = document.createElement("script");
+                if (script.src) {
+                    novoScript.src = script.src;
+                } else {
+                    novoScript.innerHTML = script.innerHTML;
+                }
+                document.body.appendChild(novoScript);
+                document.body.removeChild(novoScript);
+            });
         }
     },
     mounted() {
         this.fetchArtigo();
+
+        this.$nextTick(() => {
+            this.executarScripts();
+        });
     }
 };
 </script>
