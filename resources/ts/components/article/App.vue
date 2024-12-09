@@ -29,9 +29,11 @@
                     <template v-for="(item, index) in processarTexto(artigo.texto)" :key="index">
                         <!-- <CodeHighlight  :language="item.language" :code="item.content" /> -->
 
-                        <code-highlight v-if="item.isCode" language="javascript">
-                            {{ item.content }}
-                        </code-highlight>
+                        <code-highlight
+                            v-if="item.isCode"
+                            :language="item.language"
+                            :code="item.content"
+                        ></code-highlight>
                         <div v-else v-html="item.content"></div>
                     </template>
                 </div>
