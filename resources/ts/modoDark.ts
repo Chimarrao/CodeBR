@@ -26,8 +26,10 @@ class EstilizadorModoEscuro {
     private aplicarEstilosAElementos(elementos: NodeListOf<Element>): void {
         elementos.forEach((elemento) => {
             if (!elemento.closest('.gist')) {
-                if (elemento instanceof HTMLElement) {
-                    elemento.style.color = 'white';
+                if (!elemento.closest('pre') && !elemento.closest('code')) {
+                    if (elemento instanceof HTMLElement) {
+                        elemento.style.color = 'white';
+                    }
                 }
             }
         });
@@ -83,7 +85,6 @@ class EstilizadorModoEscuro {
      * @return {void}
      */
     public aplicarEstilosModoEscuro(): void {
-        //window.matchMedia('(prefers-color-scheme: dark)').matches && 
         if (this.elementoConteiner) {
             const paragrafosESpans = this.elementoConteiner.querySelectorAll('p, span, strong');
 
