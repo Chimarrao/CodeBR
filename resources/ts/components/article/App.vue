@@ -32,8 +32,9 @@
                         <code-highlight
                             v-if="item.isCode"
                             :language="item.language"
-                            :code="item.content"
-                        ></code-highlight>
+                        >
+                        {{ item.content }}
+                        </code-highlight>
                         <div v-else v-html="item.content"></div>
                     </template>
                 </div>
