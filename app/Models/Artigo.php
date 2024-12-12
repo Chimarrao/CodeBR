@@ -57,6 +57,12 @@ class Artigo extends Model
 
                 if ($ultimaImagem) {
                     $imagem = Image::make($ultimaImagem);
+
+                    $imagem->resize(1280, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+
                     $imagem->encode('webp', 80)->save($caminhoImagem);
                 } else {
                     $artigo->imagem = null;

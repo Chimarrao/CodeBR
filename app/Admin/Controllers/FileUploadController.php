@@ -23,6 +23,12 @@ class FileUploadController
                 $filename = $file->getClientOriginalName() . '-' . uniqid() . '.webp';
 
                 $image = Image::make($file)->encode('webp', 80);
+
+                $image->resize(1280, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
                 $image->save(public_path('images/' . $filename));
 
                 $fileUrl = asset('images/' . $filename);
