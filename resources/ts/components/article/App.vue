@@ -26,7 +26,7 @@
                 <div class="column is-one"></div>
                 <div class="column is-two-thirds">
                     <template v-for="(item, index) in processarTexto(artigo.texto)" :key="index">
-                        <prism v-if="item.isCode" language="python">{{ item.content }}</prism>
+                        <prism v-if="item.isCode" :language="item.language">{{ item.content }}</prism>
                         <div v-else v-html="item.content"></div>
                     </template>
                 </div>
@@ -34,7 +34,6 @@
             </div>
         </div>
     </section>
-
 
     <div class="section comentarios pt-0">
         <div class="container">
@@ -65,28 +64,44 @@ import SkeletonLoader from "./SkeletonLoader.vue";
 
 import Prism from 'vue-prism-component'
 import 'prismjs/themes/prism-okaidia.css'
+import 'prismjs/components/prism-bash'
+import 'prismjs/components/prism-batch'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-css';
 // import 'prismjs/components/prism-html';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-graphql';
 import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-nginx';
-// import 'prismjs/components/prism-php';
+// import 'prismjs/components/prism-php.min';
+// import 'prismjs/components/prism-phpdoc';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-rust';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-yaml';
 
+import 'prismjs/plugins/inline-color/prism-inline-color.css'
+import 'prismjs/plugins/inline-color/prism-inline-color.js'
+
+// import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.css'
+import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js'
+
+import 'prismjs/plugins/treeview/prism-treeview.css'
+import 'prismjs/plugins/treeview/prism-treeview.js'
+
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css'
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js'
+
+import 'prismjs/plugins/match-braces/prism-match-braces.css'
+import 'prismjs/plugins/match-braces/prism-match-braces.js'
+
+import 'prismjs/plugins/toolbar/prism-toolbar.js';
+import 'prismjs/plugins/toolbar/prism-toolbar.css';
+// import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.css'
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
 
 export default {
     components: {
@@ -148,10 +163,25 @@ export default {
                     });
                 }
 
+                // provisorio
+                if (match[1] == 'php') {
+                    match[1] = 'none'
+                }
+
+                let codigMatch = this.decodeHTMLEntities(match[2]);
+
+                const lines = codigMatch.split('\n');
+
+                if (lines.length > 0 && lines[0].trim() === '') {
+                    lines.shift();
+                }
+
+                codigMatch = lines.join('\n');
+
                 resultado.push({
                     isCode: true,
-                    language: match[1],
-                    content: this.decodeHTMLEntities(match[2]),
+                    language: match[1] == 'none' ? 'plaintext' : match[1],
+                    content: codigMatch,
                 });
 
                 lastIndex = regex.lastIndex;
@@ -196,3 +226,149 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+/**
+ * atom-dark theme for `prism.js`
+ * Based on Atom's `atom-dark` theme: https://github.com/atom/atom-dark-syntax
+ * @author Joe Gibson (@gibsjose)
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #c5c8c6;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+    font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"] {
+    background: #1d1f21;
+}
+
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #7C7C7C;
+}
+
+.token.punctuation {
+    color: #c5c8c6;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.keyword,
+.token.tag {
+    color: #96CBFE;
+}
+
+.token.class-name {
+    color: #FFFFB6;
+    text-decoration: underline;
+}
+
+.token.boolean,
+.token.constant {
+    color: #99CC99;
+}
+
+.token.symbol,
+.token.deleted {
+    color: #f92672;
+}
+
+.token.number {
+    color: #FF73FD;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #A8FF60;
+}
+
+.token.variable {
+    color: #C6C5FE;
+}
+
+.token.operator {
+    color: #EDEDED;
+}
+
+.token.entity {
+    color: #FFFFB6;
+    cursor: help;
+}
+
+.token.url {
+    color: #96CBFE;
+}
+
+.language-css .token.string,
+.style .token.string {
+    color: #87C38A;
+}
+
+.token.atrule,
+.token.attr-value {
+    color: #F9EE98;
+}
+
+.token.function {
+    color: #DAD085;
+}
+
+.token.regex {
+    color: #E9C062;
+}
+
+.token.important {
+    color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+</style>
