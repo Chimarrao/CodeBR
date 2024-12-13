@@ -69,24 +69,27 @@ import 'prismjs/components/prism-batch'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-javascript';
-// import 'prismjs/components/prism-html';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-typescript';
-// import 'prismjs/components/prism-php.min';
-// import 'prismjs/components/prism-phpdoc';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-rust';
 import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-markdown';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-markup-templating'
+import 'prismjs/components/prism-php';
+
+/* Linguagens não usadas removidas para reduzir o peso do bundle */
+// import 'prismjs/components/prism-markdown';
+
+import 'prismjs/plugins/toolbar/prism-toolbar.js';
+import 'prismjs/plugins/toolbar/prism-toolbar.css';
 
 import 'prismjs/plugins/inline-color/prism-inline-color.css'
 import 'prismjs/plugins/inline-color/prism-inline-color.js'
 
-// import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.css'
 import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js'
 
 import 'prismjs/plugins/treeview/prism-treeview.css'
@@ -98,9 +101,6 @@ import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js'
 import 'prismjs/plugins/match-braces/prism-match-braces.css'
 import 'prismjs/plugins/match-braces/prism-match-braces.js'
 
-import 'prismjs/plugins/toolbar/prism-toolbar.js';
-import 'prismjs/plugins/toolbar/prism-toolbar.css';
-// import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.css'
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
 
 export default {
@@ -161,11 +161,6 @@ export default {
                         isCode: false,
                         content: texto.slice(lastIndex, match.index),
                     });
-                }
-
-                // provisorio
-                if (match[1] == 'php') {
-                    match[1] = 'none'
                 }
 
                 let codigMatch = this.decodeHTMLEntities(match[2]);
