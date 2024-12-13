@@ -25,3 +25,4 @@ Route::post('/contato', [ContatoController::class, 'post']);
 Route::post('/comentarios', [ComentarioController::class, 'post']);
 
 Route::post('/arquivos', [ArquivoController::class, 'store']);
+Route::post('/upload', [ArquivoController::class, 'upload']);

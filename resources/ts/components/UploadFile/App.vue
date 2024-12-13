@@ -4,38 +4,37 @@
 
     <section class="section artigo" style="min-height: 80vh;">
         <div class="container has-text-white" style="max-width: 600px; margin: 0 auto;">
-            
+
             <h1 class="title has-text-white has-text-centered">Anonymous File Upload</h1>
             <p class="has-text-centered">Maximum upload file size: 5000MB.</p>
 
-            <div 
-                class="box has-background-dark has-text-white"
+            <div class="box has-background-dark has-text-white"
                 style="border: 2px dashed #aaa; padding: 2em; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px;"
-                @dragover.prevent
-                @drop.prevent="handleDrop"
-            >
+                @dragover.prevent @drop.prevent="handleDrop">
                 <div class="has-text-centered" style="margin-bottom: 1em;">
                     <p class="is-size-5">Drag & Drop your files or</p>
                 </div>
-                
+
                 <div class="field has-addons has-text-centered">
                     <p class="control">
                         <label class="button is-link">
-                            <input class="file-input" type="file" @change="handleFileChange" ref="fileInput" style="display: none;">
+                            <input class="file-input" type="file" @change="handleFileChange" ref="fileInput"
+                                style="display: none;">
                             <span class="file-label">
                                 Browse
                             </span>
                         </label>
                     </p>
                 </div>
-                
+
                 <p v-if="selectedFile" class="has-text-centered" style="margin-top: 1em;">
                     Selected file: <strong>{{ fileName }}</strong> ({{ fileSizeFormatted }})
                 </p>
             </div>
 
             <div v-if="uploading" class="field" style="margin-top: 2em;">
-                <progress class="progress is-primary is-large" :value="uploadProgress" max="100">{{ uploadProgress }}%</progress>
+                <progress class="progress is-primary is-large" :value="uploadProgress" max="100">{{ uploadProgress
+                    }}%</progress>
                 <p class="has-text-centered">Uploading... {{ uploadProgress }}% - {{ uploadSpeedFormatted }}</p>
             </div>
 
@@ -49,6 +48,19 @@
                 <p><strong>Upload completed!</strong></p>
                 <p>Link: <a :href="uploadedLink" target="_blank">{{ uploadedLink }}</a></p>
                 <p>Size: {{ fileSizeFormatted }}</p>
+
+                <!-- Botões de compartilhamento -->
+                <div class="buttons is-centered" style="margin-top: 1em;">
+                    <button class="button is-link" @click="shareOnWhatsApp">
+                        Share on WhatsApp
+                    </button>
+                    <button class="button is-info" @click="shareOnTelegram">
+                        Share on Telegram
+                    </button>
+                    <button class="button is-success" @click="copyToClipboard">
+                        Copy Link
+                    </button>
+                </div>
             </div>
 
             <div v-if="errorMessage" class="notification is-danger" style="margin-top: 2em;">
@@ -142,15 +154,15 @@ export default {
             formData.append('file', this.selectedFile);
 
             try {
-                const response = await axios.post('https://anonymfile.com/api/v1/upload', formData, {
+                const response = await axios.post(`/api/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
                     onUploadProgress: (progressEvent) => {
                         if (progressEvent.total) {
-                            const timeElapsed = (Date.now() - this.startTime) / 1000; // tempo em segundos
-                            const loadedKB = progressEvent.loaded / 1024;
-                            this.uploadSpeed = loadedKB / timeElapsed;
-
-                            const progress = (progressEvent.loaded * 100) / progressEvent.total;
-                            this.uploadProgress = parseFloat(progress.toFixed(2));
+                            const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                            this.uploadProgress = progress.toFixed(2);
+                            console.log(`Upload progress (client to server): ${progress}%`);
                         }
                     }
                 });
@@ -179,21 +191,24 @@ export default {
                 } else {
                     this.errorMessage = 'Error uploading file to anonymfile.';
                 }
-
             } catch (err) {
                 console.error(err);
                 this.errorMessage = 'Unexpected error during upload.';
-            } finally {
-                this.uploading = false;
             }
+        },
+        shareOnWhatsApp() {
+            const url = `https://wa.me/?text=${encodeURIComponent('Check out this file: ' + this.uploadedLink)}`;
+            window.open(url, '_blank');
+        },
+        shareOnTelegram() {
+            const url = `https://t.me/share/url?url=${encodeURIComponent(this.uploadedLink)}&text=${encodeURIComponent('Check out this file!')}`;
+            window.open(url, '_blank');
+        },
+        copyToClipboard() {
+            navigator.clipboard.writeText(this.uploadedLink).then(() => {
+                alert('Link copied to clipboard!');
+            });
         }
     }
 };
 </script>
-
-<style scoped>
-.progress.is-primary.is-large {
-    height: 1.5rem;
-    border-radius: 4px;
-}
-</style>
