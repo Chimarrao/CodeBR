@@ -94,7 +94,9 @@ export default {
             fileSize: 0,
             fileName: '',
             startTime: null,
-            uploadSpeed: 0
+            uploadSpeed: 0,
+            lastLoaded: 0,
+            lastTime: null
         };
     },
     computed: {
@@ -108,12 +110,10 @@ export default {
             }
         },
         uploadSpeedFormatted() {
-            if (!this.uploadSpeed) return '0 KB/s';
-            if (this.uploadSpeed < 1024) {
-                return this.uploadSpeed.toFixed(2) + ' KB/s';
-            } else {
-                return (this.uploadSpeed / 1024).toFixed(2) + ' MB/s';
+            if (!this.uploadSpeed || this.uploadSpeed <= 0) {
+                return '0 kbps';
             }
+            return this.uploadSpeed.toFixed(2) + ' kbps';
         }
     },
     methods: {
@@ -149,6 +149,8 @@ export default {
             this.uploadedLink = '';
             this.startTime = Date.now();
             this.uploadSpeed = 0;
+            this.lastLoaded = 0;
+            this.lastTime = Date.now();
 
             const formData = new FormData();
             formData.append('file', this.selectedFile);
@@ -162,7 +164,21 @@ export default {
                         if (progressEvent.total) {
                             const progress = (progressEvent.loaded / progressEvent.total) * 100;
                             this.uploadProgress = progress.toFixed(2);
-                            console.log(`Upload progress (client to server): ${progress}%`);
+
+                            const currentTime = Date.now();
+                            const elapsed = (currentTime - this.lastTime) / 1000;
+                            const bytesSent = progressEvent.loaded - this.lastLoaded;
+
+                            if (elapsed > 0) {
+                                const kbps = ((bytesSent * 8) / 1024) / elapsed;
+
+                                this.uploadSpeed = kbps;
+                            }
+
+                            this.lastLoaded = progressEvent.loaded;
+                            this.lastTime = currentTime;
+
+                            console.log(`Upload progress: ${progress}% - ${this.uploadSpeed.toFixed(2)} kbps`);
                         }
                     }
                 });
@@ -194,6 +210,8 @@ export default {
             } catch (err) {
                 console.error(err);
                 this.errorMessage = 'Unexpected error during upload.';
+            } finally {
+                this.uploading = false;
             }
         },
         shareOnWhatsApp() {
