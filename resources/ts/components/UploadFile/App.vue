@@ -2,44 +2,60 @@
     <Menu @pesquisar="pesquisar" />
     <Cabecalho />
 
-    <div class="upload-arquivo">
-        <div class="field">
-            <div class="file is-boxed is-centered">
-                <label class="file-label">
-                    <input class="file-input" type="file" @change="handleFileChange" ref="fileInput">
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="fa fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                            Selecione um arquivo…
-                        </span>
-                    </span>
-                </label>
+    <section class="section artigo" style="min-height: 80vh;">
+        <div class="container has-text-white" style="max-width: 600px; margin: 0 auto;">
+            
+            <h1 class="title has-text-white has-text-centered">Anonymous File Upload</h1>
+            <p class="has-text-centered">Maximum upload file size: 5000MB.</p>
+
+            <div 
+                class="box has-background-dark has-text-white"
+                style="border: 2px dashed #aaa; padding: 2em; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px;"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+            >
+                <div class="has-text-centered" style="margin-bottom: 1em;">
+                    <p class="is-size-5">Drag & Drop your files or</p>
+                </div>
+                
+                <div class="field has-addons has-text-centered">
+                    <p class="control">
+                        <label class="button is-link">
+                            <input class="file-input" type="file" @change="handleFileChange" ref="fileInput" style="display: none;">
+                            <span class="file-label">
+                                Browse
+                            </span>
+                        </label>
+                    </p>
+                </div>
+                
+                <p v-if="selectedFile" class="has-text-centered" style="margin-top: 1em;">
+                    Selected file: <strong>{{ fileName }}</strong> ({{ fileSizeFormatted }})
+                </p>
+            </div>
+
+            <div v-if="uploading" class="field" style="margin-top: 2em;">
+                <progress class="progress is-primary is-large" :value="uploadProgress" max="100">{{ uploadProgress }}%</progress>
+                <p class="has-text-centered">Uploading... {{ uploadProgress }}%</p>
+            </div>
+
+            <div class="field has-text-centered" style="margin-top: 2em;">
+                <button class="button is-primary" @click="uploadFile" :disabled="!selectedFile || uploading">
+                    {{ uploading ? 'Uploading...' : 'Upload' }}
+                </button>
+            </div>
+
+            <div v-if="uploadedLink" class="notification is-success" style="margin-top: 2em;">
+                <p><strong>Upload completed!</strong></p>
+                <p>Link: <a :href="uploadedLink" target="_blank">{{ uploadedLink }}</a></p>
+                <p>Size: {{ fileSizeFormatted }}</p>
+            </div>
+
+            <div v-if="errorMessage" class="notification is-danger" style="margin-top: 2em;">
+                {{ errorMessage }}
             </div>
         </div>
-
-        <div v-if="uploading" class="field">
-            <progress class="progress is-primary" :value="uploadProgress" max="100">{{ uploadProgress }}%</progress>
-            <p>Enviando arquivo... {{ uploadProgress }}%</p>
-        </div>
-
-        <div class="field">
-            <button class="button is-primary" @click="uploadFile" :disabled="!selectedFile || uploading">
-                {{ uploading ? 'Enviando...' : 'Enviar' }}
-            </button>
-        </div>
-
-        <div v-if="uploadedLink" class="notification is-success">
-            <p><strong>Upload concluído!</strong></p>
-            <p>Link: <a :href="uploadedLink" target="_blank">{{ uploadedLink }}</a></p>
-            <p>Tamanho: {{ fileSizeFormatted }}</p>
-        </div>
-
-        <div v-if="errorMessage" class="notification is-danger">
-            {{ errorMessage }}
-        </div>
-    </div>
+    </section>
 
     <Rodape />
 </template>
@@ -89,9 +105,19 @@ export default {
                 this.errorMessage = '';
             }
         },
+        handleDrop(e) {
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                this.selectedFile = files[0];
+                this.fileName = files[0].name;
+                this.fileSize = files[0].size;
+                this.uploadedLink = '';
+                this.errorMessage = '';
+            }
+        },
         async uploadFile() {
             if (!this.selectedFile) {
-                this.errorMessage = 'Nenhum arquivo selecionado.';
+                this.errorMessage = 'No file selected.';
                 return;
             }
 
@@ -132,15 +158,15 @@ export default {
                     const salvaResult = await salvaResponse.json();
 
                     if (!salvaResult.success) {
-                        this.errorMessage = salvaResult.message || 'Erro ao salvar no banco de dados.';
+                        this.errorMessage = salvaResult.message || 'Error saving to database.';
                     }
                 } else {
-                    this.errorMessage = 'Erro ao enviar arquivo para o anonymfile.';
+                    this.errorMessage = 'Error uploading file to anonymfile.';
                 }
 
             } catch (err) {
                 console.error(err);
-                this.errorMessage = 'Ocorreu um erro inesperado no upload.';
+                this.errorMessage = 'Unexpected error during upload.';
             } finally {
                 this.uploading = false;
             }
@@ -150,7 +176,9 @@ export default {
 </script>
 
 <style scoped>
-.upload-arquivo {
-    margin-top: 2rem;
+
+.progress.is-primary.is-large {
+    height: 1.5rem;
+    border-radius: 4px;
 }
 </style>
