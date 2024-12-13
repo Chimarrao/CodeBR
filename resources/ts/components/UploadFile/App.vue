@@ -36,7 +36,7 @@
 
             <div v-if="uploading" class="field" style="margin-top: 2em;">
                 <progress class="progress is-primary is-large" :value="uploadProgress" max="100">{{ uploadProgress }}%</progress>
-                <p class="has-text-centered">Uploading... {{ uploadProgress }}%</p>
+                <p class="has-text-centered">Uploading... {{ uploadProgress }}% - {{ uploadSpeedFormatted }}</p>
             </div>
 
             <div class="field has-text-centered" style="margin-top: 2em;">
@@ -80,7 +80,9 @@ export default {
             uploadedLink: '',
             errorMessage: '',
             fileSize: 0,
-            fileName: ''
+            fileName: '',
+            startTime: null,
+            uploadSpeed: 0
         };
     },
     computed: {
@@ -91,6 +93,14 @@ export default {
                 return kb.toFixed(2) + ' KB';
             } else {
                 return (kb / 1024).toFixed(2) + ' MB';
+            }
+        },
+        uploadSpeedFormatted() {
+            if (!this.uploadSpeed) return '0 KB/s';
+            if (this.uploadSpeed < 1024) {
+                return this.uploadSpeed.toFixed(2) + ' KB/s';
+            } else {
+                return (this.uploadSpeed / 1024).toFixed(2) + ' MB/s';
             }
         }
     },
@@ -125,6 +135,8 @@ export default {
             this.uploadProgress = 0;
             this.errorMessage = '';
             this.uploadedLink = '';
+            this.startTime = Date.now();
+            this.uploadSpeed = 0;
 
             const formData = new FormData();
             formData.append('file', this.selectedFile);
@@ -133,6 +145,10 @@ export default {
                 const response = await axios.post('https://anonymfile.com/api/v1/upload', formData, {
                     onUploadProgress: (progressEvent) => {
                         if (progressEvent.total) {
+                            const timeElapsed = (Date.now() - this.startTime) / 1000; // tempo em segundos
+                            const loadedKB = progressEvent.loaded / 1024;
+                            this.uploadSpeed = loadedKB / timeElapsed;
+
                             const progress = (progressEvent.loaded * 100) / progressEvent.total;
                             this.uploadProgress = parseFloat(progress.toFixed(2));
                         }
@@ -176,7 +192,6 @@ export default {
 </script>
 
 <style scoped>
-
 .progress.is-primary.is-large {
     height: 1.5rem;
     border-radius: 4px;
