@@ -48,6 +48,7 @@
 import Menu from './../Menu.vue';
 import Rodape from './../Rodape.vue';
 import Cabecalho from './../Cabecalho.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -68,9 +69,9 @@ export default {
     },
     computed: {
         fileSizeFormatted() {
-            if(!this.fileSize) return '';
+            if (!this.fileSize) return '';
             const kb = this.fileSize / 1024;
-            if(kb < 1024) {
+            if (kb < 1024) {
                 return kb.toFixed(2) + ' KB';
             } else {
                 return (kb / 1024).toFixed(2) + ' MB';
@@ -99,17 +100,20 @@ export default {
             this.errorMessage = '';
             this.uploadedLink = '';
 
-            try {
-                let formData = new FormData();
-                formData.append('file', this.selectedFile);
+            const formData = new FormData();
+            formData.append('file', this.selectedFile);
 
-                const response = await fetch('https://anonymfile.com/api/v1/upload', {
-                    method: 'POST',
-                    body: formData
+            try {
+                const response = await axios.post('https://anonymfile.com/api/v1/upload', formData, {
+                    onUploadProgress: (progressEvent) => {
+                        if (progressEvent.total) {
+                            const progress = (progressEvent.loaded * 100) / progressEvent.total;
+                            this.uploadProgress = parseFloat(progress.toFixed(2));
+                        }
+                    }
                 });
 
-                const result = await response.json();
-
+                const result = response.data;
                 if (result.status && result.data && result.data.file.url.full) {
                     const link = result.data.file.url.full;
                     this.uploadedLink = link;
@@ -139,7 +143,6 @@ export default {
                 this.errorMessage = 'Ocorreu um erro inesperado no upload.';
             } finally {
                 this.uploading = false;
-                this.uploadProgress = 100;
             }
         }
     }
