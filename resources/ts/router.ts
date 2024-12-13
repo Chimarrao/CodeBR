@@ -4,6 +4,7 @@ import Artigo from './components/article/App.vue';
 import Sobre from './components/about/App.vue';
 import Contato from './components/contact/App.vue';
 import PoliticaDePrivacidade from './components/privacity/App.vue';
+import UploadFile from './components/UploadFile/App.vue';
 
 const routes = [
     {
@@ -30,6 +31,10 @@ const routes = [
     {
         path: '/politica-de-privacidade',
         component: PoliticaDePrivacidade,
+    },
+    {
+        path: '/free-anonymous-file-upload',
+        component: UploadFile,
     },
 ];
 

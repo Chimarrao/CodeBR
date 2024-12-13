@@ -4,6 +4,7 @@ use App\Http\Controllers\ArtigoController;
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\ComentarioController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArquivoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,5 @@ Route::get('/artigos-destaque', [ArtigoController::class, 'getAllDestaque']);
 
 Route::post('/contato', [ContatoController::class, 'post']);
 Route::post('/comentarios', [ComentarioController::class, 'post']);
+
+Route::post('/arquivos', [ArquivoController::class, 'store']);
