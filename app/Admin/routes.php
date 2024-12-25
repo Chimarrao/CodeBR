@@ -2,7 +2,6 @@
 
 use Illuminate\Routing\Router;
 use App\Admin\Controllers\ArtigoController;
-use App\Admin\Controllers\ArtigoCodigoController;
 use App\Admin\Controllers\ComentarioController;
 
 Admin::routes();
@@ -16,6 +15,5 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->post('/file_oupload', 'FileUploadController@upload');
     $router->resource('artigos', ArtigoController::class);
-    $router->resource('artigos-exemplo', ArtigoCodigoController::class);
     $router->resource('comentarios', ComentarioController::class);
 });
