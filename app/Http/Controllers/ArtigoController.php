@@ -50,6 +50,7 @@ class ArtigoController extends Controller
         $artigo->texto = $this->attCaminhoImagem2($artigo->texto);
 
         $artigo->texto = $this->processarGistsNoArtigo($artigo->texto);
+        $artigo->texto = $this->processarImagensArtigo($artigo->artigo, $artigo->texto);
 
         return response()->json([
             'success' => true,
@@ -248,5 +249,42 @@ class ArtigoController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * Processa o conteúdo HTML de um artigo, extrai todas as imagens (jpg, jpeg, webp, png, svg),
+     * e renomeia os caminhos das imagens baseados no slug do nome do artigo e no hash CRC32
+     * do nome original da imagem. Retorna um array com os novos caminhos das imagens.
+     *
+     * @param string $nomeArtigo Nome do artigo (usado para gerar o slug no caminho das imagens).
+     * @param string $conteudoHtml Conteúdo HTML do artigo.
+     * @return string
+     */
+    private function processarImagensArtigo($nomeArtigo, $conteudoHtml)
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($conteudoHtml);
+        libxml_clear_errors();
+
+        $imagens = $dom->getElementsByTagName('img');
+
+        $slug = substr(preg_replace('/[^a-z0-9]+/i', '-', strtolower($nomeArtigo)), 0, 50);
+
+        foreach ($imagens as $img) {
+            $src = $img->getAttribute('src');
+            if (is_file(public_path($src))) {
+                if (preg_match('/\.(jpg|jpeg|webp|png|svg)$/i', $src, $matches)) {
+                    $formato = strtolower($matches[1]);
+    
+                    $hash = hash('crc32', $src);
+                    $novoNome = "/media/{$slug}-{$hash}.{$formato}";
+    
+                    $conteudoHtml = str_replace($src, $novoNome, $conteudoHtml);
+                }
+            }
+        }
+
+        return $conteudoHtml;
     }
 }

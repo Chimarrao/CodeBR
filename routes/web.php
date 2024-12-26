@@ -18,6 +18,8 @@ Route::get('/page/{numeroPagina}', 'App\Http\Controllers\IndexController@index')
 
 Route::get('/artigo/{slug}', 'App\Http\Controllers\ArtigoController@artigo');
 
+Route::get('/media/{image}', 'App\Http\Controllers\MediaController@get');
+
 Route::get('/sobre', function() {
     return view('sobre');
 });
