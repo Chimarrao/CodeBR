@@ -10,6 +10,7 @@ use Encore\Admin\Layout\Content;
 use App\Models\Artigo;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 
 class ArtigoController extends AdminController
 {
@@ -18,6 +19,15 @@ class ArtigoController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Artigo());
+
+        $grid->model()->orderBy('id_artigo', 'desc');
+
+        $grid->imagem('Imagem')->display(function ($imagem) {
+            return $imagem
+                ? '<img src="' . asset($imagem) . '" style="width: 250px; object-fit: cover; border-radius: 5px;">'
+                : 'Sem imagem';
+        })->style('text-align: center;');
+
         $grid->id_artigo('ID');
         $grid->artigo('Título');
         $grid->liberado('Liberado')->display(function ($liberado) {
@@ -26,9 +36,8 @@ class ArtigoController extends AdminController
         $grid->destaque('Destaque')->display(function ($destaque) {
             return $destaque ? 'Sim' : 'Não';
         });
-        $grid->imagem('Imagem');
+
         $grid->url('URL');
-        $grid->autor('Autor');
         $grid->data_criacao('Data de Criação');
         $grid->data_publicacao('Data de Publicação');
         $grid->data_modificacao('Data de Modificação');
@@ -38,10 +47,6 @@ class ArtigoController extends AdminController
                 'en-us' => '🇺🇸',
                 default => '🏴‍☠️'
             };
-        });
-        $grid->tags('Tags');
-        $grid->excluido('Excluído')->display(function ($excluido) {
-            return $excluido ? 'Sim' : 'Não';
         });
 
         return $grid;
@@ -56,12 +61,32 @@ class ArtigoController extends AdminController
 
         $form->text('artigo', 'Título');
 
-        $form->switch('liberado', 'Liberado')->default(1);
+        $form->switch('liberado', 'Liberado')->default(0);
         $form->switch('destaque', 'Destaque')->default(0);
 
         $form->text('descricao', 'Descrição');
 
         $form->html('<button type="button" class="btn btn-primary" onclick="padronizarTextoTMEditor()">Padronizar</button> ' . $this->getScriptPadronizacao());
+
+        $form->html('
+            <div class="alert alert-info" style="margin-bottom: 20px;">
+                <strong>Atenção:</strong>
+                <ul>
+                    <li>Para inserir um bloco de código:</li>
+                        &lt;pre&gt;
+                            &lt;code class=&quot;language-linguagem&quot;&gt;
+                            &lt;/code&gt;
+                        &lt;/pre&gt;
+                    <li>Para colocar gráficos:</li>
+                    1) Adicione um chart: <br>
+                    &lt;canvas id=&quot;chartSenior&quot;&gt;&lt;/canvas&gt; <br>
+                    2) Coloque a importação do chartjs <br>
+                    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js&quot;&gt;&lt;/script&gt; <br>
+                    3) Coloque o script conforme a necessidade
+                </ul>
+            </div>
+        ');
+
         $form->tmeditor('texto', 'Texto');
 
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
@@ -76,9 +101,7 @@ class ArtigoController extends AdminController
                 $nomeArtigo = $form->input('artigo');
             }
 
-            $nomeArtigo = 'imagem-' . strval($nomeArtigo);
-            $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
-            $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
+            $nomeArtigo = Str::slug('imagem ' . $nomeArtigo);
 
             if (strlen($nomeArtigo) > 55) {
                 $nomeArtigo = substr($nomeArtigo, 0, 55);
@@ -106,12 +129,12 @@ class ArtigoController extends AdminController
 
         $form->date('data_criacao', 'Data de Criação')->default(now());
         $form->date('data_publicacao', 'Data de Publicação')->default(now());
-        $form->date('data_modificacao', 'Data de Publicação')->default(now());
+        $form->date('data_modificacao', 'Data de Modificação')->default(now());
 
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
         $form->switch('excluido', 'Excluído')->default(0);
-        
+
         return $form;
     }
 
@@ -163,7 +186,8 @@ class ArtigoController extends AdminController
             ->body($this->form());
     }
 
-    private function getScriptPadronizacao() {
+    private function getScriptPadronizacao()
+    {
         return file_get_contents(__DIR__ . '/../includes/script-padronizacao.blade.php');
     }
 }

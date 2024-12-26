@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Artigo extends Model
 {
@@ -35,9 +36,7 @@ class Artigo extends Model
     {
         static::saving(function ($artigo) {
             $nomeArtigo = $artigo->artigo;
-            $nomeArtigo = 'imagem-' . $nomeArtigo;
-            $nomeArtigo = str_replace(' ', '-', $nomeArtigo);
-            $nomeArtigo = preg_replace('/[^A-Za-z0-9\-]/', '', $nomeArtigo);
+            $nomeArtigo = Str::slug('imagem ' . $nomeArtigo);
 
             if (strlen($nomeArtigo) > 55) {
                 $nomeArtigo = substr($nomeArtigo, 0, 55);
