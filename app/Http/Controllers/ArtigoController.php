@@ -255,6 +255,8 @@ class ArtigoController extends Controller
      * Processa o conteúdo HTML de um artigo, extrai todas as imagens (jpg, jpeg, webp, png, svg),
      * e renomeia os caminhos das imagens baseados no slug do nome do artigo e no hash CRC32
      * do nome original da imagem. Retorna um array com os novos caminhos das imagens.
+     * 
+     * Adiciona alt e loading lazy
      *
      * @param string $nomeArtigo Nome do artigo (usado para gerar o slug no caminho das imagens).
      * @param string $conteudoHtml Conteúdo HTML do artigo.
@@ -262,29 +264,51 @@ class ArtigoController extends Controller
      */
     private function processarImagensArtigo($nomeArtigo, $conteudoHtml)
     {
+        $conteudoHtml = mb_convert_encoding($conteudoHtml, 'HTML-ENTITIES', 'UTF-8');
+
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
-        $dom->loadHTML($conteudoHtml);
+        $dom->loadHTML($conteudoHtml, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
         $imagens = $dom->getElementsByTagName('img');
 
         $slug = substr(preg_replace('/[^a-z0-9]+/i', '-', strtolower($nomeArtigo)), 0, 50);
 
+        $primeiraImagem = true;
+
+        $baseName = pathinfo($nomeArtigo, PATHINFO_FILENAME);
+        $alt = ucwords(str_replace(['-', '_'], ' ', $baseName)) . ' ' . uniqid();
+
         foreach ($imagens as $img) {
+            $img->setAttribute('alt', $alt);
+
+            if (!$primeiraImagem) {
+                $img->setAttribute('loading', 'lazy');
+            } else {
+                $primeiraImagem = false;
+            }
+
             $src = $img->getAttribute('src');
             if (is_file(public_path($src))) {
+                $info = getimagesize(public_path($src));
+                $larguraOriginal = $info[0];
+                $alturaOriginal = $info[1];
+
+                $img->setAttribute('width', $larguraOriginal);
+                $img->setAttribute('height', $alturaOriginal);
+
                 if (preg_match('/\.(jpg|jpeg|webp|png|svg)$/i', $src, $matches)) {
                     $formato = strtolower($matches[1]);
-    
+
                     $hash = hash('crc32', $src);
                     $novoNome = "/media/{$slug}-{$hash}.{$formato}";
-    
-                    $conteudoHtml = str_replace($src, $novoNome, $conteudoHtml);
+
+                    $img->setAttribute('src', $novoNome);
                 }
             }
         }
 
-        return $conteudoHtml;
+        return $dom->saveHTML();
     }
 }
