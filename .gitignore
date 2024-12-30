@@ -1,12 +1,8 @@
 /.phpunit.cache
 /node_modules
 /public/build
-/public/js/*bundle*
-/public/js/*chunk*
-/public/js/*.ttf
-/public/js/*.woff2
-/public/js/*.gz
-/public/css/*app*
+/public/js/*
+/public/css/*
 /public/hot
 /public/storage
 /public/images/novas
@@ -24,3 +20,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+public/images/DALL·E 2024-12-01 19.20.38 - A sleek and modern digital illustration of a 'Proxy List 2024' concept. The design features a glowing server rack in a futuristic environment, surroun.dat-674cefc7804ad.webp
+public/images/DALL·E 2024-12-02 13.13.12 - A cartoon-style illustration tailored for an article about dark web search engines, featuring a glowing purple Tor Browser logo prominently displayed .dat-674ddcaccd619.webp
