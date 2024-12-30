@@ -376,4 +376,10 @@ pre[class*="language-"] {
 .token.italic {
     font-style: italic;
 }
+
+@media (max-width: 768px) {
+    .subtitle {
+        display: none;
+    }
+}
 </style>
