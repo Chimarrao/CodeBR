@@ -14,6 +14,8 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'public/js'),
+        chunkFilename: '[name].[contenthash].js',
+        publicPath: '/js/',
     },
     resolve: {
         extensions: ['.ts', '.js', '.vue'],
@@ -71,7 +73,8 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-            filename: './../css/app.css',
+            filename: './../css/app.css', 
+            chunkFilename: './../css/[name].[contenthash].css', 
         }),
         new WebpackBar(),
         new CompressionPlugin(),

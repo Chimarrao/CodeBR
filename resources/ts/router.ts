@@ -1,40 +1,34 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Index from './components/index/App.vue';
-import Artigo from './components/article/App.vue';
-import Sobre from './components/about/App.vue';
-import Contato from './components/contact/App.vue';
-import PoliticaDePrivacidade from './components/privacity/App.vue';
-import UploadFile from './components/UploadFile/App.vue';
 
 const routes = [
     {
         path: '/',
-        component: Index,
+        component: () => import(/* webpackChunkName: "index" */ './components/index/App.vue'),
     },
     {
         path: '/page/:pageNumber',
-        component: Index,
+        component: () => import(/* webpackChunkName: "index" */ './components/index/App.vue'),
     },
     {
         path: '/artigo/:slug',
-        component: Artigo,
+        component: () => import(/* webpackChunkName: "artigo" */ './components/article/App.vue'),
         props: true
     },
     {
         path: '/sobre',
-        component: Sobre,
+        component: () => import(/* webpackChunkName: "sobre" */ './components/about/App.vue'),
     },
     {
         path: '/contato',
-        component: Contato,
+        component: () => import(/* webpackChunkName: "contato" */ './components/contact/App.vue'),
     },
     {
         path: '/politica-de-privacidade',
-        component: PoliticaDePrivacidade,
+        component: () => import(/* webpackChunkName: "privacidade" */ './components/privacity/App.vue'),
     },
     {
         path: '/free-anonymous-file-upload',
-        component: UploadFile,
+        component: () => import(/* webpackChunkName: "upload-file" */ './components/UploadFile/App.vue'),
     },
 ];
 
