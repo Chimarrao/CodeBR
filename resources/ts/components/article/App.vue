@@ -1,17 +1,18 @@
 <template>
     <Menu />
     <Cabecalho />
-    <SkeletonLoader v-if="loading" />
 
-    <section class="hero is-medium is-dark is-bold">
+    <!-- Hero fixo, garantindo altura mínima para evitar shift ao carregar -->
+    <section class="hero is-medium is-dark is-bold" style="min-height: 300px;">
         <div class="hero-body">
             <div class="container text-center">
                 <div class="columns is-centered">
                     <div class="column is-two-thirds">
-                        <h1 class="title artigo">
+                        <!-- Título e Subtítulo com v-cloak + placeholders -->
+                        <h1 class="title artigo" v-cloak :style="{ visibility: loading ? 'hidden' : 'visible' }">
                             {{ artigo.artigo }}
                         </h1>
-                        <h2 class="subtitle">
+                        <h2 class="subtitle" v-cloak :style="{ visibility: loading ? 'hidden' : 'visible' }">
                             {{ artigo.descricao }}
                         </h2>
                     </div>
@@ -20,13 +21,20 @@
         </div>
     </section>
 
+    <!-- Se estiver carregando, exibimos o Skeleton na mesma estrutura abaixo -->
     <section class="section artigo">
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-one"></div>
-                <div class="column is-two-thirds">
+                <div class="column is-two-thirds" v-if="loading">
+                    <!-- Skeleton genérico para ocupar o espaço do artigo -->
+                    <SkeletonLoader />
+                </div>
+                <div class="column is-two-thirds" v-else>
                     <template v-for="(item, index) in processarTexto(artigo.texto)" :key="index">
-                        <prism v-if="item.isCode" :language="item.language">{{ item.content }}</prism>
+                        <prism v-if="item.isCode" :language="item.language">
+                            {{ item.content }}
+                        </prism>
                         <div v-else v-html="item.content"></div>
                     </template>
                 </div>
@@ -35,16 +43,30 @@
         </div>
     </section>
 
+    <!-- Comentários -->
     <div class="section comentarios pt-0">
         <div class="container">
             <div class="columns is-centered">
+                <!-- Enquanto carrega o artigo, deixamos a sessão de comentários com placeholders -->
                 <div class="column is-two-thirds">
-                    <h2 class="title is-3">Comentários</h2>
+                    <h2 class="title is-3" v-if="!loading">Comentários</h2>
+                    <h2 class="title is-3" v-else style="min-height: 1em; background-color: #f3f3f3;"></h2>
 
+                    <div v-if="!loading">
+                    <FormComentario @comentarioEnviado="adicionarComentario" />
                     <FormComentario @comentarioEnviado="adicionarComentario" />
 
-                    <div class="bloco-comentarios mt-2">
-                        <Comentario v-for="comentario in comentarios" :key="comentario.id" :comentario="comentario" />
+                        <FormComentario @comentarioEnviado="adicionarComentario" />
+
+                        <div class="bloco-comentarios mt-2">
+                            <Comentario v-for="comentario in comentarios" :key="comentario.id"
+                                :comentario="comentario" />
+                        </div>
+                    </div>
+
+                    <!-- Placeholder para formulário e lista de comentários -->
+                    <div v-else>
+                        <SkeletonLoader />
                     </div>
                 </div>
             </div>
@@ -58,16 +80,16 @@
 import Menu from './../Menu.vue';
 import Rodape from './../Rodape.vue';
 import Cabecalho from './../Cabecalho.vue';
-import FormComentario from "./FormComentario.vue";
-import Comentario from "./Comentario.vue";
-import SkeletonLoader from "./SkeletonLoader.vue";
+import FormComentario from './FormComentario.vue';
+import Comentario from './Comentario.vue';
+import SkeletonLoader from './SkeletonLoader.vue';
 
-import Prism from 'vue-prism-component'
-import 'prismjs/themes/prism-okaidia.css'
-import 'prismjs/components/prism-bash'
-import 'prismjs/components/prism-batch'
-import 'prismjs/components/prism-python'
-import 'prismjs/components/prism-css'
+import Prism from 'vue-prism-component';
+import 'prismjs/themes/prism-okaidia.css';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-batch';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
@@ -78,30 +100,22 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-markup-templating'
+import 'prismjs/components/prism-markup-templating';
 import 'prismjs/components/prism-php';
 
-/* Linguagens não usadas removidas para reduzir o peso do bundle */
-// import 'prismjs/components/prism-markdown';
-
+// Plugins
 import 'prismjs/plugins/toolbar/prism-toolbar.js';
 import 'prismjs/plugins/toolbar/prism-toolbar.css';
-
-import 'prismjs/plugins/inline-color/prism-inline-color.css'
-import 'prismjs/plugins/inline-color/prism-inline-color.js'
-
-import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js'
-
-import 'prismjs/plugins/treeview/prism-treeview.css'
-import 'prismjs/plugins/treeview/prism-treeview.js'
-
-import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css'
-import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js'
-
-import 'prismjs/plugins/match-braces/prism-match-braces.css'
-import 'prismjs/plugins/match-braces/prism-match-braces.js'
-
-import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
+import 'prismjs/plugins/inline-color/prism-inline-color.css';
+import 'prismjs/plugins/inline-color/prism-inline-color.js';
+import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js';
+import 'prismjs/plugins/treeview/prism-treeview.css';
+import 'prismjs/plugins/treeview/prism-treeview.js';
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css';
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js';
+import 'prismjs/plugins/match-braces/prism-match-braces.css';
+import 'prismjs/plugins/match-braces/prism-match-braces.js';
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js';
 
 export default {
     components: {
@@ -137,10 +151,10 @@ export default {
                         this.executarScripts();
                     });
                 } else {
-                    console.error("Erro ao carregar os artigos:", resultado.message);
+                    console.error('Erro ao carregar os artigos:', resultado.message);
                 }
             } catch (error) {
-                console.error("Erro ao buscar os artigos:", error);
+                console.error('Erro ao buscar os artigos:', error);
             }
 
             this.loading = false;
@@ -171,7 +185,7 @@ export default {
                     lines.shift();
                 }
 
-                codigMatch = lines.join('\n');
+                codeMatch = lines.join('\n');
 
                 resultado.push({
                     isCode: true,
@@ -214,7 +228,6 @@ export default {
     },
     mounted() {
         this.fetchArtigo();
-
         this.$nextTick(() => {
             this.executarScripts();
         });
@@ -223,12 +236,17 @@ export default {
 </script>
 
 <style scoped>
-/**
- * atom-dark theme for `prism.js`
- * Based on Atom's `atom-dark` theme: https://github.com/atom/atom-dark-syntax
- * @author Joe Gibson (@gibsjose)
- */
+/* Oculta elementos até o Vue carregar completamente */
+[v-cloak] {
+    display: none;
+}
 
+/* Mantemos o hero com min-height para evitar shift */
+.hero {
+    min-height: 300px;
+}
+
+/* Estilos do Prism (tema atom-dark) */
 code[class*="language-"],
 pre[class*="language-"] {
     color: #c5c8c6;
@@ -254,22 +272,19 @@ pre[class*="language-"] {
 /* Code blocks */
 pre[class*="language-"] {
     padding: 1em;
-    margin: .5em 0;
+    margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
 }
 
-:not(pre)>code[class*="language-"],
-pre[class*="language-"] {
+/* Inline code */
+:not(pre)>code[class*="language-"] {
+    padding: 0.1em;
+    border-radius: 0.3em;
     background: #1d1f21;
 }
 
-/* Inline code */
-:not(pre)>code[class*="language-"] {
-    padding: .1em;
-    border-radius: .3em;
-}
-
+/* Cores de tokens */
 .token.comment,
 .token.prolog,
 .token.doctype,
@@ -282,7 +297,7 @@ pre[class*="language-"] {
 }
 
 .namespace {
-    opacity: .7;
+    opacity: 0.7;
 }
 
 .token.property,
