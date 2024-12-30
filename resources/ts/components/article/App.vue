@@ -47,26 +47,13 @@
     <div class="section comentarios pt-0">
         <div class="container">
             <div class="columns is-centered">
-                <!-- Enquanto carrega o artigo, deixamos a sessão de comentários com placeholders -->
                 <div class="column is-two-thirds">
-                    <h2 class="title is-3" v-if="!loading">Comentários</h2>
-                    <h2 class="title is-3" v-else style="min-height: 1em; background-color: #f3f3f3;"></h2>
+                    <h2 class="title is-3">Comentários</h2>
 
-                    <div v-if="!loading">
-                    <FormComentario @comentarioEnviado="adicionarComentario" />
                     <FormComentario @comentarioEnviado="adicionarComentario" />
 
-                        <FormComentario @comentarioEnviado="adicionarComentario" />
-
-                        <div class="bloco-comentarios mt-2">
-                            <Comentario v-for="comentario in comentarios" :key="comentario.id"
-                                :comentario="comentario" />
-                        </div>
-                    </div>
-
-                    <!-- Placeholder para formulário e lista de comentários -->
-                    <div v-else>
-                        <SkeletonLoader />
+                    <div class="bloco-comentarios mt-2">
+                        <Comentario v-for="comentario in comentarios" :key="comentario.id" :comentario="comentario" />
                     </div>
                 </div>
             </div>
@@ -84,12 +71,12 @@ import FormComentario from './FormComentario.vue';
 import Comentario from './Comentario.vue';
 import SkeletonLoader from './SkeletonLoader.vue';
 
-import Prism from 'vue-prism-component';
-import 'prismjs/themes/prism-okaidia.css';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-batch';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-css';
+import Prism from 'vue-prism-component'
+import 'prismjs/themes/prism-okaidia.css'
+import 'prismjs/components/prism-bash'
+import 'prismjs/components/prism-batch'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
@@ -100,22 +87,30 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-markup-templating';
+import 'prismjs/components/prism-markup-templating'
 import 'prismjs/components/prism-php';
 
-// Plugins
+/* Linguagens não usadas removidas para reduzir o peso do bundle */
+// import 'prismjs/components/prism-markdown';
+
 import 'prismjs/plugins/toolbar/prism-toolbar.js';
 import 'prismjs/plugins/toolbar/prism-toolbar.css';
-import 'prismjs/plugins/inline-color/prism-inline-color.css';
-import 'prismjs/plugins/inline-color/prism-inline-color.js';
-import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js';
-import 'prismjs/plugins/treeview/prism-treeview.css';
-import 'prismjs/plugins/treeview/prism-treeview.js';
-import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css';
-import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js';
-import 'prismjs/plugins/match-braces/prism-match-braces.css';
-import 'prismjs/plugins/match-braces/prism-match-braces.js';
-import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js';
+
+import 'prismjs/plugins/inline-color/prism-inline-color.css'
+import 'prismjs/plugins/inline-color/prism-inline-color.js'
+
+import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js'
+
+import 'prismjs/plugins/treeview/prism-treeview.css'
+import 'prismjs/plugins/treeview/prism-treeview.js'
+
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css'
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight.js'
+
+import 'prismjs/plugins/match-braces/prism-match-braces.css'
+import 'prismjs/plugins/match-braces/prism-match-braces.js'
+
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
 
 export default {
     components: {
@@ -185,7 +180,7 @@ export default {
                     lines.shift();
                 }
 
-                codeMatch = lines.join('\n');
+                codigMatch = lines.join('\n');
 
                 resultado.push({
                     isCode: true,
