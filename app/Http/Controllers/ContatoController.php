@@ -35,12 +35,12 @@ class ContatoController extends Controller
             'mensagem' => $request->input('mensagem'),
         ]);
 
-        Mail::to('seu@email.com')->send(new EmailContato(
-            $request->input('nome'),
-            $request->input('telefone'),
-            $request->input('email'),
-            $request->input('mensagem')
-        ));
+        // Mail::to('seu@email.com')->send(new EmailContato(
+        //     $request->input('nome'),
+        //     $request->input('telefone'),
+        //     $request->input('email'),
+        //     $request->input('mensagem')
+        // ));
 
         return response()->json(['message' => 'Mensagem enviada com sucesso', 'erro' => False]);
     }
