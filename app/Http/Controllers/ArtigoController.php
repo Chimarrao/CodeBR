@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Artigo;
 use App\Models\Comentario;
 use Illuminate\Http\Request;
+use Highlight\Highlighter;
 
 class ArtigoController extends Controller
 {
@@ -51,6 +52,8 @@ class ArtigoController extends Controller
 
         $artigo->texto = $this->processarGistsNoArtigo($artigo->texto);
         $artigo->texto = $this->processarImagensArtigo($artigo->artigo, $artigo->texto);
+
+        $artigo->texto = $this->processarCodigoComHighlight($artigo->texto);
 
         return response()->json([
             'success' => true,
@@ -121,13 +124,15 @@ class ArtigoController extends Controller
             ->get();
 
         foreach ($artigos as $chave => $artigo) {
-            if (isset($artigo->{"imagem"})) {
-                $artigo->{"imagem"} = '/' . $artigo->{"imagem"};
-                $artigos[$chave] = $artigo;
-                continue;
+            $artigo->{"imagem_menor"} = $artigo->{"imagem"};
+
+            if (!isset($artigo->{"imagem"})) {
+                $artigo->{"imagem"} =  '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
+                $artigo->{"imagem_menor"} = $artigo->{"imagem"};
+            } elseif (str_contains($artigo->{"imagem"}, 'CodeBR-img') && !str_ends_with($artigo->{"imagem"}, '.gif')) {
+                $artigo->{"imagem_menor"} = str_replace('/images/', '/images/pequenas/', $artigo->{"imagem"});
             }
 
-            $artigo->{"imagem"} = '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
             $artigos[$chave] = $artigo;
         }
 
@@ -150,13 +155,21 @@ class ArtigoController extends Controller
         $artigos = Artigo::where('destaque', 1)->get();
 
         foreach ($artigos as $chave => $artigo) {
-            if (isset($artigo->{"imagem"})) {
-                $artigo->{"imagem"} = '/' . $artigo->{"imagem"};
+            $artigo->{"imagem_menor"} = $artigo->{"imagem"};
+
+            foreach ($artigos as $chave => $artigo) {
+                $artigo->{"imagem_menor"} = $artigo->{"imagem"};
+    
+                if (!isset($artigo->{"imagem"})) {
+                    $artigo->{"imagem"} =  '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
+                    $artigo->{"imagem_menor"} = $artigo->{"imagem"};
+                } elseif (str_contains($artigo->{"imagem"}, 'CodeBR-img') && !str_ends_with($artigo->{"imagem"}, '.gif')) {
+                    $artigo->{"imagem_menor"} = str_replace('/images/', '/images/pequenas/', $artigo->{"imagem"});
+                }
+    
                 $artigos[$chave] = $artigo;
-                continue;
             }
 
-            $artigo->{"imagem"} = '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
             $artigos[$chave] = $artigo;
         }
 
@@ -310,5 +323,42 @@ class ArtigoController extends Controller
         }
 
         return $dom->saveHTML();
+    }
+
+    /**
+     * Processa e destaca blocos de código usando Highlight.php.
+     *
+     * @param string $texto O conteúdo do artigo em HTML.
+     * @return string O texto processado com destaque de código.
+     */
+    private function processarCodigoComHighlight(string $texto): string
+    {
+        $highlighter = new Highlighter();
+
+        $pattern = '/<pre><code class="language-(\w+)">(.*?)<\/code><\/pre>/s';
+        $callback = function ($matches) use ($highlighter) {
+            $language = $matches[1];
+            $code = html_entity_decode($matches[2]);
+            $code = ltrim($code);
+
+            try {
+                $result = $highlighter->highlight($language, $code);
+                return <<<HTML
+                    <div class="code-container">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy"></i></button>
+                        <pre><code class="hljs ' . $language . '">$result->value</code></pre>
+                    </div>
+                HTML;
+            } catch (\Exception $e) {
+                return <<<HTML
+                    <div class="code-container">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy"></i></button>
+                        <pre><code class="hljs">htmlspecialchars($code)</code></pre>
+                    </div>
+                HTML;
+            }
+        };
+
+        return preg_replace_callback($pattern, $callback, $texto);
     }
 }
