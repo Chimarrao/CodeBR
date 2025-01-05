@@ -11,6 +11,8 @@ use App\Models\Artigo;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ArtigoController extends AdminController
 {
@@ -56,6 +58,7 @@ class ArtigoController extends AdminController
     {
 
         $form = new Form(new Artigo());
+        $githubToken = env('GITHUB_TOKEN');
 
         $form->display('id_artigo', 'ID');
 
@@ -89,7 +92,7 @@ class ArtigoController extends AdminController
 
         $form->tmeditor('texto', 'Texto');
 
-        $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form) {
+        $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form, $githubToken) {
             $url = Request::url();
             $isEditing = strpos($url, '/edit') !== false;
 
@@ -116,6 +119,39 @@ class ArtigoController extends AdminController
             });
 
             $imagem->encode('webp', 80)->save(public_path('images/' . $nomeImagem));
+            $caminhoImagem = public_path('images/' . $nomeImagem);
+
+            $nomeDoDonoGithub = 'Chimarrao';
+            $nomeDoRepositorio = 'CodeBR-img';
+            $branch = 'img';
+
+            if (!file_exists($caminhoImagem)) {
+                Log::error('O arquivo não existe: ' . $caminhoImagem);
+            } else {
+                $imageContent = base64_encode(file_get_contents($caminhoImagem));
+    
+                $relativePath = $caminhoImagem;
+                $relativePath = ltrim($caminhoImagem, '/');
+                $fileName = basename($caminhoImagem);
+                $fileName = str_replace('.webp', uniqid() . '.webp', $fileName);
+                $nomeImagem = 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/develop/public/images/' . $fileName;
+    
+                $apiUrl = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/{$fileName}";
+    
+                $response = Http::withHeaders([
+                    'Authorization' => "token {$githubToken}",
+                    'Accept' => 'application/vnd.github.v3+json',
+                ])->put($apiUrl, [
+                    'message' => "Upload da imagem {$fileName} para {$relativePath}",
+                    'content' => $imageContent,
+                    'branch' => $branch,
+                ]);
+    
+                if ($response->failed()) {
+                    Log::error('Falha ao enviar a imagem para o GitHub: ' . $response->body());
+                }
+            }
+
             return $nomeImagem;
         });
 
