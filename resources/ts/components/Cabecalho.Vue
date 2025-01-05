@@ -16,18 +16,22 @@ export default {
     setup() {
         const particlesSection = ref(null);
 
+        const isMobile = () => window.innerWidth <= 768;
+
         const initParticles = async () => {
             if (particlesSection.value) {
                 particlesSection.value.setAttribute('id', 'section_particulas');
             }
 
             const hero = document.querySelector('.hero');
-
             if (hero instanceof HTMLElement) {
                 hero.setAttribute('id', 'section_particulas');
             }
 
             try {
+                const mobileDevice = isMobile();
+                const particleCount = mobileDevice ? 20 : 40;
+
                 await tsParticles.load('section_particulas', {
                     autoPlay: true,
                     background: {
@@ -43,16 +47,16 @@ export default {
                     interactivity: {
                         detectsOn: 'window',
                         events: {
-                            onClick: { enable: true, mode: 'push' },
+                            onClick: { enable: isMobile ? false : true, mode: 'push' },
                             onHover: {
                                 enable: true,
                                 mode: 'repulse',
                             },
-                            resize: { enable: true, delay: 0.5 },
+                            resize: { enable: isMobile ? false : true, delay: 0.5 },
                         },
                     },
                     particles: {
-                        number: { value: 40 },
+                        number: { value: particleCount },
                         color: {
                             value: '#ff0000',
                             animation: {
@@ -89,11 +93,16 @@ export default {
         };
 
         onMounted(() => {
-            initParticles();
+            if (isMobile) {
+                setTimeout(() => {
+                    initParticles();
+                }, 1000);
+            } else {
+                initParticles();
+            }
         });
 
         onBeforeUnmount(() => {
-            // 
         });
 
         return {
