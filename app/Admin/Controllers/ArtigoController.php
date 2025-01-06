@@ -95,7 +95,7 @@ class ArtigoController extends AdminController
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form, $githubToken) {
             $url = Request::url();
             $isEditing = strpos($url, '/edit') !== false;
-
+        
             if (!$isEditing) {
                 $id = Request::segment(3);
                 $artigo = Artigo::findOrFail($id);
@@ -103,56 +103,86 @@ class ArtigoController extends AdminController
             } else {
                 $nomeArtigo = $form->input('artigo');
             }
-
+        
             $nomeArtigo = Str::slug('imagem ' . $nomeArtigo);
-
+        
             if (strlen($nomeArtigo) > 55) {
                 $nomeArtigo = substr($nomeArtigo, 0, 55);
             }
 
-            $nomeImagem = $nomeArtigo . '.webp';
+            $uniqid = uniqid();
+        
+            $nomeImagem = $nomeArtigo . '-' . $uniqid . '.webp';
             $caminhoOriginal = $file->getPath() . '/' . $file->getFilename();
             $imagem = Image::make($caminhoOriginal);
-
+        
+            // Gerar a imagem de 700px
             $imagem->resize(700, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-
+        
             $imagem->encode('webp', 80)->save(public_path('images/' . $nomeImagem));
             $caminhoImagem = public_path('images/' . $nomeImagem);
-
+        
+            // Criar a imagem menor (392px de largura)
+            $nomeImagemPequena = $nomeArtigo . '-' . $uniqid . '.webp';
+            $imagemPequena = Image::make($caminhoOriginal);
+        
+            $imagemPequena->resize(392, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+        
+            $imagemPequena->encode('webp', 80)->save(public_path('images/temp/' . $nomeImagemPequena));
+            $caminhoImagemPequena = public_path('images/temp/' . $nomeImagemPequena);
+        
             $nomeDoDonoGithub = 'Chimarrao';
             $nomeDoRepositorio = 'CodeBR-img';
             $branch = 'img';
-
-            if (!file_exists($caminhoImagem)) {
-                Log::error('O arquivo não existe: ' . $caminhoImagem);
-            } else {
+        
+            // Enviar a imagem maior ao GitHub
+            if (file_exists($caminhoImagem)) {
                 $imageContent = base64_encode(file_get_contents($caminhoImagem));
-    
-                $relativePath = $caminhoImagem;
-                $relativePath = ltrim($caminhoImagem, '/');
-                $fileName = basename($caminhoImagem);
-                $fileName = str_replace('.webp', uniqid() . '.webp', $fileName);
-                $nomeImagem = 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/develop/public/images/' . $fileName;
-    
-                $apiUrl = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/{$fileName}";
-    
+        
+                $apiUrl = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/{$nomeImagem}";
+        
                 $response = Http::withHeaders([
                     'Authorization' => "token {$githubToken}",
                     'Accept' => 'application/vnd.github.v3+json',
                 ])->put($apiUrl, [
-                    'message' => "Upload da imagem {$fileName} para {$relativePath}",
+                    'message' => "Upload da imagem {$nomeImagem}",
                     'content' => $imageContent,
                     'branch' => $branch,
                 ]);
-    
+        
                 if ($response->failed()) {
-                    Log::error('Falha ao enviar a imagem para o GitHub: ' . $response->body());
+                    Log::error('Falha ao enviar a imagem maior para o GitHub: ' . $response->body());
                 }
             }
-
-            return $nomeImagem;
+        
+            // Enviar a imagem menor ao GitHub
+            if (file_exists($caminhoImagemPequena)) {
+                $imageContentPequena = base64_encode(file_get_contents($caminhoImagemPequena));
+        
+                $apiUrlPequena = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/pequenas/{$nomeImagemPequena}";
+        
+                $responsePequena = Http::withHeaders([
+                    'Authorization' => "token {$githubToken}",
+                    'Accept' => 'application/vnd.github.v3+json',
+                ])->put($apiUrlPequena, [
+                    'message' => "Upload da imagem pequena {$nomeImagemPequena}",
+                    'content' => $imageContentPequena,
+                    'branch' => $branch,
+                ]);
+        
+                if ($responsePequena->failed()) {
+                    Log::error('Falha ao enviar a imagem pequena para o GitHub: ' . $responsePequena->body());
+                }
+        
+                // Apagar a imagem temporária
+                unlink($caminhoImagemPequena);
+            }
+        
+            return 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/' . $nomeImagem;
         });
 
         $form->saving(function (Form $form) {
