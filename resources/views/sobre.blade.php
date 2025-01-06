@@ -57,6 +57,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.2/css/bulma.min.css" integrity="sha512-RpeJZX3aH5oZN3U3JhE7Sd+HG8XQsqmP3clIbu4G28p668yNsRNj3zMASKe1ATjl/W80wuEtCx2dFA8xaebG5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="{{ asset('css/app.css') }}?v=1.1.1" rel="stylesheet">
 <script src="{{ asset('js/bundle.js') }}?v=1.1.1"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3072419723964148" crossorigin="anonymous"></script>
+{{-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3072419723964148" crossorigin="anonymous"></script> --}}
 
 </html>
