@@ -294,6 +294,10 @@ class ArtigoController extends Controller
         $alt = ucwords(str_replace(['-', '_'], ' ', $baseName)) . ' ' . uniqid();
 
         foreach ($imagens as $img) {
+            if ($img->getAttribute('alt')) {
+                continue;
+            }
+            
             $img->setAttribute('alt', $alt);
 
             if (!$primeiraImagem) {
@@ -340,6 +344,8 @@ class ArtigoController extends Controller
             $language = $matches[1];
             $code = html_entity_decode($matches[2]);
             $code = ltrim($code);
+            $code = str_replace('?-->', '?>', $code);
+            $code = str_replace('<!--?php', '<?php', $code);
 
             try {
                 $result = $highlighter->highlight($language, $code);
@@ -350,10 +356,11 @@ class ArtigoController extends Controller
                     </div>
                 HTML;
             } catch (\Exception $e) {
+                $code = htmlspecialchars($code);
                 return <<<HTML
                     <div class="code-container">
                         <button class="copy-btn" onclick="copyCode(this)"><i class="fa-solid fa-copy"></i></button>
-                        <pre><code class="hljs">htmlspecialchars($code)</code></pre>
+                        <pre><code class="hljs">$code</code></pre>
                     </div>
                 HTML;
             }
