@@ -11,9 +11,7 @@ app.mount('#app');
 
 import { alerts } from './alerts/alerts';
 
-// import './contato';
 import './modoDark';
-// import './particulas';
 import './menuHamburguer';
 
 import '@fortawesome/fontawesome-free/css/all.css';
