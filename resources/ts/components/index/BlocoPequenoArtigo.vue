@@ -4,7 +4,7 @@
             <div class="box article">
                 <article>
                     <figure class="image is-3by2">
-                        <img :src="artigo.imagem" :alt="`Imagem de ${artigo.artigo}`" />
+                        <img :src="artigo.imagem_menor" :alt="`Imagem de ${artigo.artigo}`" loading="lazy"/>
                     </figure>
                     <div class="content">
                         <h3 class="title is-4">{{ artigo.artigo }}</h3>
@@ -40,6 +40,6 @@ export default {
 <style scoped>
 .article img {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 </style>
