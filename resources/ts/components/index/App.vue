@@ -21,7 +21,7 @@
 
             <div class="container">
                 <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                    <a v-if="numeroPagina > 1" class="pagination-previous"
+                    <a v-if="numeroPagina > 1" class="pagination-previous" :href="getPaginationUrl(numeroPagina - 1)"
                         @click.prevent="navigateToPage(numeroPagina - 1)">
                         Anterior
                     </a>
@@ -29,14 +29,13 @@
                     <ul class="pagination-list">
                         <li v-for="i in paginationRange" :key="i">
                             <a :class="['pagination-link', { 'is-current': i === numeroPagina }]"
-                                @click.prevent="navigateToPage(i)">
+                                :href="getPaginationUrl(i)" @click.prevent="navigateToPage(i)">
                                 {{ i }}
                             </a>
                         </li>
                     </ul>
 
-                    <a v-if="numeroPagina < totalPaginas" class="pagination-next"
-                        @click.prevent="navigateToPage(numeroPagina + 1)">
+                    <a v-if="numeroPagina < totalPaginas" class="pagination-next" :href="getPaginationUrl(numeroPagina + 1)" @click.prevent="navigateToPage(numeroPagina + 1)">
                         Próxima
                     </a>
                 </nav>
