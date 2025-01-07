@@ -20,7 +20,7 @@ O CodeBR Website foi inicialmente desenvolvido por volta de 2021, utilizando PHP
 
 - Axios
 - Inputmask
-- PrismJS
+- tsParticles
 - Webpack (+ plugins)
 
 ## Bibliotecas removidas
