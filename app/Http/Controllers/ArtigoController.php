@@ -53,7 +53,10 @@ class ArtigoController extends Controller
         $artigo->texto = $this->processarGistsNoArtigo($artigo->texto);
         $artigo->texto = $this->processarImagensArtigo($artigo->artigo, $artigo->texto);
 
+        $artigo->texto_dark = $this->aplicarModoEscuro($artigo->texto);
+
         $artigo->texto = $this->processarCodigoComHighlight($artigo->texto);
+        $artigo->texto_dark = $this->processarCodigoComHighlight($artigo->texto_dark);
 
         return response()->json([
             'success' => true,
@@ -159,14 +162,14 @@ class ArtigoController extends Controller
 
             foreach ($artigos as $chave => $artigo) {
                 $artigo->{"imagem_menor"} = $artigo->{"imagem"};
-    
+
                 if (!isset($artigo->{"imagem"})) {
                     $artigo->{"imagem"} =  '/' . $this->obterPrimeiraImagemComRegex($artigo->texto);
                     $artigo->{"imagem_menor"} = $artigo->{"imagem"};
                 } elseif (str_contains($artigo->{"imagem"}, 'CodeBR-img') && !str_ends_with($artigo->{"imagem"}, '.gif')) {
                     $artigo->{"imagem_menor"} = str_replace('/images/', '/images/pequenas/', $artigo->{"imagem"});
                 }
-    
+
                 $artigos[$chave] = $artigo;
             }
 
@@ -297,7 +300,7 @@ class ArtigoController extends Controller
             if ($img->getAttribute('alt')) {
                 continue;
             }
-            
+
             $img->setAttribute('alt', $alt);
 
             if (!$primeiraImagem) {
@@ -367,5 +370,56 @@ class ArtigoController extends Controller
         };
 
         return preg_replace_callback($pattern, $callback, $texto);
+    }
+
+    /**
+     * Aplica o modo escuro em uma string HTML utilizando DOMDocument.
+     *
+     * @param  string $html Conteúdo HTML de entrada.
+     * @return string       HTML transformado com as alterações de modo escuro.
+     */
+    private function aplicarModoEscuro(string $html)
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $xpath = new \DOMXPath($dom);
+
+        $nodes = $xpath->query(".//p | .//span | .//strong");
+
+        foreach ($nodes as $node) {
+            $temAncestorGist = $xpath->query("ancestor::*[contains(@class, 'gist')]", $node)->length > 0;
+            $temAncestorPre  = $xpath->query("ancestor::pre", $node)->length > 0;
+            $temAncestorCode = $xpath->query("ancestor::code", $node)->length > 0;
+
+            if (!$temAncestorGist && !$temAncestorPre && !$temAncestorCode) {
+                $estiloAtual = $node->getAttribute('style');
+                if (strpos($estiloAtual, ' color:') === false) {
+                    $node->setAttribute('style', trim($estiloAtual . ' color: white;'));
+                } else {
+                    $node->setAttribute('style', preg_replace('/color:\s?[^;]+;?/i', 'color: white;', $estiloAtual));
+                }
+            }
+        }
+
+        $nodesLi = $xpath->query("//li");
+
+        foreach ($nodesLi as $node) {
+            $estiloAtual = $node->getAttribute('style');
+            if (strpos($estiloAtual, 'color:') === false) {
+                $node->setAttribute('style', trim($estiloAtual . ' color: white;'));
+            } else {
+                $node->setAttribute('style', preg_replace('/color:\s?[^;]+;?/i', 'color: white;', $estiloAtual));
+            }
+        }
+
+        $blackStyledElements = $xpath->query('//*[contains(@style, "color: black") or contains(@style, "color: #000000") and not(contains(@class, "hljs"))]');
+        foreach ($blackStyledElements as $element) {
+            $element->setAttribute('style', 'color: white;');
+        }
+
+        return $dom->saveHTML();
     }
 }

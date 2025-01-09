@@ -32,7 +32,7 @@
                     <SkeletonLoader />
                 </div>
                 <div class="column is-two-thirds" v-else>
-                    <template v-for="(item, index) in processarTexto(artigo.texto)" :key="index">
+                    <template v-for="(item, index) in processarTexto(artigo.texto_dark)" :key="index">
                         <div v-if="item.isCode" v-html="item.content"></div>
                         <div v-else v-html="item.content"></div>
                     </template>

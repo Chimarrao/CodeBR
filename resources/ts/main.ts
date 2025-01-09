@@ -10,8 +10,6 @@ app.mount('#app');
 
 
 import { alerts } from './alerts/alerts';
-
-import './modoDark';
 import './menuHamburguer';
 
 import '@fortawesome/fontawesome-free/css/all.css';
