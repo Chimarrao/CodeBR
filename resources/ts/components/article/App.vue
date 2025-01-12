@@ -257,4 +257,8 @@ code {
 .copy-btn:hover {
     background: #555;
 }
+
+pre {
+    background-color: hsl(221, 14%, 14%) !important;
+}
 </style>
