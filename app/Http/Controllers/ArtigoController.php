@@ -387,7 +387,7 @@ class ArtigoController extends Controller
 
         $xpath = new \DOMXPath($dom);
 
-        $nodes = $xpath->query(".//p | .//span | .//strong");
+        $nodes = $xpath->query("//p | //span | //strong");
 
         foreach ($nodes as $node) {
             $temAncestorGist = $xpath->query("ancestor::*[contains(@class, 'gist')]", $node)->length > 0;
@@ -395,7 +395,20 @@ class ArtigoController extends Controller
             $temAncestorCode = $xpath->query("ancestor::code", $node)->length > 0;
 
             if (!$temAncestorGist && !$temAncestorPre && !$temAncestorCode) {
+                if ($node->hasAttribute('style')) {
+                    $style = $node->getAttribute('style');
+
+                    $newStyle = preg_replace('/\s*background-color\s*:\s*[^;]+;?\s*/i', '', $style);
+
+                    if (empty(trim($newStyle))) {
+                        $node->removeAttribute('style');
+                    } else {
+                        $node->setAttribute('style', $newStyle);
+                    }
+                }
+
                 $estiloAtual = $node->getAttribute('style');
+
                 if (strpos($estiloAtual, ' color:') === false) {
                     $node->setAttribute('style', trim($estiloAtual . ' color: white;'));
                 } else {
