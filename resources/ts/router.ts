@@ -25,11 +25,7 @@ const routes = [
     {
         path: '/politica-de-privacidade',
         component: () => import(/* webpackChunkName: "privacidade" */ './components/privacity/App.vue'),
-    },
-    {
-        path: '/free-anonymous-file-upload',
-        component: () => import(/* webpackChunkName: "upload-file" */ './components/UploadFile/App.vue'),
-    },
+    }
 ];
 
 const router = createRouter({

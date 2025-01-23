@@ -31,7 +31,3 @@ Route::get('/contato', function() {
 Route::get('/politica-de-privacidade', function() {
     return view('politica-de-privacidade');
 });
-
-Route::get('/free-anonymous-file-upload', function() {
-    return view('upload');
-});
