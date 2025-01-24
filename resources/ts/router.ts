@@ -25,6 +25,14 @@ const routes = [
     {
         path: '/politica-de-privacidade',
         component: () => import(/* webpackChunkName: "privacidade" */ './components/privacity/App.vue'),
+    },
+    {
+        path: '/converter',
+        component: () => import(/* webpackChunkName: "privacidade" */ './components/images/App.vue'),
+    },
+    {
+        path: '/converter/:formato',
+        component: () => import(/* webpackChunkName: "privacidade" */ './components/images/App.vue'),
     }
 ];
 

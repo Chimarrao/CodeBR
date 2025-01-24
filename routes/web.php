@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImageConverterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,18 @@ Route::get('/contato', function() {
 
 Route::get('/politica-de-privacidade', function() {
     return view('politica-de-privacidade');
+});
+
+Route::get('/converter/{formato?}', function() {
+    return view('converter');
+});
+
+Route::get('/file/{filename}', function ($filename) {
+    $path = storage_path('app/public/converted/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
 });
