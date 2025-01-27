@@ -22,9 +22,13 @@ class ImageConverterController extends Controller
      */
     public function converter(Request $request)
     {
+        if (extension_loaded('imagick') && class_exists('Imagick')) {
+            Image::configure(['driver' => 'imagick']);
+        }
+        
         $request->validate([
-            'arquivos.*' => 'required|file|mimes:jpeg,png,webp,gif,bmp',
-            'formatos.*' => 'required|string|in:jpeg,png,webp,gif,bmp',
+            'arquivos.*' => 'required|file|mimes:jpeg,png,webp,avif,gif,bmp',
+            'formatos.*' => 'required|string|in:jpeg,png,webp,avif,gif,bmp',
         ]);
 
         $arquivos = $request->file('arquivos');
@@ -100,7 +104,7 @@ class ImageConverterController extends Controller
      */
     private function salvarImagem($imagem, $formato, $caminhoSaida)
     {
-        $formatosValidos = ['jpeg', 'png', 'gif', 'bmp', 'webp'];
+        $formatosValidos = ['jpeg', 'png', 'gif', 'bmp', 'webp', 'avif'];
 
         if (!in_array(strtolower($formato), $formatosValidos)) {
             throw new \Exception("Formato alvo não suportado: $formato");

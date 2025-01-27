@@ -2,7 +2,7 @@
     <section class="hero is-fullheight is-light">
         <div class="hero-body">
             <div class="container">
-                <h1 class="title has-text-centered">Advanced Image Converter</h1>
+                <h1 class="title has-text-centered">Online Image Converter</h1>
                 <p class="subtitle has-text-centered">Drag and drop your files or click to upload.</p>
                 <div class="box has-text-centered is-droppable" @dragover.prevent @drop.prevent="handleDrop">
                     <div>
@@ -39,6 +39,7 @@
                                                 <option value="webp">WEBP</option>
                                                 <option value="gif">GIF</option>
                                                 <option value="bmp">BMP</option>
+                                                <option value="avif">AVIF</option>
                                             </select>
                                         </div>
                                     </td>
@@ -114,6 +115,13 @@ export default {
          */
         conversionLink(newLink) {
             this.$router.push({ path: `/converter/${newLink}` });
+
+            const formattedTitle = newLink
+                .split('-') // Divide o newLink por '-'
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Transforma cada palavra em maiúsculas
+                .join(' '); // Junta as palavras com espaço
+
+            document.title = `${formattedTitle} | Online Image Converter | Effortless Image Format Conversion`;
         },
     },
     methods: {
@@ -179,7 +187,7 @@ export default {
 
                     try {
                         const response = await axios.post("/api/conversor-imagem", formData, {
-                            timeout: 60000,
+                            timeout: 3000,
                             headers: {
                                 "Content-Type": "multipart/form-data",
                             },
@@ -192,7 +200,7 @@ export default {
                         }
                     } catch (error) {
                         console.error("Erro ao converter o arquivo:", fileObj.file.name, error);
-                        alert(`Ocorreu um erro na conversão de ${fileObj.file.name}. Tente novamente.`);
+                        alert(`Ocorreu um erro na conversão de ${fileObj.file.name}. ${error} Tente novamente.`);
                     }
                 }
             } catch (error) {

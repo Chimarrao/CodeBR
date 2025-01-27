@@ -28,11 +28,11 @@ const routes = [
     },
     {
         path: '/converter',
-        component: () => import(/* webpackChunkName: "privacidade" */ './components/images/App.vue'),
+        component: () => import(/* webpackChunkName: "converter" */ './components/images/App.vue'),
     },
     {
         path: '/converter/:formato',
-        component: () => import(/* webpackChunkName: "privacidade" */ './components/images/App.vue'),
+        component: () => import(/* webpackChunkName: "converter" */ './components/images/App.vue'),
     }
 ];
 
