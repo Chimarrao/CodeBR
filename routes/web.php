@@ -33,6 +33,10 @@ Route::get('/politica-de-privacidade', function() {
     return view('politica-de-privacidade');
 });
 
+Route::get('/converter/', function() {
+    return view('converter');
+});
+
 Route::get('/converter/{formato?}', function() {
     return view('converter');
 });
