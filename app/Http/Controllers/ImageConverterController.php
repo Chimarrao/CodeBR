@@ -35,6 +35,13 @@ class ImageConverterController extends Controller
         $formatos = $request->input('formatos');
         $arquivosConvertidos = [];
 
+        if (!$arquivos || !count($arquivos)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Array de imagens vazio',
+            ], 422);
+        }
+
         try {
             foreach ($arquivos as $indice => $arquivo) {
                 $formatoOriginal = $arquivo->getClientOriginalExtension();
