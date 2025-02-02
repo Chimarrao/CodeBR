@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ArtigoController extends AdminController
 {
@@ -22,33 +23,71 @@ class ArtigoController extends AdminController
     {
         $grid = new Grid(new Artigo());
 
-        $grid->model()->orderBy('id_artigo', 'desc');
+        $grid->model()
+            ->leftJoin('artigos_idiomas as ai', 'artigos.id_artigo', '=', 'ai.id_artigo')
+            ->select('artigos.*', DB::raw("
+                CASE 
+                    WHEN ai.id_ligacao IS NOT NULL 
+                        AND artigos.id_artigo <> (
+                            SELECT MIN(a2.id_artigo)
+                            FROM artigos a2 
+                            JOIN artigos_idiomas ai2 ON a2.id_artigo = ai2.id_artigo 
+                            WHERE ai2.id_ligacao = ai.id_ligacao
+                        )
+                    THEN 1
+                    ELSE 0
+                END as filho
+            "))
+            ->orderByRaw("
+                COALESCE(
+                    (SELECT MIN(a2.id_artigo)
+                    FROM artigos a2 
+                    JOIN artigos_idiomas ai2 ON a2.id_artigo = ai2.id_artigo 
+                    WHERE ai2.id_ligacao = ai.id_ligacao
+                    ),
+                    artigos.id_artigo
+                ) DESC,
+                filho ASC,
+                artigos.id_artigo DESC
+            ");
+
 
         $grid->imagem('Imagem')->display(function ($imagem) {
-            return $imagem
-                ? '<img src="' . asset($imagem) . '" style="width: 250px; object-fit: cover; border-radius: 5px;">'
-                : 'Sem imagem';
+            if ($this->filho == 1) {
+                return 'Sem imagem';
+            }
+            return $imagem ? '<img src="' . asset($imagem) . '" style="width: 250px; object-fit: cover; border-radius: 5px;">' : 'Sem imagem';
         })->style('text-align: center;');
 
-        $grid->id_artigo('ID');
-        $grid->artigo('Título');
-        $grid->liberado('Liberado')->display(function ($liberado) {
+        $grid->column('id_artigo', 'ID');
+
+        $grid->column('artigo', 'Título')->display(function ($artigo) {
+            if ($this->filho == 1) {
+                return '<span style="padding-left: 20px;">↳ ' . $artigo . '</span>';
+            }
+            return $artigo;
+        });
+
+        $grid->column('liberado', 'Liberado')->display(function ($liberado) {
             return $liberado ? 'Sim' : 'Não';
         });
-        $grid->destaque('Destaque')->display(function ($destaque) {
+
+        $grid->column('destaque', 'Destaque')->display(function ($destaque) {
             return $destaque ? 'Sim' : 'Não';
         });
 
-        $grid->url('URL');
-        $grid->data_criacao('Data de Criação');
-        $grid->data_publicacao('Data de Publicação');
-        $grid->data_modificacao('Data de Modificação');
-        $grid->lang('Idioma')->display(function ($lang) {
-            return match ($lang) {
+        $grid->column('url', 'URL');
+        $grid->column('data_criacao', 'Data de Criação');
+        $grid->column('data_publicacao', 'Data de Publicação');
+        $grid->column('data_modificacao', 'Data de Modificação');
+
+        $grid->column('lang', 'Idioma')->display(function ($lang) {
+            $flags = [
                 'pt-br' => '🇧🇷',
                 'en-us' => '🇺🇸',
-                default => '🏴‍☠️'
-            };
+                'es-es' => '🇪🇸',
+            ];
+            return $flags[strtolower($lang)] ?? $lang;
         });
 
         return $grid;
@@ -95,7 +134,7 @@ class ArtigoController extends AdminController
         $form->image('imagem', 'Imagem')->disk('public_images')->name(function ($file) use ($form, $githubToken) {
             $url = Request::url();
             $isEditing = strpos($url, '/edit') !== false;
-        
+
             if (!$isEditing) {
                 $id = Request::segment(3);
                 $artigo = Artigo::findOrFail($id);
@@ -103,48 +142,48 @@ class ArtigoController extends AdminController
             } else {
                 $nomeArtigo = $form->input('artigo');
             }
-        
+
             $nomeArtigo = Str::slug('imagem ' . $nomeArtigo);
-        
+
             if (strlen($nomeArtigo) > 55) {
                 $nomeArtigo = substr($nomeArtigo, 0, 55);
             }
 
             $uniqid = uniqid();
-        
+
             $nomeImagem = $nomeArtigo . '-' . $uniqid . '.webp';
             $caminhoOriginal = $file->getPath() . '/' . $file->getFilename();
             $imagem = Image::make($caminhoOriginal);
-        
+
             // Gerar a imagem de 700px
             $imagem->resize(700, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-        
+
             $imagem->encode('webp', 80)->save(public_path('images/' . $nomeImagem));
             $caminhoImagem = public_path('images/' . $nomeImagem);
-        
+
             // Criar a imagem menor (392px de largura)
             $nomeImagemPequena = $nomeArtigo . '-' . $uniqid . '.webp';
             $imagemPequena = Image::make($caminhoOriginal);
-        
+
             $imagemPequena->resize(392, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-        
+
             $imagemPequena->encode('webp', 80)->save(public_path('images/temp/' . $nomeImagemPequena));
             $caminhoImagemPequena = public_path('images/temp/' . $nomeImagemPequena);
-        
+
             $nomeDoDonoGithub = 'Chimarrao';
             $nomeDoRepositorio = 'CodeBR-img';
             $branch = 'img';
-        
+
             // Enviar a imagem maior ao GitHub
             if (file_exists($caminhoImagem)) {
                 $imageContent = base64_encode(file_get_contents($caminhoImagem));
-        
+
                 $apiUrl = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/{$nomeImagem}";
-        
+
                 $response = Http::withHeaders([
                     'Authorization' => "token {$githubToken}",
                     'Accept' => 'application/vnd.github.v3+json',
@@ -153,18 +192,18 @@ class ArtigoController extends AdminController
                     'content' => $imageContent,
                     'branch' => $branch,
                 ]);
-        
+
                 if ($response->failed()) {
                     Log::error('Falha ao enviar a imagem maior para o GitHub: ' . $response->body());
                 }
             }
-        
+
             // Enviar a imagem menor ao GitHub
             if (file_exists($caminhoImagemPequena)) {
                 $imageContentPequena = base64_encode(file_get_contents($caminhoImagemPequena));
-        
+
                 $apiUrlPequena = "https://api.github.com/repos/{$nomeDoDonoGithub}/{$nomeDoRepositorio}/contents/images/pequenas/{$nomeImagemPequena}";
-        
+
                 $responsePequena = Http::withHeaders([
                     'Authorization' => "token {$githubToken}",
                     'Accept' => 'application/vnd.github.v3+json',
@@ -173,15 +212,15 @@ class ArtigoController extends AdminController
                     'content' => $imageContentPequena,
                     'branch' => $branch,
                 ]);
-        
+
                 if ($responsePequena->failed()) {
                     Log::error('Falha ao enviar a imagem pequena para o GitHub: ' . $responsePequena->body());
                 }
-        
+
                 // Apagar a imagem temporária
                 unlink($caminhoImagemPequena);
             }
-        
+
             return 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/' . $nomeImagem;
         });
 
@@ -199,7 +238,68 @@ class ArtigoController extends AdminController
 
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
+
+        $form->radio('grupo_opcao', 'Opção de Grupo')
+            ->options([
+                'novo'     => 'Criar novo grupo',
+                'vincular' => 'Vincular a grupo existente',
+            ])
+            ->default('novo')
+            ->help('Escolha se deseja criar um novo grupo ou vincular este artigo a um grupo existente.')
+            // Quando o valor for "vincular", adiciona o campo select
+            ->when('vincular', function (Form $form) {
+                $form->select('id_ligacao', 'Grupo Existente')
+                    ->options(function () {
+                        $grupos = \App\Models\ArtigoIdioma::select('id_ligacao')
+                            ->groupBy('id_ligacao')
+                            ->get();
+                        $options = [];
+                        foreach ($grupos as $grupo) {
+                            $registros = \App\Models\ArtigoIdioma::where('id_ligacao', $grupo->id_ligacao)->orderByDesc('id_artigo')->get();
+
+                            foreach ($registros as $reg) {
+                                $artigo = \App\Models\Artigo::find($reg->id_artigo);
+
+                                $idiomas = [];
+                                $nomeArtigo = $artigo->artigo;
+
+                                if ($artigo) {
+                                    $idiomas[] = $artigo->lang;
+                                }
+                            }
+
+                            $options[$grupo->id_ligacao] = $nomeArtigo . ' | ' . implode(' | ', $idiomas);
+                        }
+                        return $options;
+                    })
+                    ->help('Selecione um grupo existente para vincular este artigo, se desejar.')
+                    ->rules('nullable');
+            });
+
+
+        $form->ignore(['grupo_opcao']);
+
         $form->switch('excluido', 'Excluído')->default(0);
+
+        $form->saved(function (Form $form) {
+            $grupoOpcao = request()->input('grupo_opcao');
+            $selectedGrupo = request()->input('id_ligacao');
+            $artigoId = $form->model()->id_artigo;
+
+            if ($grupoOpcao === 'novo') {
+                $novoGrupo = (string) Str::uuid();
+                \App\Models\ArtigoIdioma::updateOrCreate(
+                    ['id_artigo' => $artigoId],
+                    ['id_ligacao' => $novoGrupo]
+                );
+            } elseif ($grupoOpcao === 'vincular' && !empty($selectedGrupo)) {
+                \App\Models\ArtigoIdioma::updateOrCreate(
+                    ['id_artigo' => $artigoId],
+                    ['id_ligacao' => $selectedGrupo]
+                );
+            }
+        });
+
 
         return $form;
     }
