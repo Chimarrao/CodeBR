@@ -20,13 +20,6 @@ return new class extends Migration {
             ['clean-code-codigo-limpo-desenvolvimento', 'clean-code-principles-for-development'],
             ['unlim-armazenamento-em-nuvem-ilimitado-e-gratuito', 'unlim-unlimited-and-free-cloud-storage'],
             ['documentar-api-laravel-com-swagger', 'document-api-laravel-with-swagger'],
-            ['best-javascript-framework-2025-react-angular-vue', 'best-javascript-framework-2025-react-angular-vue'],
-            ['always-updated-torrent-trackers-list-2025', 'always-updated-torrent-trackers-list-2025'],
-            ['best-free-proxy-list-2024', 'best-free-proxy-list-2024'],
-            ['best-dark-web-search-engines-2025', 'best-dark-web-search-engines-2025'],
-            ['best-torrent-trackers-2024', 'best-torrent-trackers-2024'],
-            ['javascript-map-guide', 'javascript-map-guide'],
-            ['javascript-array-guide', 'javascript-array-guide'],
         ];
 
         foreach ($artigosRelacionados as $artigos) {
