@@ -8,6 +8,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Layout\Content;
 use App\Models\Artigo;
+use App\Models\ArtigoIdioma;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
@@ -54,9 +55,23 @@ class ArtigoController extends AdminController
 
         $grid->imagem('Imagem')->display(function ($imagem) {
             if ($this->filho == 1) {
-                return 'Sem imagem';
+                $idArtigo = $this->id_artigo;
+                return $imagem ?
+                    "
+                <style>
+                    tr[data-key='$idArtigo'] {
+                        background: linear-gradient(
+                            to right,
+                            transparent 10%, /* Primeiros 10% sem cor (transparente) */
+                          #dfe8fd 10% /* Os 90% restantes com a cor desejada */
+                        );
+                    }
+                </style>
+                "
+                    .
+                    '<img src="' . asset($imagem) . '" style="width: 15rem; object-fit: cover; border-radius: 5px;; margin-left: 15rem">' : 'Sem imagem';
             }
-            return $imagem ? '<img src="' . asset($imagem) . '" style="width: 250px; object-fit: cover; border-radius: 5px;">' : 'Sem imagem';
+            return $imagem ? '<img src="' . asset($imagem) . '" style="width: 30rem; object-fit: cover; border-radius: 5px">' : 'Sem imagem';
         })->style('text-align: center;');
 
         $grid->column('id_artigo', 'ID');
@@ -69,7 +84,7 @@ class ArtigoController extends AdminController
         });
 
         $grid->column('liberado', 'Liberado')->display(function ($liberado) {
-            return $liberado ? 'Sim' : 'Não';
+            return $liberado ? '✅' : '❌';
         });
 
         $grid->column('destaque', 'Destaque')->display(function ($destaque) {
@@ -82,12 +97,7 @@ class ArtigoController extends AdminController
         $grid->column('data_modificacao', 'Data de Modificação');
 
         $grid->column('lang', 'Idioma')->display(function ($lang) {
-            $flags = [
-                'pt-br' => '🇧🇷',
-                'en-us' => '🇺🇸',
-                'es-es' => '🇪🇸',
-            ];
-            return $flags[strtolower($lang)] ?? $lang;
+            return $lang;
         });
 
         return $grid;
@@ -239,26 +249,43 @@ class ArtigoController extends AdminController
         $form->text('lang', 'Idioma')->default('pt-br');
         $form->text('tags', 'Tags');
 
+        $url = Request::url();
+        $isEditing = strpos($url, '/edit') !== false;
+        $vinculacao = false;
+
+        if ($isEditing) {
+            $id_artigo = Request::segment(3);
+            $vinculacao = ArtigoIdioma::where('id_artigo', $id_artigo)->exists();
+
+            $artigo = Artigo::findOrFail($id_artigo);
+            $nomeArtigo = $artigo->artigo;
+        }
+
+        $itensOptions = [
+            'novo'     => 'Criar novo grupo',
+            'vincular' => 'Vincular a grupo existente',
+        ];
+
+        if ($vinculacao) {
+            $itensOptions['manter'] = 'Manter no grupo: ' . $nomeArtigo;
+        }
+
         $form->radio('grupo_opcao', 'Opção de Grupo')
-            ->options([
-                'novo'     => 'Criar novo grupo',
-                'vincular' => 'Vincular a grupo existente',
-            ])
-            ->default('novo')
+            ->options($itensOptions)
+            ->default($vinculacao ? 'manter' : 'novo')
             ->help('Escolha se deseja criar um novo grupo ou vincular este artigo a um grupo existente.')
-            // Quando o valor for "vincular", adiciona o campo select
             ->when('vincular', function (Form $form) {
                 $form->select('id_ligacao', 'Grupo Existente')
                     ->options(function () {
-                        $grupos = \App\Models\ArtigoIdioma::select('id_ligacao')
+                        $grupos = ArtigoIdioma::select('id_ligacao')
                             ->groupBy('id_ligacao')
                             ->get();
                         $options = [];
                         foreach ($grupos as $grupo) {
-                            $registros = \App\Models\ArtigoIdioma::where('id_ligacao', $grupo->id_ligacao)->orderByDesc('id_artigo')->get();
+                            $registros = ArtigoIdioma::where('id_ligacao', $grupo->id_ligacao)->orderByDesc('id_artigo')->get();
 
                             foreach ($registros as $reg) {
-                                $artigo = \App\Models\Artigo::find($reg->id_artigo);
+                                $artigo = Artigo::find($reg->id_artigo);
 
                                 $idiomas = [];
                                 $nomeArtigo = $artigo->artigo;
@@ -276,8 +303,7 @@ class ArtigoController extends AdminController
                     ->rules('nullable');
             });
 
-
-        $form->ignore(['grupo_opcao']);
+        $form->ignore(['grupo_opcao', 'id_ligacao']);
 
         $form->switch('excluido', 'Excluído')->default(0);
 
