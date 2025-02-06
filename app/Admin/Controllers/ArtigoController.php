@@ -118,8 +118,6 @@ class ArtigoController extends AdminController
 
         $form->text('descricao', 'Descrição');
 
-        $form->html('<button type="button" class="btn btn-primary" onclick="padronizarTextoTMEditor()">Padronizar</button> ' . $this->getScriptPadronizacao());
-
         $form->html('
             <div class="alert alert-info" style="margin-bottom: 20px;">
                 <strong>Atenção:</strong>
