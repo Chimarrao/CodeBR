@@ -88,11 +88,12 @@ class Artigo extends Model
                     $novoNome = "{$slug}-{$hash}.{$formato}";
 
                     // Faz o upload para o GitHub
-                    static::uploadImagemParaGithub($src, $novoNome);
+                    if (static::uploadImagemParaGithub($src, $novoNome)) {
+                        // Atualiza o atributo `src` da imagem
+                        $novoSrc = 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/' . $novoNome;
+                        $img->setAttribute('src', $novoSrc);
+                    }
 
-                    // Atualiza o atributo `src` da imagem
-                    $novoSrc = 'https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/' . $novoNome;
-                    $img->setAttribute('src', $novoSrc);
                 }
             }
         }
@@ -131,7 +132,12 @@ class Artigo extends Model
 
             if ($response->failed()) {
                 Log::error('Falha ao enviar a imagem para o GitHub: ' . $response->body());
+                return false;
             }
+
+            return true;
         }
+
+        return false;
     }
 }
