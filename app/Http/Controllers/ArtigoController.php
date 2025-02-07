@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artigo;
+use App\Models\ArtigoIdioma;
 use App\Models\Comentario;
 use Illuminate\Http\Request;
 use Highlight\Highlighter;
+use Illuminate\Support\Str;
 
 class ArtigoController extends Controller
 {
@@ -434,5 +436,60 @@ class ArtigoController extends Controller
         }
 
         return $dom->saveHTML();
+    }
+
+    /**
+     * Inseri um artigo traduzido no banco
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inserirArtigoTraduzido(Request $request) {
+        $id_artigo = $request->input('id_artigo');
+        $json = $request->input('json');
+
+        $artigoAntigo = Artigo::where('id_artigo', $id_artigo)->first();
+        $artigoIdiomaAntigo = ArtigoIdioma::where('id_artigo', $id_artigo)->first();
+
+        $json = str_replace("```json", "", $json);
+        $json = str_replace("```", "", $json);
+        $json = json_decode($json, true);
+
+        $artigo = new Artigo();
+        $artigo->artigo = isset($json['title']) ? $json['title'] : $json['titulo'];
+        $artigo->liberado = 0;
+        $artigo->destaque = 0;
+        $artigo->descricao = isset($json['description']) ? $json['description'] : $json['descricao'];
+        $artigo->html_title = isset($json['title']) ? $json['title'] : $json['titulo'];
+        $artigo->html_meta = isset($json['description']) ? $json['description'] : $json['descricao'];
+        $artigo->texto =  isset($json['text']) ? $json['text'] : $json['texto'];
+        $artigo->imagem = $artigoAntigo->imagem;
+        $artigo->url = $json['url'];
+        $artigo->autor = $artigoAntigo->autor;
+        $artigo->lang = $request->input('lang') ?? 'en-us';
+        $artigo->tags = $json['tags'];
+        $artigo->excluido = 0;
+        $artigo->data_criacao = now();
+        $artigo->data_modificacao = now();
+        $artigo->data_publicacao = now();
+        $artigo->save();
+
+        $uuid = $artigoIdiomaAntigo ? $artigoIdiomaAntigo->id_ligacao : Str::uuid();
+
+        $artigoIdioma = new ArtigoIdioma();
+        $artigoIdioma->id_artigo = $artigo->id_artigo;
+        $artigoIdioma->id_ligacao = $uuid;
+        $artigoIdioma->save();
+
+        if (!$artigoIdiomaAntigo) {
+            $artigoIdioma = new ArtigoIdioma();
+            $artigoIdioma->id_artigo = $id_artigo;
+            $artigoIdioma->id_ligacao = $uuid;
+            $artigoIdioma->save();
+        }
+
+        return response()->json([
+            'response' => $json,
+        ]);
     }
 }

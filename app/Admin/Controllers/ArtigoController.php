@@ -118,6 +118,50 @@ class ArtigoController extends AdminController
 
         $form->text('descricao', 'Descrição');
 
+        $url = Request::url();
+        $isEditing = strpos($url, '/edit') !== false;
+        $vinculacao = false;
+
+        if ($isEditing) {
+            $id_artigo = Request::segment(3);
+            $artigo = Artigo::findOrFail($id_artigo);
+            $titulo = $artigo->artigo;
+            $url = $artigo->url;
+            $tags = $artigo->tags;
+            $descricao = $artigo->descricao;
+            $texto = htmlspecialchars($artigo->texto);
+
+            $form->html(
+                <<<HTML
+                    <button 
+                        type="button" 
+                        class="btn chat-btn btn-primary" 
+                        data-id="$id_artigo" 
+                        data-titulo="$titulo"
+                        data-descricao="$descricao"
+                        data-url="$url"
+                        data-tags="$tags"
+                        data-texto="$texto">
+                        Traduzir <img src="https://kapowaz.github.io/square-flags/flags/us.svg" width="20">
+                    </button>
+
+                    <button 
+                        type="button" 
+                        class="btn chat-btn btn-primary" 
+                        data-id="$id_artigo" 
+                        data-titulo="$titulo"
+                        data-descricao="$descricao"
+                        data-url="$url"
+                        data-tags="$tags"
+                        data-texto="$texto">
+                        Traduzir <img src="https://kapowaz.github.io/square-flags/flags/es.svg" width="20">
+                    </button>
+                HTML
+            );
+
+            $form->html(file_get_contents(__DIR__ .  '/../includes/tradutor.blade.php'));
+        }
+
         $form->html('
             <div class="alert alert-info" style="margin-bottom: 20px;">
                 <strong>Atenção:</strong>
@@ -374,10 +418,5 @@ class ArtigoController extends AdminController
         return $content
             ->header('Criar Artigo')
             ->body($this->form());
-    }
-
-    private function getScriptPadronizacao()
-    {
-        return file_get_contents(__DIR__ . '/../includes/script-padronizacao.blade.php');
     }
 }

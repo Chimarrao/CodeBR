@@ -13,6 +13,7 @@
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
+        "openai-php/client": "^0.10.3",
         "ramsey/uuid": "^4.7",
         "scrivo/highlight.php": "^9.18",
         "symfony/console": "^7.0"
