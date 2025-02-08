@@ -91,7 +91,10 @@ class ArtigoController extends AdminController
             return $destaque ? 'Sim' : 'Não';
         });
 
-        $grid->column('url', 'URL');
+        $grid->column('url', 'URL')->display(function ($url) {
+            return "<a href=\"https://codebr.net/artigo/{$url}\" target=\"_blank\">{$url}</a>";
+        });
+        
         $grid->column('data_criacao', 'Data de Criação');
         $grid->column('data_publicacao', 'Data de Publicação');
         $grid->column('data_modificacao', 'Data de Modificação');
@@ -141,6 +144,7 @@ class ArtigoController extends AdminController
                         data-descricao="$descricao"
                         data-url="$url"
                         data-tags="$tags"
+                        data-lang="en-us"
                         data-texto="$texto">
                         Traduzir <img src="https://kapowaz.github.io/square-flags/flags/us.svg" width="20">
                     </button>
@@ -153,6 +157,7 @@ class ArtigoController extends AdminController
                         data-descricao="$descricao"
                         data-url="$url"
                         data-tags="$tags"
+                        data-lang="es-es"
                         data-texto="$texto">
                         Traduzir <img src="https://kapowaz.github.io/square-flags/flags/es.svg" width="20">
                     </button>

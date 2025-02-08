@@ -7,6 +7,7 @@
         const descricao = button.getAttribute('data-descricao');
         const url = button.getAttribute('data-url');
         const tags = button.getAttribute('data-tags');
+        const lang = button.getAttribute('data-lang');
 
         const prompt = `Instruções
             Você irá traduzir este artigo abaixo, para o idioma: inglês
@@ -74,7 +75,8 @@
                                     },
                                     body: JSON.stringify({
                                         json: accumulatedData,
-                                        id_artigo: idArtigo
+                                        id_artigo: idArtigo,
+                                        lang: lang
                                     })
                                 })
                                 .then(response => response.json())
