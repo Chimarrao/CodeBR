@@ -9,10 +9,12 @@
         const tags = button.getAttribute('data-tags');
         const lang = button.getAttribute('data-lang');
 
+        const flag = `https://kapowaz.github.io/square-flags/flags/${lang == 'en-us' ? 'us' : 'es'}.svg`
+
         const prompt = `Instruções
-            Você irá traduzir este artigo abaixo, para o idioma: inglês
-            Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma
-            Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para inglês, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento)
+            Você irá traduzir este artigo abaixo, para o idioma: ` + lang + `
+            Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma (texto titulo descricao tags e URL)
+            Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento)
             ATENCAO: Você me devolverá apenas um JSON no formato abaixo: 
                 JSON de exemplo: 
                     {
@@ -30,8 +32,8 @@
 
         // Modal de loading inicial
         Swal.fire({
-            title: 'Traduzindo... <img src="https://kapowaz.github.io/square-flags/flags/us.svg" width="20">',
-            text: 'Por favor, aguarde enquanto traduzimos o artigo para o inglês.',
+            title: `Traduzindo... <img src="${flag}" width="20">`,
+            text: 'Por favor, aguarde enquanto traduzimos o artigo.',
             allowOutsideClick: false,
             didOpen: () => Swal.showLoading()
         });
@@ -56,7 +58,7 @@
                     Swal.close();
 
                     streamAlert = Swal.fire({
-                        title: 'Traduzindo... <img src="https://kapowaz.github.io/square-flags/flags/us.svg" width="20">',
+                        title: `Traduzindo... <img src="${flag}" width="20">`,
                         html: `<pre id="stream-output" class="pre-editor"></pre>`,
                         showConfirmButton: true,
                         confirmButtonText: 'Salvar',
@@ -147,7 +149,7 @@
 
 <style>
     .swal2-popup.swal2-modal.swal2-show {
-        width: 170rem;
+        width: 100rem;
     }
 
     .pre-editor {
@@ -156,8 +158,8 @@
         padding: 20px;
         border-radius: 5px;
         text-align: left;
-        height: 60rem;
-        width: 167rem;
+        height: 50rem;
+        width: 97rem;
         overflow-y: auto;
         font-family: 'Courier New', monospace;
         white-space: pre-wrap;
