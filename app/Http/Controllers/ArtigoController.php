@@ -455,6 +455,10 @@ class ArtigoController extends Controller
         $json = str_replace("```", "", $json);
         $json = json_decode($json, true);
 
+        if (isset($json['descripcion'])) {
+            $json['description'] = $json['descripcion'];
+        }
+
         $artigo = new Artigo();
         $artigo->artigo = isset($json['title']) ? $json['title'] : $json['titulo'];
         $artigo->liberado = 0;
