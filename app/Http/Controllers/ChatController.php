@@ -33,7 +33,7 @@ class ChatController extends Controller
 
         $config = [
             'messages' => $chatHistory, 
-            'model' => 'gpt-4o',
+            'model' => 'gpt-4o-mini',
             'stream' => true,
         ];
 
