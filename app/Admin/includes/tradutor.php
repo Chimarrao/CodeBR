@@ -1,151 +1,196 @@
+<div id="translator-app">
+    <!-- Os botões existentes já estarão aqui -->
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    const button = document.querySelector('.chat-btn');
-    button.addEventListener('click', function() {
-        const idArtigo = button.getAttribute('data-id');
-        const texto = button.getAttribute('data-texto');
-        const titulo = button.getAttribute('data-titulo');
-        const descricao = button.getAttribute('data-descricao');
-        const url = button.getAttribute('data-url');
-        const tags = button.getAttribute('data-tags');
-        const lang = button.getAttribute('data-lang');
+    const {
+        createApp
+    } = Vue;
 
-        const flag = `https://kapowaz.github.io/square-flags/flags/${lang == 'en-us' ? 'us' : 'es'}.svg`
+    createApp({
+        mounted() {
+            document.querySelectorAll('.chat-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    this.handleTranslation(e.currentTarget);
+                });
+            });
+        },
+        methods: {
+            handleTranslation(button) {
+                const data = {
+                    id: button.getAttribute('data-id'),
+                    titulo: button.getAttribute('data-titulo'),
+                    descricao: button.getAttribute('data-descricao'),
+                    url: button.getAttribute('data-url'),
+                    tags: button.getAttribute('data-tags'),
+                    lang: button.getAttribute('data-lang'),
+                    texto: button.getAttribute('data-texto'),
+                };
 
-        const prompt = `Instruções
-            Você irá traduzir este artigo abaixo, para o idioma: ` + lang + `
-            Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma (texto titulo descricao tags e URL)
-            Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento)
-            ATENCAO: Você me devolverá apenas um JSON no formato abaixo: 
-                JSON de exemplo: 
-                    {
-                    "titulo": "Como Otimizar e Utilizar a Função substr no PHP",
-                    "descricao": "Aprenda a usar a função substr no PHP para manipular strings de forma eficiente, com exemplos práticos e dicas de otimização.",
-                    "texto": "<p><strong><span style=\"font-family: lora, serif; font-size: 20pt;\">Como Otimizar e Utilizar a Função substr no PHP</span></strong></p><p><img src=\"https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/como-otimizar-e-utilizar-a-fun-o-substr-no-php-par-30257141.webp\" width=\"1280\" height=\"720\" alt=\"......"
-                    "url": "aprenda-a-funcao-substr-php"
-                    "tags": "substr,php,funcao"
-                    }
-            Titulo do artigo: ${titulo}
-            Descrição do artigo: ${descricao}
-            URL do artigo: ${url}
-            Tags do artigo: ${tags}
-            Texto do artigo: ${texto}`;
+                this.startTranslation(data);
+            },
 
-        // Modal de loading inicial
-        Swal.fire({
-            title: `Traduzindo... <img src="${flag}" width="20">`,
-            text: 'Por favor, aguarde enquanto traduzimos o artigo.',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
+            async startTranslation(data) {
+                try {
+                    const prompt = this.createPrompt(data);
+                    this.showLoadingAlert(data.lang);
 
-        fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    prompt: prompt
-                })
-            })
-            .then(response => {
+                    const response = await this.fetchTranslation(prompt);
+                    await this.handleStreamResponse(response, data);
+                } catch (error) {
+                    this.handleError(error);
+                }
+            },
+
+            createPrompt(data) {
+                return `Instruções
+                    Você irá traduzir este artigo abaixo, para o idioma: ` + data.lang + `
+                    Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma (texto titulo descricao tags e URL)
+                    Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + data.lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento)
+                    ATENCAO: Você me devolverá apenas um JSON no formato abaixo: 
+                        JSON de exemplo: 
+                            {
+                            "titulo": "Como Otimizar e Utilizar a Função substr no PHP",
+                            "descricao": "Aprenda a usar a função substr no PHP para manipular strings de forma eficiente, com exemplos práticos e dicas de otimização.",
+                            "texto": "<p><strong><span style=\"font-family: lora, serif; font-size: 20pt;\">Como Otimizar e Utilizar a Função substr no PHP</span></strong></p><p><img src=\"https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/como-otimizar-e-utilizar-a-fun-o-substr-no-php-par-30257141.webp\" width=\"1280\" height=\"720\" alt=\"......"
+                            "url": "aprenda-a-funcao-substr-php"
+                            "tags": "substr,php,funcao"
+                            }
+                    Titulo do artigo: ${data.titulo}
+                    Descrição do artigo: ${data.descricao}
+                    URL do artigo: ${data.url}
+                    Tags do artigo: ${data.tags}
+                    Texto do artigo: ${data.texto}`;
+            },
+
+            showLoadingAlert(lang) {
+                Swal.fire({
+                    title: `Traduzindo... ${this.getFlag(lang)}`,
+                    text: 'Por favor, aguarde enquanto traduzimos o artigo.',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+            },
+
+            async fetchTranslation(prompt) {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        prompt
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erro na requisição');
+                return response;
+            },
+
+            async handleStreamResponse(response, data) {
                 const reader = response.body.getReader();
-                const decoder = new TextDecoder();
                 let accumulatedData = '';
-                let streamAlert = null;
+                window.accumulatedData =  '';
 
                 setTimeout(() => {
                     Swal.close();
-
-                    streamAlert = Swal.fire({
-                        title: `Traduzindo... <img src="${flag}" width="20">`,
-                        html: `<pre id="stream-output" class="pre-editor"></pre>`,
-                        showConfirmButton: true,
-                        confirmButtonText: 'Salvar',
-                        showCancelButton: true,
-                        cancelButtonText: 'Fechar',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            document.getElementById('stream-output').textContent = accumulatedData;
-                        },
-                        preConfirm: () => {
-                            fetch('/api/inserir-artigo-traduzido', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                    },
-                                    body: JSON.stringify({
-                                        json: accumulatedData,
-                                        id_artigo: idArtigo,
-                                        lang: lang
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data)
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Sucesso!',
-                                        text: 'Artigo traduzido salvo com sucesso!',
-                                        confirmButtonText: 'OK'
-                                    });
-                                });
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire('Salvo!', 'O conteúdo foi salvo com sucesso.', 'success');
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            Swal.fire('Cancelado', 'O conteúdo não foi salvo.', 'error');
-                        }
-                    });
+                    this.showStreamAlert(accumulatedData, data);
                 }, 300);
 
-                function readStream() {
-                    reader.read().then(({
+                await this.readStream(reader, accumulatedData, data);
+            },
+
+            async readStream(reader, accumulatedData, data) {
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const {
                         done,
                         value
-                    }) => {
-                        const chunk = decoder.decode(value, {
-                            stream: true
-                        });
-                        console.log('Chunk recebido (raw):', chunk);
-                        accumulatedData += chunk;
+                    } = await reader.read();
+                    if (done) break;
 
-                        const outputElement = document.getElementById('stream-output');
-                        if (outputElement) {
-                            outputElement.textContent = accumulatedData;
-                            outputElement.scrollTop = outputElement.scrollHeight;
-                        }
-
-                        if (done) {
-                            return;
-                        }
-
-                        readStream();
-                    }).catch(error => {
-                        console.error(error)
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erro no Stream',
-                            text: 'Ocorreu um erro durante o processo de tradução!'
-                        });
+                    const chunk = decoder.decode(value, {
+                        stream: true
                     });
+                    console.log(chunk)
+                    accumulatedData += chunk;
+                    window.accumulatedData += chunk;
+                    this.updateStreamOutput(accumulatedData);
                 }
 
-                readStream();
-            })
-            .catch(error => {
-                console.error(error)
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro',
-                    text: 'Falha ao iniciar o processo de tradução!'
-                });
-            });
-    });
-</script>
+                return accumulatedData;
+            },
 
+            showStreamAlert(initialData, data) {
+                Swal.fire({
+                    title: `Traduzindo... ${this.getFlag(data.lang)}`,
+                    html: `<pre id="stream-output" class="pre-editor">${initialData}</pre>`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Salvar',
+                    cancelButtonText: 'Fechar',
+                    showCancelButton: true,
+                    didOpen: () => this.scrollOutput(),
+                    preConfirm: () => this.saveTranslation(window.accumulatedData, data)
+                }).then(result => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire('Cancelado', 'Tradução não salva', 'info');
+                    }
+                });
+            },
+
+            async saveTranslation(data, originalData) {
+                console.log( data,
+                            originalData.id,
+                            originalData.lang)
+                try {
+                    await fetch('/api/inserir-artigo-traduzido', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            json: data,
+                            id_artigo: originalData.id,
+                            lang: originalData.lang
+                        })
+                    });
+                    Swal.fire('Sucesso!', 'Artigo salvo com sucesso!', 'success');
+                } catch (error) {
+                    Swal.fire('Erro!', 'Falha ao salvar artigo!', 'error');
+                }
+            },
+
+            handleError(error) {
+                console.error(error);
+                Swal.fire('Erro!', 'Ocorreu um erro durante a tradução!', 'error');
+            },
+
+            getFlag(lang) {
+                const country = lang === 'en-us' ? 'us' : 'es';
+                return `<img src="https://kapowaz.github.io/square-flags/flags/${country}.svg" width="20">`;
+            },
+
+            updateStreamOutput(data) {
+                const output = document.getElementById('stream-output');
+                if (output) {
+                    output.textContent = data;
+                    this.scrollOutput();
+                }
+            },
+
+            scrollOutput() {
+                const output = document.getElementById('stream-output');
+                if (output) output.scrollTop = output.scrollHeight;
+            }
+        }
+    }).mount('#translator-app');
+</script>
 
 <style>
     .swal2-popup.swal2-modal.swal2-show {

@@ -108,8 +108,15 @@ class ArtigoController extends AdminController
 
     protected function form()
     {
-
         $form = new Form(new Artigo());
+        $url = Request::url();
+        $isEditing = strpos($url, '/edit') !== false;
+        $vinculacao = false;
+
+        if (!$isEditing) {
+            $form->html(file_get_contents(__DIR__ .  '/../includes/redator.php'));
+        }
+        
         $githubToken = env('GITHUB_TOKEN');
 
         $form->display('id_artigo', 'ID');
@@ -120,10 +127,6 @@ class ArtigoController extends AdminController
         $form->switch('destaque', 'Destaque')->default(0);
 
         $form->text('descricao', 'Descrição');
-
-        $url = Request::url();
-        $isEditing = strpos($url, '/edit') !== false;
-        $vinculacao = false;
 
         if ($isEditing) {
             $id_artigo = Request::segment(3);
@@ -164,7 +167,7 @@ class ArtigoController extends AdminController
                 HTML
             );
 
-            $form->html(file_get_contents(__DIR__ .  '/../includes/tradutor.blade.php'));
+            $form->html(file_get_contents(__DIR__ .  '/../includes/tradutor.php'));
         }
 
         $form->html('
