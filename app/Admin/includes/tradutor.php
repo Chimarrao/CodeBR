@@ -49,15 +49,16 @@
                 return `Instruções
                     Você irá traduzir este artigo abaixo, para o idioma: ` + data.lang + `
                     Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma (texto titulo descricao tags e URL)
-                    Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + data.lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento)
-                    ATENCAO: Você me devolverá apenas um JSON no formato abaixo: 
+                    Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + data.lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento). Além disso mantenha a formatação dele
+                    OBS: Mantenha as imagens exatamente iguais, exatamente o mesmo link e mesmos tamanhos. Mude apenas o ALT delas se tiver
+                    ATENCAO: Você me devolverá APENAS um JSON no formato abaixo (o texto deve ser COMPLETO ! SEM OCULTAR NADA): 
                         JSON de exemplo: 
                             {
                             "titulo": "Como Otimizar e Utilizar a Função substr no PHP",
                             "descricao": "Aprenda a usar a função substr no PHP para manipular strings de forma eficiente, com exemplos práticos e dicas de otimização.",
+                            "url": "aprenda-a-funcao-substr-php",
+                            "tags": "substr,php,funcao",
                             "texto": "<p><strong><span style=\"font-family: lora, serif; font-size: 20pt;\">Como Otimizar e Utilizar a Função substr no PHP</span></strong></p><p><img src=\"https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/como-otimizar-e-utilizar-a-fun-o-substr-no-php-par-30257141.webp\" width=\"1280\" height=\"720\" alt=\"......"
-                            "url": "aprenda-a-funcao-substr-php"
-                            "tags": "substr,php,funcao"
                             }
                     Titulo do artigo: ${data.titulo}
                     Descrição do artigo: ${data.descricao}
