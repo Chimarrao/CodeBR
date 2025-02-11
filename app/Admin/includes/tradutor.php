@@ -1,8 +1,9 @@
 <div id="translator-app">
-    <!-- Os botões existentes já estarão aqui -->
+    <!-- Seus botões existentes aqui -->
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -11,6 +12,11 @@
     } = Vue;
 
     createApp({
+        data() {
+            return {
+                editor: null
+            }
+        },
         mounted() {
             document.querySelectorAll('.chat-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -95,12 +101,11 @@
             async handleStreamResponse(response, data) {
                 const reader = response.body.getReader();
                 let accumulatedData = '';
-                window.accumulatedData =  '';
+                window.accumulatedData = '';
 
-                setTimeout(() => {
-                    Swal.close();
-                    this.showStreamAlert(accumulatedData, data);
-                }, 300);
+                Swal.close();
+                this.showStreamAlert(accumulatedData, data);
+                this.initializeEditor();
 
                 await this.readStream(reader, accumulatedData, data);
             },
@@ -109,19 +114,14 @@
                 const decoder = new TextDecoder();
 
                 while (true) {
-                    const {
-                        done,
-                        value
-                    } = await reader.read();
+                    const { done, value } = await reader.read();
                     if (done) break;
 
-                    const chunk = decoder.decode(value, {
-                        stream: true
-                    });
-                    console.log(chunk)
+                    const chunk = decoder.decode(value, { stream: true });
+                    console.log(chunk);
                     accumulatedData += chunk;
                     window.accumulatedData += chunk;
-                    this.updateStreamOutput(accumulatedData);
+                    this.updateStreamOutput(window.accumulatedData);
                 }
 
                 return accumulatedData;
@@ -129,14 +129,21 @@
 
             showStreamAlert(initialData, data) {
                 Swal.fire({
-                    title: `Traduzindo... ${this.getFlag(data.lang)}`,
-                    html: `<pre id="stream-output" class="pre-editor">${initialData}</pre>`,
+                    title: `Tradução ${this.getFlag(data.lang)} - Edite antes de salvar`,
+                    html: `<pre id="editor" style="width: 100%; height: 70vh;"></pre>`,
                     showConfirmButton: true,
                     confirmButtonText: 'Salvar',
                     cancelButtonText: 'Fechar',
                     showCancelButton: true,
-                    didOpen: () => this.scrollOutput(),
-                    preConfirm: () => this.saveTranslation(window.accumulatedData, data)
+                    width: '90%',
+                    didOpen: () => {
+                        this.initializeEditor();
+                        this.updateStreamOutput(initialData);
+                    },
+                    preConfirm: () => {
+                        const content = this.editor.getValue();
+                        return this.saveTranslation(content, data);
+                    }
                 }).then(result => {
                     if (result.dismiss === Swal.DismissReason.cancel) {
                         Swal.fire('Cancelado', 'Tradução não salva', 'info');
@@ -144,10 +151,32 @@
                 });
             },
 
+            initializeEditor() {
+                this.editor = ace.edit('editor', {
+                    mode: 'ace/mode/json', // Modo JSON
+                    theme: 'ace/theme/dracula', // Tema Dracula
+                    fontSize: 16, // Tamanho da fonte
+                    showPrintMargin: false, // Remove a margem de impressão
+                    wrap: true, // Quebra de linha automática
+                    enableBasicAutocompletion: true, // Autocompletar básico
+                    enableLiveAutocompletion: true, // Autocompletar em tempo real
+                });
+
+                this.editor.setOptions({
+                    fontFamily: 'Fira Code, monospace', // Fonte personalizada
+                });
+
+                this.editor.session.setUseWorker(false); // Desativa o worker para melhorar desempenho
+            },
+
+            updateStreamOutput(data) {
+                if (this.editor) {
+                    this.editor.setValue(data, -1); // -1 para posicionar o cursor no início
+                }
+            },
+
             async saveTranslation(data, originalData) {
-                console.log( data,
-                            originalData.id,
-                            originalData.lang)
+                console.log(data, originalData.id, originalData.lang);
                 try {
                     await fetch('/api/inserir-artigo-traduzido', {
                         method: 'POST',
@@ -176,19 +205,6 @@
                 const country = lang === 'en-us' ? 'us' : 'es';
                 return `<img src="https://kapowaz.github.io/square-flags/flags/${country}.svg" width="20">`;
             },
-
-            updateStreamOutput(data) {
-                const output = document.getElementById('stream-output');
-                if (output) {
-                    output.textContent = data;
-                    this.scrollOutput();
-                }
-            },
-
-            scrollOutput() {
-                const output = document.getElementById('stream-output');
-                if (output) output.scrollTop = output.scrollHeight;
-            }
         }
     }).mount('#translator-app');
 </script>
@@ -198,16 +214,25 @@
         width: 100rem;
     }
 
-    .pre-editor {
+    /* Estilo do Ace Editor */
+    #editor {
         background: #1e1e1e;
         color: #d4d4d4;
-        padding: 20px;
         border-radius: 5px;
-        text-align: left;
-        height: 50rem;
-        width: 97rem;
-        overflow-y: auto;
-        font-family: 'Courier New', monospace;
-        white-space: pre-wrap;
+        font-family: 'Fira Code', monospace;
+        font-size: 16px;
+    }
+
+    .ace_gutter {
+        background: #1e1e1e !important;
+        color: #858585 !important;
+    }
+
+    .ace_active-line {
+        background: #2a2a2a !important;
+    }
+
+    .ace_cursor {
+        border-left: 2px solid #d4d4d4 !important;
     }
 </style>
