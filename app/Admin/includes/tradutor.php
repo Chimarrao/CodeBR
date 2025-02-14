@@ -10,12 +10,14 @@
     const {
         createApp
     } = Vue;
-
     createApp({
         data() {
             return {
-                editor: null
-            }
+                editor: null,
+                currentStep: 0, 
+                translationData: {}, 
+                popupEditor: null,
+            };
         },
         mounted() {
             document.querySelectorAll('.chat-btn').forEach(button => {
@@ -35,53 +37,185 @@
                     lang: button.getAttribute('data-lang'),
                     texto: button.getAttribute('data-texto'),
                 };
-
-                this.startTranslation(data);
+                this.translationData = data;
+                this.currentStep = 0;
+                this.translateNextPart();
             },
+            async translateNextPart() {
+                const steps = [
+                    this.translateTitle,
+                    this.translateDescription,
+                    this.translateUrl,
+                    this.translateTags,
+                    this.translateTextParts,
+                ];
 
-            async startTranslation(data) {
-                try {
-                    const prompt = this.createPrompt(data);
-                    this.showLoadingAlert(data.lang);
+                if (this.currentStep < steps.length) {
+                    await steps[this.currentStep]();
+                    this.currentStep++;
 
-                    const response = await this.fetchTranslation(prompt);
-                    await this.handleStreamResponse(response, data);
-                } catch (error) {
-                    this.handleError(error);
+                    setTimeout(() => {
+                        this.translateNextPart();
+                    }, 2000);
+                } else {
+                    this.finalizeTranslation();
                 }
             },
+            async translateTitle() {
+                const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA: Traduza o seguinte título para ${this.translationData.lang}: ${this.translationData.titulo}`;
+                const translatedTitle = await this.fetchTranslation(prompt);
+                this.translationData.titulo = translatedTitle.trim();
+                this.openPopup("Título", this.translationData.titulo, "titulo");
+            },
+            async translateDescription() {
+                const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA: Traduza a seguinte descrição para ${this.translationData.lang}: ${this.translationData.descricao}`;
+                const translatedDescription = await this.fetchTranslation(prompt);
+                this.translationData.descricao = translatedDescription.trim();
+                this.openPopup("Descrição", this.translationData.descricao, "descricao");
+            },
+            async translateUrl() {
+                const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA (SE NAO TIVER, DEVOLVA 'ERRO'): Adapte o slug (é a URL de um artigo que estamos traduzindo) do idioma original para ${this.translationData.lang}: ${this.translationData.url}`;
+                const translatedUrl = await this.fetchTranslation(prompt);
+                this.translationData.url = translatedUrl.trim().replace(/\s+/g, '-').toLowerCase();
+                this.openPopup("URL", this.translationData.url, "url");
+            },
+            async translateTags() {
+                const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA (SE NAO TIVER, DEVOLVA AS MESMAS TAGS DO IDIOMA ORIGINAL): Traduza as seguintes tags para ${this.translationData.lang}: ${this.translationData.tags}`;
+                const translatedTags = await this.fetchTranslation(prompt);
+                this.translationData.tags = translatedTags.trim().split(',').map(tag => tag.trim()).join(',');
+                this.openPopup("Tags", this.translationData.tags, "tags");
+            },
+            async delay(time) {
+                return new Promise(resolve => setTimeout(resolve, time));
+            },
+            async translateTextParts() {
+                const parts = this.splitHtmlIntoParts(this.translationData.texto);
+                const translatedParts = [];
+                this.openPopup("Texto", '', "texto");
+                this.initializeEditor();
 
-            createPrompt(data) {
-                return `Instruções
-                    Você irá traduzir este artigo abaixo, para o idioma: ` + data.lang + `
-                    Mantenha exatamente a mesma estrutura, emojis, imagens e tudo mais... apenas troque o texto de idioma (texto titulo descricao tags e URL)
-                    Se o artigo tiver bloco de código e o código estiver em pt-br, adapte ele para  ` + data.lang + `, mas certifique-se que ele irá rodar... (devem ser adaptadas funções, variáveis e comentários, mas mantendo exatamente o mesmo funcionamento). Além disso mantenha a formatação dele
-                    OBS: Mantenha as imagens exatamente iguais, exatamente o mesmo link e mesmos tamanhos. Mude apenas o ALT delas se tiver
-                    ATENCAO: Você me devolverá APENAS um JSON no formato abaixo (o texto deve ser COMPLETO ! SEM OCULTAR NADA): 
-                        JSON de exemplo: 
-                            {
-                            "titulo": "Como Otimizar e Utilizar a Função substr no PHP",
-                            "descricao": "Aprenda a usar a função substr no PHP para manipular strings de forma eficiente, com exemplos práticos e dicas de otimização.",
-                            "url": "aprenda-a-funcao-substr-php",
-                            "tags": "substr,php,funcao",
-                            "texto": "<p><strong><span style=\"font-family: lora, serif; font-size: 20pt;\">Como Otimizar e Utilizar a Função substr no PHP</span></strong></p><p><img src=\"https://cdn.statically.io/gh/Chimarrao/CodeBR-img/img/images/internas/como-otimizar-e-utilizar-a-fun-o-substr-no-php-par-30257141.webp\" width=\"1280\" height=\"720\" alt=\"......"
-                            }
-                    Titulo do artigo: ${data.titulo}
-                    Descrição do artigo: ${data.descricao}
-                    URL do artigo: ${data.url}
-                    Tags do artigo: ${data.tags}
-                    Texto do artigo: ${data.texto}`;
+                for (const part of parts) {
+                    await this.delay(2000);
+                    let html = false;
+                    html = await this.translateHtmlContent(part);
+
+                    if (html) {
+                        const clean = html.replace(/```(html|php|js|ts|javascript|typescript|sql|python|rust)?\s*([\s\S]*?)\s*```/g, '$2');
+                        translatedParts.push(clean);
+
+                        this.translationData.texto = translatedParts.join('\n');
+                        this.updateEditorWithTranslatedText(this.translationData.texto);
+                    }
+                }
+            },
+            initializeEditor() {
+                this.popupEditor = ace.edit('editor', {
+                    mode: 'ace/mode/json',
+                    theme: 'ace/theme/dracula',
+                    fontSize: 16,
+                    showPrintMargin: false,
+                    wrap: true,
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                });
+
+                this.popupEditor.setOptions({
+                    fontFamily: 'Fira Code, monospace',
+                });
+
+                this.popupEditor.session.setUseWorker(false);
             },
 
-            showLoadingAlert(lang) {
+            updateEditorWithTranslatedText(translatedText) {
+                if (!this.popupEditor) {
+                    this.initializeEditor();
+                }
+                this.popupEditor.setValue(translatedText, -1);
+            },
+            splitHtmlIntoParts(html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const parts = [];
+                const nodes = Array.from(doc.body.childNodes); 
+                const chunkSize = 20; 
+
+                for (let i = 0; i < nodes.length; i += chunkSize) {
+                    const chunk = nodes.slice(i, i + chunkSize); 
+                    const part = chunk.map(node => node.outerHTML || node.textContent).join(''); 
+                    parts.push(part); 
+                }
+
+                return parts;
+            },
+            async translateHtmlContent(htmlContent) {
+                const prompt = `ME DEVOLVA APENAS O HTML: Traduza o seguinte conteúdo para ${this.translationData.lang}, mantendo as tags intactas: ${htmlContent}`;
+                const translatedContent = await this.fetchTranslation(prompt);
+                return translatedContent.trim();
+            },
+            openPopup(title, content, type) {
+                let popup = document.getElementById('translation-popup');
+                if (!popup) {
+                    popup = document.createElement('div');
+                    popup.id = 'translation-popup';
+                    popup.style.position = 'fixed';
+                    popup.style.top = '50%';
+                    popup.style.left = '50%';
+                    popup.style.transform = 'translate(-50%, -50%)';
+                    popup.style.width = '80vw';
+                    popup.style.height = '80vh';
+                    popup.style.backgroundColor = '#fff';
+                    popup.style.zIndex = '1000';
+                    popup.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                    popup.style.padding = '20px';
+                    popup.style.overflow = 'auto';
+                    document.body.appendChild(popup);
+
+                    const closeBtn = document.createElement('button');
+                    closeBtn.innerText = 'Fechar';
+                    closeBtn.style.position = 'absolute';
+                    closeBtn.style.top = '10px';
+                    closeBtn.style.right = '10px';
+                    closeBtn.onclick = () => popup.remove();
+                    popup.appendChild(closeBtn);
+                }
+
+                const titleLabel = document.createElement('h3');
+                titleLabel.innerText = title;
+                popup.appendChild(titleLabel);
+
+                if (type === "texto") {
+                    const editorElement = document.getElementById('editor');
+
+                    if (!editorElement) {
+                        const preElement = document.createElement('pre');
+                        preElement.id = 'editor';
+                        preElement.style.width = '100%';
+                        preElement.style.height = '70vh';
+
+                        popup.appendChild(preElement);
+                    }
+                } else {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = content;
+                    input.style.width = '100%';
+                    input.style.marginBottom = '10px';
+                    popup.appendChild(input);
+
+                    input.oninput = () => {
+                        this.translationData[type] = input.value;
+                    };
+                }
+            },
+            finalizeTranslation() {
                 Swal.fire({
-                    title: `Traduzindo... ${this.getFlag(lang)}`,
-                    text: 'Por favor, aguarde enquanto traduzimos o artigo.',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading()
+                    title: 'Tradução finalizada!',
+                    text: 'Todos os elementos foram traduzidos com sucesso.',
+                    icon: 'success',
+                }).then(() => {
+                    this.saveTranslation(JSON.stringify(this.translationData));
                 });
             },
-
             async fetchTranslation(prompt) {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
@@ -93,90 +227,20 @@
                         prompt
                     })
                 });
-
                 if (!response.ok) throw new Error('Erro na requisição');
-                return response;
-            },
-
-            async handleStreamResponse(response, data) {
                 const reader = response.body.getReader();
-                let accumulatedData = '';
-                window.accumulatedData = '';
-
-                Swal.close();
-                this.showStreamAlert(accumulatedData, data);
-                this.initializeEditor();
-
-                await this.readStream(reader, accumulatedData, data);
-            },
-
-            async readStream(reader, accumulatedData, data) {
-                const decoder = new TextDecoder();
-
+                let result = '';
                 while (true) {
-                    const { done, value } = await reader.read();
+                    const {
+                        done,
+                        value
+                    } = await reader.read();
                     if (done) break;
-
-                    const chunk = decoder.decode(value, { stream: true });
-                    console.log(chunk);
-                    accumulatedData += chunk;
-                    window.accumulatedData += chunk;
-                    this.updateStreamOutput(window.accumulatedData);
+                    result += new TextDecoder().decode(value);
                 }
-
-                return accumulatedData;
+                return result.trim();
             },
-
-            showStreamAlert(initialData, data) {
-                Swal.fire({
-                    title: `Tradução ${this.getFlag(data.lang)} - Edite antes de salvar`,
-                    html: `<pre id="editor" style="width: 100%; height: 70vh;"></pre>`,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Salvar',
-                    cancelButtonText: 'Fechar',
-                    showCancelButton: true,
-                    width: '90%',
-                    didOpen: () => {
-                        this.initializeEditor();
-                        this.updateStreamOutput(initialData);
-                    },
-                    preConfirm: () => {
-                        const content = this.editor.getValue();
-                        return this.saveTranslation(content, data);
-                    }
-                }).then(result => {
-                    if (result.dismiss === Swal.DismissReason.cancel) {
-                        Swal.fire('Cancelado', 'Tradução não salva', 'info');
-                    }
-                });
-            },
-
-            initializeEditor() {
-                this.editor = ace.edit('editor', {
-                    mode: 'ace/mode/json', // Modo JSON
-                    theme: 'ace/theme/dracula', // Tema Dracula
-                    fontSize: 16, // Tamanho da fonte
-                    showPrintMargin: false, // Remove a margem de impressão
-                    wrap: true, // Quebra de linha automática
-                    enableBasicAutocompletion: true, // Autocompletar básico
-                    enableLiveAutocompletion: true, // Autocompletar em tempo real
-                });
-
-                this.editor.setOptions({
-                    fontFamily: 'Fira Code, monospace', // Fonte personalizada
-                });
-
-                this.editor.session.setUseWorker(false); // Desativa o worker para melhorar desempenho
-            },
-
-            updateStreamOutput(data) {
-                if (this.editor) {
-                    this.editor.setValue(data, -1); // -1 para posicionar o cursor no início
-                }
-            },
-
-            async saveTranslation(data, originalData) {
-                console.log(data, originalData.id, originalData.lang);
+            async saveTranslation(data) {
                 try {
                     await fetch('/api/inserir-artigo-traduzido', {
                         method: 'POST',
@@ -186,24 +250,14 @@
                         },
                         body: JSON.stringify({
                             json: data,
-                            id_artigo: originalData.id,
-                            lang: originalData.lang
+                            id_artigo: this.translationData.id,
+                            lang: this.translationData.lang
                         })
                     });
                     Swal.fire('Sucesso!', 'Artigo salvo com sucesso!', 'success');
                 } catch (error) {
                     Swal.fire('Erro!', 'Falha ao salvar artigo!', 'error');
                 }
-            },
-
-            handleError(error) {
-                console.error(error);
-                Swal.fire('Erro!', 'Ocorreu um erro durante a tradução!', 'error');
-            },
-
-            getFlag(lang) {
-                const country = lang === 'en-us' ? 'us' : 'es';
-                return `<img src="https://kapowaz.github.io/square-flags/flags/${country}.svg" width="20">`;
             },
         }
     }).mount('#translator-app');
