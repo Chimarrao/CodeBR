@@ -14,8 +14,8 @@
         data() {
             return {
                 editor: null,
-                currentStep: 0, 
-                translationData: {}, 
+                currentStep: 0,
+                translationData: {},
                 popupEditor: null,
             };
         },
@@ -63,27 +63,52 @@
             },
             async translateTitle() {
                 const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA: Traduza o seguinte título para ${this.translationData.lang}: ${this.translationData.titulo}`;
-                const translatedTitle = await this.fetchTranslation(prompt);
-                this.translationData.titulo = translatedTitle.trim();
+
                 this.openPopup("Título", this.translationData.titulo, "titulo");
+
+                // Atualiza conforme os dados chegam
+                const translatedTitle = await this.fetchTranslation(prompt, (partialResult) => {
+                    this.updatePopupInputValue("titulo", partialResult);
+                });
+
+                this.translationData.titulo = translatedTitle.trim();
+                this.updatePopupInputValue("titulo", this.translationData.titulo);
             },
             async translateDescription() {
                 const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA: Traduza a seguinte descrição para ${this.translationData.lang}: ${this.translationData.descricao}`;
-                const translatedDescription = await this.fetchTranslation(prompt);
-                this.translationData.descricao = translatedDescription.trim();
+
                 this.openPopup("Descrição", this.translationData.descricao, "descricao");
+
+                const translatedDescription = await this.fetchTranslation(prompt, (partialResult) => {
+                    this.updatePopupInputValue("descricao", partialResult);
+                });
+
+                this.translationData.descricao = translatedDescription.trim();
+                this.updatePopupInputValue("descricao", this.translationData.descricao);
             },
             async translateUrl() {
                 const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA (SE NAO TIVER, DEVOLVA 'ERRO'): Adapte o slug (é a URL de um artigo que estamos traduzindo) do idioma original para ${this.translationData.lang}: ${this.translationData.url}`;
-                const translatedUrl = await this.fetchTranslation(prompt);
-                this.translationData.url = translatedUrl.trim().replace(/\s+/g, '-').toLowerCase();
+
                 this.openPopup("URL", this.translationData.url, "url");
+
+                const translatedUrl = await this.fetchTranslation(prompt, (partialResult) => {
+                    this.updatePopupInputValue("url", partialResult);
+                });
+
+                this.translationData.url = translatedUrl.trim().replace(/\s+/g, '-').toLowerCase();
+                this.updatePopupInputValue("url", this.translationData.url);
             },
             async translateTags() {
                 const prompt = `ME DEVOLVA APENAS A ADAPTACAO DO IDIOMA (SE NAO TIVER, DEVOLVA AS MESMAS TAGS DO IDIOMA ORIGINAL): Traduza as seguintes tags para ${this.translationData.lang}: ${this.translationData.tags}`;
-                const translatedTags = await this.fetchTranslation(prompt);
-                this.translationData.tags = translatedTags.trim().split(',').map(tag => tag.trim()).join(',');
+
                 this.openPopup("Tags", this.translationData.tags, "tags");
+
+                const translatedTags = await this.fetchTranslation(prompt, (partialResult) => {
+                    this.updatePopupInputValue("tags", partialResult);
+                });
+
+                this.translationData.tags = translatedTags.trim().split(',').map(tag => tag.trim()).join(',');
+                this.updatePopupInputValue("tags", this.translationData.tags);
             },
             async delay(time) {
                 return new Promise(resolve => setTimeout(resolve, time));
@@ -91,41 +116,43 @@
             async translateTextParts() {
                 const parts = this.splitHtmlIntoParts(this.translationData.texto);
                 const translatedParts = [];
+
                 this.openPopup("Texto", '', "texto");
                 this.initializeEditor();
+                let isFirst = true;
 
                 for (const part of parts) {
                     await this.delay(2000);
-                    let html = false;
-                    html = await this.translateHtmlContent(part);
-
+                    if (isFirst) {
+                        isFirst = false;
+                    }
+                    const html = await this.translateHtmlContent(part, isFirst);
                     if (html) {
-                        const clean = html.replace(/```(html|php|js|ts|javascript|typescript|sql|python|rust)?\s*([\s\S]*?)\s*```/g, '$2');
+                        clean = html.replace(/```(html|php|js|ts|javascript|typescript|sql|python|rust)?\s*([\s\S]*?)\s*```/g, '$2');
+                        clean = clean.replace(/width="(120|128)"/g, (match, num) => `width="${num}0"`);
                         translatedParts.push(clean);
-
                         this.translationData.texto = translatedParts.join('\n');
                         this.updateEditorWithTranslatedText(this.translationData.texto);
                     }
                 }
             },
             initializeEditor() {
-                this.popupEditor = ace.edit('editor', {
-                    mode: 'ace/mode/json',
-                    theme: 'ace/theme/dracula',
-                    fontSize: 16,
-                    showPrintMargin: false,
-                    wrap: true,
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: true,
-                });
-
-                this.popupEditor.setOptions({
-                    fontFamily: 'Fira Code, monospace',
-                });
-
-                this.popupEditor.session.setUseWorker(false);
+                if (!this.popupEditor) {
+                    this.popupEditor = ace.edit('editor', {
+                        mode: 'ace/mode/json',
+                        theme: 'ace/theme/dracula',
+                        fontSize: 16,
+                        showPrintMargin: false,
+                        wrap: true,
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true,
+                    });
+                    this.popupEditor.setOptions({
+                        fontFamily: 'Fira Code, monospace',
+                    });
+                    this.popupEditor.session.setUseWorker(false);
+                }
             },
-
             updateEditorWithTranslatedText(translatedText) {
                 if (!this.popupEditor) {
                     this.initializeEditor();
@@ -136,20 +163,27 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const parts = [];
-                const nodes = Array.from(doc.body.childNodes); 
-                const chunkSize = 20; 
-
+                const nodes = Array.from(doc.body.childNodes);
+                const chunkSize = 20;
                 for (let i = 0; i < nodes.length; i += chunkSize) {
-                    const chunk = nodes.slice(i, i + chunkSize); 
-                    const part = chunk.map(node => node.outerHTML || node.textContent).join(''); 
-                    parts.push(part); 
+                    const chunk = nodes.slice(i, i + chunkSize);
+                    const part = chunk.map(node => node.outerHTML || node.textContent).join('');
+                    parts.push(part);
                 }
-
                 return parts;
             },
-            async translateHtmlContent(htmlContent) {
+            async translateHtmlContent(htmlContent, primeiraParte) {
                 const prompt = `ME DEVOLVA APENAS O HTML: Traduza o seguinte conteúdo para ${this.translationData.lang}, mantendo as tags intactas: ${htmlContent}`;
-                const translatedContent = await this.fetchTranslation(prompt);
+
+                const translatedContent = await this.fetchTranslation(prompt, (partialResult) => {
+                    temp = [];
+                    // if (!primeiraParte && this.translationData.texto) {
+                    //     temp.push(this.translationData.texto);
+                    // }
+                    temp.push(partialResult);
+
+                    this.updateEditorWithTranslatedText(temp.join('\n'));
+                });
                 return translatedContent.trim();
             },
             openPopup(title, content, type) {
@@ -185,13 +219,11 @@
 
                 if (type === "texto") {
                     const editorElement = document.getElementById('editor');
-
                     if (!editorElement) {
                         const preElement = document.createElement('pre');
                         preElement.id = 'editor';
                         preElement.style.width = '100%';
                         preElement.style.height = '70vh';
-
                         popup.appendChild(preElement);
                     }
                 } else {
@@ -200,11 +232,18 @@
                     input.value = content;
                     input.style.width = '100%';
                     input.style.marginBottom = '10px';
+                    input.id = `input-${type}`;
                     popup.appendChild(input);
 
                     input.oninput = () => {
                         this.translationData[type] = input.value;
                     };
+                }
+            },
+            updatePopupInputValue(type, value) {
+                const input = document.getElementById(`input-${type}`);
+                if (input) {
+                    input.value = value;
                 }
             },
             finalizeTranslation() {
@@ -216,7 +255,7 @@
                     this.saveTranslation(JSON.stringify(this.translationData));
                 });
             },
-            async fetchTranslation(prompt) {
+            async fetchTranslation(prompt, updateCallback) {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
@@ -228,15 +267,24 @@
                     })
                 });
                 if (!response.ok) throw new Error('Erro na requisição');
+
                 const reader = response.body.getReader();
+                const decoder = new TextDecoder();
                 let result = '';
+
                 while (true) {
                     const {
                         done,
                         value
                     } = await reader.read();
                     if (done) break;
-                    result += new TextDecoder().decode(value);
+                    const chunk = decoder.decode(value, {
+                        stream: true
+                    });
+                    result += chunk;
+                    if (typeof updateCallback === 'function') {
+                        updateCallback(result);
+                    }
                 }
                 return result.trim();
             },
@@ -268,7 +316,6 @@
         width: 100rem;
     }
 
-    /* Estilo do Ace Editor */
     #editor {
         background: #1e1e1e;
         color: #d4d4d4;
