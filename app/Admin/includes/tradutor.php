@@ -7,9 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    const {
-        createApp
-    } = Vue;
+    const { createApp } = Vue;
     createApp({
         data() {
             return {
@@ -17,6 +15,8 @@
                 currentStep: 0,
                 translationData: {},
                 popupEditor: null,
+                isEditing: false,
+                errorCount: 0,
             };
         },
         mounted() {
@@ -51,8 +51,21 @@
                 ];
 
                 if (this.currentStep < steps.length) {
-                    await steps[this.currentStep]();
-                    this.currentStep++;
+                    try {
+                        await steps[this.currentStep]();
+                        this.currentStep++;
+                        this.errorCount = 0;
+                    } catch (error) {
+                        console.error('Erro na tradução:', error);
+                        this.errorCount++;
+                        if (this.errorCount < 10) {
+                            await this.delay(2000);
+                            await this.translateNextPart();
+                        } else {
+                            Swal.fire('Erro!', 'Falha ao traduzir após várias tentativas.', 'error');
+                        }
+                        return;
+                    }
 
                     setTimeout(() => {
                         this.translateNextPart();
@@ -66,7 +79,6 @@
 
                 this.openPopup("Título", this.translationData.titulo, "titulo");
 
-                // Atualiza conforme os dados chegam
                 const translatedTitle = await this.fetchTranslation(prompt, (partialResult) => {
                     this.updatePopupInputValue("titulo", partialResult);
                 });
@@ -177,11 +189,7 @@
 
                 const translatedContent = await this.fetchTranslation(prompt, (partialResult) => {
                     temp = [];
-                    // if (!primeiraParte && this.translationData.texto) {
-                    //     temp.push(this.translationData.texto);
-                    // }
                     temp.push(partialResult);
-
                     this.updateEditorWithTranslatedText(temp.join('\n'));
                 });
                 return translatedContent.trim();
@@ -211,6 +219,25 @@
                     closeBtn.style.right = '10px';
                     closeBtn.onclick = () => popup.remove();
                     popup.appendChild(closeBtn);
+
+                    const saveBtn = document.createElement('button');
+                    saveBtn.innerText = 'Salvar';
+                    saveBtn.style.position = 'absolute';
+                    saveBtn.style.top = '10px';
+                    saveBtn.style.right = '100px';
+                    saveBtn.onclick = () => this.saveTranslation(JSON.stringify(this.translationData));
+                    popup.appendChild(saveBtn);
+
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.innerText = 'Cancelar';
+                    cancelBtn.style.position = 'absolute';
+                    cancelBtn.style.top = '10px';
+                    cancelBtn.style.right = '200px';
+                    cancelBtn.onclick = () => {
+                        popup.remove();
+                        this.isEditing = false;
+                    };
+                    popup.appendChild(cancelBtn);
                 }
 
                 const titleLabel = document.createElement('h3');
@@ -251,42 +278,40 @@
                     title: 'Tradução finalizada!',
                     text: 'Todos os elementos foram traduzidos com sucesso.',
                     icon: 'success',
-                }).then(() => {
-                    this.saveTranslation(JSON.stringify(this.translationData));
-                });
+                }).then(() => { });
             },
             async fetchTranslation(prompt, updateCallback) {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        prompt
-                    })
-                });
-                if (!response.ok) throw new Error('Erro na requisição');
-
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let result = '';
-
-                while (true) {
-                    const {
-                        done,
-                        value
-                    } = await reader.read();
-                    if (done) break;
-                    const chunk = decoder.decode(value, {
-                        stream: true
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            prompt
+                        })
                     });
-                    result += chunk;
-                    if (typeof updateCallback === 'function') {
-                        updateCallback(result);
+                    if (!response.ok) throw new Error('Erro na requisição');
+
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let result = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        const chunk = decoder.decode(value, { stream: true });
+                        result += chunk;
+                        if (typeof updateCallback === 'function') {
+                            updateCallback(result);
+                        }
                     }
+                    return result.trim();
+                } catch (error) {
+                    console.error('Erro na requisição:', error);
+                    throw error;
                 }
-                return result.trim();
             },
             async saveTranslation(data) {
                 try {
