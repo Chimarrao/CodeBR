@@ -7,7 +7,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    const { createApp } = Vue;
+    const {
+        createApp
+    } = Vue;
     createApp({
         data() {
             return {
@@ -141,7 +143,7 @@
                     const html = await this.translateHtmlContent(part, isFirst);
                     if (html) {
                         clean = html.replace(/```(html|php|js|ts|javascript|typescript|sql|python|rust)?\s*([\s\S]*?)\s*```/g, '$2');
-                        clean = clean.replace(/width="(120|128)"/g, (match, num) => `width="${num}0"`);
+                        clean = clean.replace(/width="(120|128)(?!\.\d)"/g, (match, num) => `width="${num}0"`);
                         translatedParts.push(clean);
                         this.translationData.texto = translatedParts.join('\n');
                         this.updateEditorWithTranslatedText(this.translationData.texto);
@@ -240,6 +242,14 @@
                     popup.appendChild(cancelBtn);
                 }
 
+                const existingTitle = Array.from(popup.children).find(
+                    child => child.tagName === 'H3' && child.innerText === title
+                );
+
+                if (existingTitle) {
+                    return;
+                }
+
                 const titleLabel = document.createElement('h3');
                 titleLabel.innerText = title;
                 popup.appendChild(titleLabel);
@@ -278,7 +288,7 @@
                     title: 'Tradução finalizada!',
                     text: 'Todos os elementos foram traduzidos com sucesso.',
                     icon: 'success',
-                }).then(() => { });
+                }).then(() => {});
             },
             async fetchTranslation(prompt, updateCallback) {
                 try {
@@ -299,9 +309,14 @@
                     let result = '';
 
                     while (true) {
-                        const { done, value } = await reader.read();
+                        const {
+                            done,
+                            value
+                        } = await reader.read();
                         if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
+                        const chunk = decoder.decode(value, {
+                            stream: true
+                        });
                         result += chunk;
                         if (typeof updateCallback === 'function') {
                             updateCallback(result);
