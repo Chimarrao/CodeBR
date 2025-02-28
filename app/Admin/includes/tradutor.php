@@ -178,7 +178,7 @@
                 const doc = parser.parseFromString(html, 'text/html');
                 const parts = [];
                 const nodes = Array.from(doc.body.childNodes);
-                const chunkSize = 20;
+                const chunkSize = 30;
                 for (let i = 0; i < nodes.length; i += chunkSize) {
                     const chunk = nodes.slice(i, i + chunkSize);
                     const part = chunk.map(node => node.outerHTML || node.textContent).join('');
@@ -216,6 +216,7 @@
 
                     const closeBtn = document.createElement('button');
                     closeBtn.innerText = 'Fechar';
+                    closeBtn.className = 'btn btn-danger'; 
                     closeBtn.style.position = 'absolute';
                     closeBtn.style.top = '10px';
                     closeBtn.style.right = '10px';
@@ -224,6 +225,7 @@
 
                     const saveBtn = document.createElement('button');
                     saveBtn.innerText = 'Salvar';
+                    saveBtn.className = 'btn btn-success';
                     saveBtn.style.position = 'absolute';
                     saveBtn.style.top = '10px';
                     saveBtn.style.right = '100px';
@@ -232,6 +234,7 @@
 
                     const cancelBtn = document.createElement('button');
                     cancelBtn.innerText = 'Cancelar';
+                    cancelBtn.className = 'btn btn-default'; 
                     cancelBtn.style.position = 'absolute';
                     cancelBtn.style.top = '10px';
                     cancelBtn.style.right = '200px';
